@@ -14,4 +14,5 @@ package sinyuk.com.fanfou.prefs
 └──────────────────────────────────────────────────────────────────┘
  */
 
+const val TYPE_GLOBAL = "global"
 const val ACCESS_TOKEN = "access_token"

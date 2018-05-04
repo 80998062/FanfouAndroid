@@ -1,14 +1,7 @@
-package sinyuk.com.fanfou.domain.api
-
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import dagger.Module
-import dagger.Provides
-import java.util.*
-import javax.inject.Singleton
+package sinyuk.com.fanfou
 
 /**
- * Created by sinyuk on 2018/4/23.
+ * Created by sinyuk on 2018/5/3.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -20,24 +13,27 @@ import javax.inject.Singleton
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-@Module
-class ApiModule {
-    @Suppress("unused")
-    @Provides
-    @Singleton
-    fun provideGson(): Gson {
-        return GsonBuilder()
-                // Blank fields are included as null instead of being omitted.
-                .serializeNulls()
-                .registerTypeAdapter(Date::class.java, DateDeserializer)
-//                .registerTypeAdapter(Status::class.java, StatusDeserializer)
-                .create()
+object TimberDelegate : ITimber {
+    override fun plantTree() {
     }
 
+    override fun d(message: String, vararg args: Any) {
+    }
 
-    @Suppress("unused")
-    @Provides
-    @Singleton
-    fun provideEndpoint() = Endpoint("http://api.fanfou.com/")
+    override fun e(message: String, vararg args: Any) {
+    }
 
+    override fun i(message: String, vararg args: Any) {
+    }
+
+    override fun d(message: String) {
+    }
+
+    override fun e(message: String) {
+    }
+
+    override fun i(message: String) {
+    }
+
+    override fun tag(tag: String) = Timber.tag(tag)
 }

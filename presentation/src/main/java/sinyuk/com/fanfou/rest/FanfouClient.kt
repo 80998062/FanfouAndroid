@@ -2,7 +2,7 @@ package sinyuk.com.fanfou.rest
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
+import android.support.annotation.VisibleForTesting
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import okhttp3.*
 import okhttp3.CacheControl
@@ -11,6 +11,7 @@ import okio.Buffer
 import okio.ByteString
 import sinyuk.com.fanfou.BuildConfig
 import sinyuk.com.fanfou.BuildConfig.OAUTH_VERSION_VALUE
+import sinyuk.com.fanfou.TimberDelegate
 import sinyuk.com.fanfou.domain.api.AccessTokenTask
 import sinyuk.com.fanfou.domain.isOnline
 import sinyuk.com.fanfou.prefs.ACCESS_TOKEN
@@ -50,18 +51,11 @@ fun initOkHttpClient(application: Context, preferences: SharedPreferences): OkHt
     val timeout: Long = 30
     val max = (1024 * 1024 * 10).toLong() // 10 MiB
     val logging = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger {
-        Log.d("FanfouAPI", it)
+        TimberDelegate.tag("FanfouAPI").d(it)
     })
 
     val builder = OkHttpClient.Builder()
             .authenticator(FanfouAuthenticator(preferences))
-    if (BuildConfig.DEBUG) {
-        builder.addNetworkInterceptor(StethoInterceptor())
-    } else {
-        logging.level = HttpLoggingInterceptor.Level.HEADERS
-        builder.addInterceptor(logging)
-    }
-
     builder.retryOnConnectionFailure(false)
     builder.connectTimeout(timeout, TimeUnit.SECONDS)
             .writeTimeout(timeout, TimeUnit.SECONDS)
@@ -70,33 +64,61 @@ fun initOkHttpClient(application: Context, preferences: SharedPreferences): OkHt
     val cacheFile = File(application.cacheDir, "http")
     val cache = Cache(cacheFile, max)
     builder.cache(cache)
-    val rewriteCacheControlInterceptor = RewriteCacheControlInterceptor(application)
-    builder.addInterceptor(rewriteCacheControlInterceptor)
-    builder.addNetworkInterceptor(rewriteCacheControlInterceptor)
+    builder.addInterceptor(LocalCacheInterceptor(application))
+    builder.addNetworkInterceptor(RewriteCacheControlInterceptor(application))
+
+
+    if (BuildConfig.DEBUG) {
+        builder.addNetworkInterceptor(StethoInterceptor())
+    } else {
+        logging.level = HttpLoggingInterceptor.Level.HEADERS
+        builder.addNetworkInterceptor(logging)
+    }
     return builder.build()
 }
 
+
 /**
+ * interceptor that only work with local cache.
+ * you should use @{OkHttpClient#addInterceptor()} to add it.
+ */
+class LocalCacheInterceptor constructor(private val context: Context) : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val builder = chain.request().newBuilder()
+        return if (isOnline(context.applicationContext)) {
+            val maxAge = 7 * 24 * 60 * 3600
+            val mayExpired = CacheControl.Builder()
+                    .maxAge(maxAge, TimeUnit.SECONDS)
+                    .maxStale(0, TimeUnit.SECONDS).build()
+            chain.proceed(builder.cacheControl(mayExpired).build())
+        } else {
+            val onlyCache = CacheControl.Builder().maxAge(Int.MAX_VALUE, TimeUnit.SECONDS).build()
+            chain.proceed(builder.cacheControl(onlyCache).build())
+        }
+    }
+}
+
+/**
+ * Interceptor that rewrite the response returned by server side.
+ * you should use @{OkHttpClient#addNetworkInterceptor()} to add it.
+ * <p/>
  *
- * Dangerous interceptor that rewrites the server's cache-control header.
+ * Notice: it's dangerous!
  */
 class RewriteCacheControlInterceptor constructor(private val context: Context) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        var request = chain.request()
-        if (!isOnline(context.applicationContext)) {
-            request = request.newBuilder().cacheControl(CacheControl.FORCE_CACHE).build()
-        }
+        val request = chain.request()
         val originalResponse = chain.proceed(request)
         return if (isOnline(context)) {
-            val cacheControl = request.cacheControl().toString()
+            val cacheControl = "public, max-age=" + (3600 * 60)
             originalResponse.newBuilder()
-                    .header("Cache-Control", cacheControl)
                     .removeHeader("Pragma")
+                    .header("Cache-Control", cacheControl)
                     .build()
         } else {
             originalResponse.newBuilder()
-                    .header("Cache-Control", "public, only-if-cached, max-stale=3600")
                     .removeHeader("Pragma")
+                    .header("Cache-Control", "public, only-if-cached, max-stale=" + Int.MAX_VALUE)
                     .build()
         }
     }
@@ -138,10 +160,8 @@ class FanfouAuthenticator constructor(private val preferences: SharedPreferences
     override fun authenticate(route: Route?, response: Response?): Request? {
         if (response == null) return null
         if (response.request()?.header("Authorization") != null) {
-            if (BuildConfig.DEBUG) {
-                println("$TAG Authenticating for response: $response")
-                println("$TAG Challenges: " + response.challenges())
-            }
+            TimberDelegate.tag(TAG).d("Authenticating for response: $response")
+            TimberDelegate.tag(TAG).d("Challenges: %s", response.challenges())
             return null
         }
         val stringSet = preferences.getStringSet(ACCESS_TOKEN, null)
@@ -173,18 +193,22 @@ class FanfouAuthenticator constructor(private val preferences: SharedPreferences
     }
 }
 
-fun generateCredential(token: String?, secret: String?, request: Request): String? {
+fun generateCredential(token: String?,
+                       secret: String?,
+                       request: Request,
+                       @VisibleForTesting mockNonce: String? = null,
+                       @VisibleForTesting mockTimestamp: String? = null): String? {
     if (token == null || secret == null) return null
     val random = SecureRandom()
     val bytes = ByteArray(32)
-    val clock = AccessTokenTask.Clock()
     random.nextBytes(bytes)
-    val nonce = ByteString.of(*bytes).base64().replace("\\W".toRegex(), "")
-    val timestamp = clock.millis()
+
+    val nonce = mockNonce ?: ByteString.of(*bytes).base64().replace("\\W".toRegex(), "")
+    val timestamp = mockTimestamp ?: AccessTokenTask.Clock().millis()
 
     val parameters = TreeMap<String, String>()
 
-    val consumerKeyValue = UrlEscapeUtils.escape("")
+    val consumerKeyValue = UrlEscapeUtils.escape(BuildConfig.CONSUMER_KEY)
     val accessTokenValue = UrlEscapeUtils.escape(token)
 
     parameters[OAUTH_CONSUMER_KEY] = consumerKeyValue

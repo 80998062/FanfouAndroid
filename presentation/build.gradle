@@ -4,6 +4,8 @@ apply plugin: "kotlin-android"
 
 apply plugin: "kotlin-android-extensions"
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion 27
     defaultConfig {
@@ -30,22 +32,41 @@ android {
             testCoverageEnabled = true
         }
     }
+
+    sourceSets {
+//        main.kotlin.srcDirs = ['main/java', 'release/java', 'debug/java']
+//        main.java.srcDirs = ['main/java', 'release/java', 'debug/java']
+    }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
     //noinspection GradleCompatible
     implementation "com.android.support:appcompat-v7:$support_version"
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
+    testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp_version"
     androidTestImplementation "org.mockito:mockito-android:$mockito_version"
     androidTestImplementation "com.android.support.test:runner:$runner_version"
+    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+    implementation "android.arch.paging:runtime:$paging_version"
+
     // network
     implementation "com.google.code.gson:gson:$gson_version"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
     implementation "android.arch.paging:runtime:$paging_version"
+    implementation 'com.jakewharton.timber:timber:4.7.0'
     implementation project(':domain')
+    implementation "com.google.dagger:dagger:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    implementation "com.google.dagger:dagger-android:$dagger_version"
+    implementation "com.google.dagger:dagger-android-support:$dagger_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta5'
 }
