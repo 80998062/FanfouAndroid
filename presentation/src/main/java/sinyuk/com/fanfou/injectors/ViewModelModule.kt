@@ -16,10 +16,13 @@
 
 package sinyuk.com.fanfou.injectors
 
+import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import dagger.Binds
 import dagger.Module
+import dagger.multibindings.IntoMap
 import sinyuk.com.fanfou.ui.FanfouViewModelFactory
+import sinyuk.com.fanfou.ui.sign.SignViewModel
 
 /**
  * Created by sinyuk on 2018/5/4.
@@ -36,6 +39,12 @@ import sinyuk.com.fanfou.ui.FanfouViewModelFactory
  */
 @Module
 abstract class ViewModelModule {
+    @Suppress("unused")
+    @Binds
+    @IntoMap
+    @ViewModelKey(SignViewModel::class)
+    abstract fun signViewModel(viewModel: SignViewModel): ViewModel
+
     @Suppress("unused")
     @Binds
     abstract fun bindViewModelFactory(factory: FanfouViewModelFactory): ViewModelProvider.Factory

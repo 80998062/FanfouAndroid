@@ -33,17 +33,16 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import cn.dreamtobe.kpswitch.util.KeyboardUtil
 import kotlinx.android.synthetic.main.signin_view.*
-import okhttp3.HttpUrl
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
 import permissions.dispatcher.*
 import sinyuk.com.fanfou.R
 import sinyuk.com.fanfou.domain.States
-import sinyuk.com.fanfou.domain.repo.UserRepo
+import sinyuk.com.fanfou.ext.obtainViewModel
+import sinyuk.com.fanfou.ext.start
 import sinyuk.com.fanfou.injectors.Injectable
+import sinyuk.com.fanfou.ui.FanfouViewModelFactory
 import sinyuk.com.fanfou.ui.ViewTooltip
 import sinyuk.com.fanfou.ui.base.AbstractFragment
+import sinyuk.com.fanfou.ui.home.HomeActivity
 import sinyuk.com.fanfou.utils.showRationaleDialog
 import javax.inject.Inject
 
@@ -71,7 +70,9 @@ class SignInView : AbstractFragment(), Injectable {
     }
 
     @Inject
-    lateinit var userRepo: UserRepo
+    lateinit var factory: FanfouViewModelFactory
+
+    private val signViewModel by lazy { obtainViewModel(factory, SignViewModel::class.java) }
 
     private fun setup() {
         onFormChanged()
@@ -168,7 +169,7 @@ class SignInView : AbstractFragment(), Injectable {
     fun performSigningIn() {
         val accountText = account.text.toString()
         val passwordText = password.text.toString()
-        userRepo.signIn(accountText, passwordText, { executeRequest(it) })
+        signViewModel.signIn(accountText, passwordText)
                 .observe(this@SignInView, Observer {
                     onProcessingSignIn(it?.states == States.LOADING)
                     when (it?.states) {
@@ -177,8 +178,7 @@ class SignInView : AbstractFragment(), Injectable {
                         States.ERROR -> {
                             onSignInFailed(it.message)
                         }
-                        States.SUCCESS -> {
-                        }
+                        States.SUCCESS -> start(HomeActivity::class)
                     }
                 })
     }
@@ -217,13 +217,6 @@ class SignInView : AbstractFragment(), Injectable {
     fun clearFocus() {
         account.clearFocus()
         password.clearFocus()
-    }
-
-    @Inject
-    lateinit var okHttpClient: OkHttpClient
-
-    private fun executeRequest(url: HttpUrl): Response {
-        return okHttpClient.newCall(Request.Builder().url(url).build()).execute()
     }
 
 

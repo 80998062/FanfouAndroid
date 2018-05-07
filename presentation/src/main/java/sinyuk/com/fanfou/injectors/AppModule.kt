@@ -17,6 +17,7 @@
 package sinyuk.com.fanfou.injectors
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -25,12 +26,13 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import sinyuk.com.fanfou.App
 import sinyuk.com.fanfou.domain.AppExecutors
+import sinyuk.com.fanfou.domain.TYPE_GLOBAL
 import sinyuk.com.fanfou.domain.api.ApiModule
 import sinyuk.com.fanfou.domain.api.Endpoint
 import sinyuk.com.fanfou.domain.api.RestAPI
 import sinyuk.com.fanfou.domain.api.adapters.LiveDataCallAdapterFactory
-import sinyuk.com.fanfou.prefs.TYPE_GLOBAL
 import sinyuk.com.fanfou.rest.initOkHttpClient
+import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -56,12 +58,14 @@ class AppModule constructor(private val app: App) {
     @Suppress("unused")
     @Provides
     @Singleton
+    @Named(TYPE_GLOBAL)
     fun providePreferences() = app.getSharedPreferences(TYPE_GLOBAL, Context.MODE_PRIVATE)!!
 
     @Suppress("unused")
     @Provides
     @Singleton
-    fun provideOkHttp(app: App) = initOkHttpClient(app)
+    fun provideOkHttp(app: App, @Named(TYPE_GLOBAL) preferences: SharedPreferences) =
+            initOkHttpClient(app, preferences)
 
 
     @Suppress("unused")

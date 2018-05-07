@@ -16,12 +16,16 @@
 
 package sinyuk.com.fanfou.ext
 
+import android.app.Activity
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
+import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import kotlin.reflect.KClass
 
 /**
  * Created by sinyuk on 2017/11/28.
@@ -56,5 +60,17 @@ fun AppCompatActivity.addFragment(@IdRes res: Int, fragment: Fragment, addToBack
                     .commit()
         }
     }
+}
 
+
+fun <T : Activity> AppCompatActivity.start(target: KClass<T>, bundle: Bundle? = null) {
+    val intent = Intent(this, target.java)
+    bundle?.let { intent.putExtras(it) }
+    startActivity(intent)
+}
+
+fun <T : Activity> Fragment.start(target: KClass<T>, bundle: Bundle? = null) {
+    val intent = Intent(context, target.java)
+    bundle?.let { intent.putExtras(it) }
+    startActivity(intent)
 }

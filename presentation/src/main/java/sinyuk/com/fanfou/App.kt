@@ -18,11 +18,18 @@ package sinyuk.com.fanfou
 
 import android.app.Activity
 import android.app.Application
+import android.content.SharedPreferences
+import android.support.v7.app.AppCompatDelegate
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
+import sinyuk.com.fanfou.domain.AppExecutors
+import sinyuk.com.fanfou.domain.TYPE_GLOBAL
 import sinyuk.com.fanfou.injectors.AppInjector
+import sinyuk.com.fanfou.ui.NIGHT_MODE
+import sinyuk.com.fanfou.ui.NIGHT_MODE_AUTO
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Created by sinyuk on 2018/5/3.
@@ -43,9 +50,38 @@ class App : Application(), HasActivityInjector {
 
     override fun activityInjector(): AndroidInjector<Activity> = dispatchingActivityInjector
 
+    @Suppress("MemberVisibilityCanBePrivate")
+    @Inject
+    lateinit var appExecutors: AppExecutors
+
     override fun onCreate() {
         super.onCreate()
         AppInjector.init(this)
         TimberDelegate.plantTree()
+
+        InstallTask(this).apply {
+            appExecutors.networkIO().execute(this)
+        }
+
+        configureNightMode()
+    }
+
+
+    @field:[Named(TYPE_GLOBAL) Inject]
+    lateinit var preferences: SharedPreferences
+
+    /**
+     * Setup night mode
+     */
+    private fun configureNightMode() {
+        if (preferences.getBoolean(NIGHT_MODE_AUTO, false)) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO)
+        } else {
+            if (preferences.getBoolean(NIGHT_MODE, false)) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
     }
 }

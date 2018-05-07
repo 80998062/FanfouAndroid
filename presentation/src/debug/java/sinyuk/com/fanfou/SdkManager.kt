@@ -16,7 +16,8 @@
 
 package sinyuk.com.fanfou
 
-import android.content.Context
+import android.app.Application
+import com.facebook.stetho.Stetho
 
 /**
  * Created by sinyuk on 2018/5/7.
@@ -32,8 +33,10 @@ import android.content.Context
 └──────────────────────────────────────────────────────────────────┘
  */
 
-class InstallTask constructor(private val context: Context) : Runnable {
+class InstallTask constructor(private val application: Application) : Runnable {
     override fun run() {
-
+        Stetho.initialize(Stetho.newInitializerBuilder(application)
+                .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(application))
+                .build())
     }
 }

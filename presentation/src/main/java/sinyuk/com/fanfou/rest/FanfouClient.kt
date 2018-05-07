@@ -1,3 +1,19 @@
+/*
+ *   Copyright 2081 Sinyuk
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
 package sinyuk.com.fanfou.rest
 
 import android.content.Context
@@ -12,10 +28,10 @@ import okio.ByteString
 import sinyuk.com.fanfou.BuildConfig
 import sinyuk.com.fanfou.BuildConfig.OAUTH_VERSION_VALUE
 import sinyuk.com.fanfou.TimberDelegate
+import sinyuk.com.fanfou.domain.ACCESS_TOKEN
 import sinyuk.com.fanfou.domain.api.AccessTokenTask
 import sinyuk.com.fanfou.domain.isOnline
 import sinyuk.com.fanfou.domain.utils.UrlEscapeUtils
-import sinyuk.com.fanfou.prefs.ACCESS_TOKEN
 import sinyuk.com.fanfou.rest.FanfouAuthenticator.Companion.OAUTH_ACCESS_TOKEN
 import sinyuk.com.fanfou.rest.FanfouAuthenticator.Companion.OAUTH_CONSUMER_KEY
 import sinyuk.com.fanfou.rest.FanfouAuthenticator.Companion.OAUTH_NONCE
@@ -48,7 +64,7 @@ import javax.crypto.spec.SecretKeySpec
 └──────────────────────────────────────────────────────────────────┘
  */
 
-fun initOkHttpClient(application: Context): OkHttpClient {
+fun initOkHttpClient(application: Context, preferences: SharedPreferences): OkHttpClient {
     val timeout: Long = 30
     val max = (1024 * 1024 * 10).toLong() // 10 MiB
     val logging = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger {
@@ -67,7 +83,6 @@ fun initOkHttpClient(application: Context): OkHttpClient {
     builder.addInterceptor(LocalCacheInterceptor(application))
     builder.addNetworkInterceptor(RewriteCacheControlInterceptor(application))
 
-
     logging.level = if (BuildConfig.DEBUG) {
         builder.addNetworkInterceptor(StethoInterceptor())
         HttpLoggingInterceptor.Level.BODY
@@ -75,6 +90,15 @@ fun initOkHttpClient(application: Context): OkHttpClient {
         HttpLoggingInterceptor.Level.HEADERS
     }
     builder.addNetworkInterceptor(logging)
+
+    val stringSet = preferences.getStringSet(ACCESS_TOKEN, null)
+    if (stringSet?.isNotEmpty() == true) {
+        val token = stringSet.elementAt(0)
+        val secret = stringSet.elementAt(1)
+        builder.addNetworkInterceptor(Oauth1SigningInterceptor(token, secret, preferences))
+    } else {
+        builder.addNetworkInterceptor(Oauth1SigningInterceptor(preferences = preferences))
+    }
     return builder.build()
 }
 
@@ -128,12 +152,23 @@ class RewriteCacheControlInterceptor constructor(private val context: Context) :
 /**
  * The type Oauth 1 signing interceptor.
  */
-class Oauth1SigningInterceptor constructor(private val token: String?, private val secret: String?) : Interceptor {
+class Oauth1SigningInterceptor constructor(private var token: String? = null,
+                                           private var secret: String? = null,
+                                           private val preferences: SharedPreferences) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val credential = generateCredential(token, secret, chain.request())
-        return if (credential == null) {
+        if (token == null || secret == null) {
+            val stringSet = preferences.getStringSet(ACCESS_TOKEN, null)
+            if (stringSet?.isNotEmpty() == true) {
+                token = stringSet.elementAt(0)
+                secret = stringSet.elementAt(1)
+            }
+        }
+
+        return if (token == null || secret == null) {
             chain.proceed(chain.request().newBuilder().removeHeader("Authorization").build())
         } else {
+            val credential = generateCredential(token, secret, chain.request())
+            @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
             chain.proceed(chain.request().newBuilder().addHeader("Authorization", credential).build())
         }
     }
@@ -141,9 +176,9 @@ class Oauth1SigningInterceptor constructor(private val token: String?, private v
 
 /**
  * Automatically retry unauthenticated requests, when a response is 401 Not Authorized.
- * @param preferences SharedPreferences
  */
-class FanfouAuthenticator constructor(private val preferences: SharedPreferences) : Authenticator {
+class FanfouAuthenticator constructor(private val token: String,
+                                      private val secret: String) : Authenticator {
     companion object {
         const val MAX_RETRY_COUNT = 3
         const val TAG = "FanfouAuthenticator"
@@ -164,19 +199,12 @@ class FanfouAuthenticator constructor(private val preferences: SharedPreferences
             TimberDelegate.tag(TAG).d("Challenges: %s", response.challenges())
             return null
         }
-        val stringSet = preferences.getStringSet(ACCESS_TOKEN, null)
-        if (stringSet?.isEmpty() != false || stringSet.size != 2) {
-            return null
-        } else {
-            val token = stringSet.elementAt(0)
-            val secret = stringSet.elementAt(1)
-            val credential = generateCredential(token, secret, response.request())
-            when {
-                credential == null -> return null
-                responseCount(response) >= MAX_RETRY_COUNT -> return null // If we've failed 3 times, give up.
-                credential == response.request().header("Authorization") -> return null
-                else -> response.request().newBuilder().header("Authorization", credential).build()
-            }
+        val credential = generateCredential(token, secret, response.request())
+        when {
+            credential == null -> return null
+            responseCount(response) >= MAX_RETRY_COUNT -> return null // If we've failed 3 times, give up.
+            credential == response.request().header("Authorization") -> return null
+            else -> response.request().newBuilder().header("Authorization", credential).build()
         }
         return null
     }

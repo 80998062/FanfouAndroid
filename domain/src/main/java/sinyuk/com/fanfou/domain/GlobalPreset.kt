@@ -14,16 +14,10 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.ui.home
-
-import android.os.Bundle
-import sinyuk.com.fanfou.R
-import sinyuk.com.fanfou.ext.addFragment
-import sinyuk.com.fanfou.ui.base.AbstractActivity
-import sinyuk.com.fanfou.ui.player.PlayerView
+package sinyuk.com.fanfou.domain
 
 /**
- * Created by sinyuk on 2018/5/4.
+ * Created by sinyuk on 2018/5/3.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -35,16 +29,6 @@ import sinyuk.com.fanfou.ui.player.PlayerView
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-class HomeActivity : AbstractActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.home_activity)
-        setup()
-    }
-
-    private fun setup() {
-        addFragment(R.id.fragment_container, PlayerView(), false)
-    }
-
-}
+const val TYPE_GLOBAL = "global"
+const val ACCESS_TOKEN = "access_token"

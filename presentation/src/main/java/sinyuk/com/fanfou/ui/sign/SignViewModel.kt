@@ -14,16 +14,18 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.ui.home
+package sinyuk.com.fanfou.ui.sign
 
-import android.os.Bundle
-import sinyuk.com.fanfou.R
-import sinyuk.com.fanfou.ext.addFragment
-import sinyuk.com.fanfou.ui.base.AbstractActivity
-import sinyuk.com.fanfou.ui.player.PlayerView
+import android.arch.lifecycle.ViewModel
+import okhttp3.HttpUrl
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import sinyuk.com.fanfou.domain.repo.UserRepo
+import javax.inject.Inject
 
 /**
- * Created by sinyuk on 2018/5/4.
+ * Created by sinyuk on 2018/5/7.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -35,16 +37,13 @@ import sinyuk.com.fanfou.ui.player.PlayerView
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-class HomeActivity : AbstractActivity() {
+class SignViewModel @Inject constructor(private val userRepo: UserRepo,
+                                        private val okHttpClient: OkHttpClient) : ViewModel() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.home_activity)
-        setup()
+    fun signIn(account: String, password: String) =
+            userRepo.signIn(account, password, { executeRequest(it) })
+
+    private fun executeRequest(url: HttpUrl): Response {
+        return okHttpClient.newCall(Request.Builder().url(url).build()).execute()
     }
-
-    private fun setup() {
-        addFragment(R.id.fragment_container, PlayerView(), false)
-    }
-
 }
