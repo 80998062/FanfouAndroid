@@ -21,6 +21,8 @@ import okhttp3.HttpUrl
 import okhttp3.Response
 import sinyuk.com.fanfou.domain.Promise
 import sinyuk.com.fanfou.domain.api.AccessToken
+import sinyuk.com.fanfou.domain.api.ApiResponse
+import sinyuk.com.fanfou.domain.data.Player
 
 /**
  * Created by sinyuk on 2018/5/4.
@@ -36,5 +38,7 @@ import sinyuk.com.fanfou.domain.api.AccessToken
 └──────────────────────────────────────────────────────────────────┘
  */
 interface SignUsecase {
-    fun signIn(account: String, password: String,execute: (url: HttpUrl) -> Response?): LiveData<Promise<AccessToken>>
+    fun signIn(account: String, password: String, execute: (url: HttpUrl) -> Response?): LiveData<Promise<AccessToken>>
+
+    fun vertify(): LiveData<ApiResponse<Player>>
 }

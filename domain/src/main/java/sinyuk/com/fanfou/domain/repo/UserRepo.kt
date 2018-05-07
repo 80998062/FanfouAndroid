@@ -17,15 +17,20 @@
 package sinyuk.com.fanfou.domain.repo
 
 import android.arch.lifecycle.LiveData
+import android.content.SharedPreferences
 import okhttp3.HttpUrl
 import okhttp3.Response
 import sinyuk.com.fanfou.domain.AppExecutors
 import sinyuk.com.fanfou.domain.Promise
+import sinyuk.com.fanfou.domain.TYPE_GLOBAL
 import sinyuk.com.fanfou.domain.api.AccessToken
 import sinyuk.com.fanfou.domain.api.AccessTokenTask
+import sinyuk.com.fanfou.domain.api.ApiResponse
 import sinyuk.com.fanfou.domain.api.RestAPI
+import sinyuk.com.fanfou.domain.data.Player
 import sinyuk.com.fanfou.domain.usecase.SignUsecase
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -43,12 +48,16 @@ import javax.inject.Singleton
  */
 @Singleton
 class UserRepo @Inject constructor(private val restAPI: RestAPI,
-                                   private val appExecutors: AppExecutors) : SignUsecase {
+                                   private val appExecutors: AppExecutors,
+                                   @Named(TYPE_GLOBAL) private val preferences: SharedPreferences) : SignUsecase {
+    override fun vertify(): LiveData<ApiResponse<Player>> {
+        return restAPI.verify_credentials()
+    }
 
     override fun signIn(account: String,
                         password: String,
                         execute: (url: HttpUrl) -> Response?): LiveData<Promise<AccessToken>> {
-        val task = AccessTokenTask(account, password, execute)
+        val task = AccessTokenTask(account, password, preferences, execute)
         return task.apply { appExecutors.networkIO().execute(this) }.liveData
     }
 }

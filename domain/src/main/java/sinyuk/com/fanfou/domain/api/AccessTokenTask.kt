@@ -2,11 +2,13 @@ package sinyuk.com.fanfou.domain.api
 
 import android.annotation.SuppressLint
 import android.arch.lifecycle.MutableLiveData
+import android.content.SharedPreferences
 import android.support.annotation.VisibleForTesting
 import okhttp3.HttpUrl
 import okhttp3.Response
 import okio.ByteString
 import org.xml.sax.SAXException
+import sinyuk.com.fanfou.domain.ACCESS_TOKEN
 import sinyuk.com.fanfou.domain.BuildConfig
 import sinyuk.com.fanfou.domain.Promise
 import java.io.IOException
@@ -37,6 +39,7 @@ import javax.xml.parsers.ParserConfigurationException
 class AccessTokenTask @Inject constructor(
         account: String,
         password: String,
+        private val preferences: SharedPreferences,
         private val execute: (url: HttpUrl) -> Response?) : Runnable {
 
     @Suppress("MemberVisibilityCanBePrivate")
@@ -75,6 +78,11 @@ class AccessTokenTask @Inject constructor(
             if (accessToken == null) {
                 liveData.postValue(Promise.error(INTERNAL_ERROR, null))
             } else {
+                preferences.edit()
+                        .putStringSet(ACCESS_TOKEN, mutableSetOf(accessToken.token,
+                                accessToken.secret,
+                                accessToken.updatedAt?.toString()))
+                        .apply()
                 liveData.postValue(Promise.success(accessToken))
             }
         } else {

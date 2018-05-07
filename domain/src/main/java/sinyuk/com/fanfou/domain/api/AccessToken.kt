@@ -16,10 +16,9 @@ import java.util.*
 └──────────────────────────────────────────────────────────────────┘
  */
 class AccessToken
-constructor(var uniqueId: String? = null, var updatedAt: Date? = null) {
+constructor(var updatedAt: Date? = null) {
     lateinit var token: String
     lateinit var secret: String
-
     companion object {
         fun parseResponse(text: String): AccessToken? {
             if (!text.startsWith("oauth_token", 0)) return null
