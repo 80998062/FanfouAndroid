@@ -18,6 +18,7 @@ package sinyuk.com.fanfou.injectors
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import sinyuk.com.fanfou.ui.player.PlayerView
 import sinyuk.com.fanfou.ui.sign.SignInView
 
 /**
@@ -38,4 +39,9 @@ abstract class FragmentBuildersModule {
     @Suppress("unused")
     @ContributesAndroidInjector
     abstract fun signInView(): SignInView
+
+    @Suppress("unused")
+    @ContributesAndroidInjector
+    abstract fun playerView(): PlayerView
+
 }

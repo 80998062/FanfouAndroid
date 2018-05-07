@@ -19,6 +19,7 @@ package sinyuk.com.fanfou.domain.repo
 import android.arch.lifecycle.LiveData
 import okhttp3.HttpUrl
 import okhttp3.Response
+import sinyuk.com.fanfou.domain.AppExecutors
 import sinyuk.com.fanfou.domain.Promise
 import sinyuk.com.fanfou.domain.api.AccessToken
 import sinyuk.com.fanfou.domain.api.AccessTokenTask
@@ -41,12 +42,13 @@ import javax.inject.Singleton
 └──────────────────────────────────────────────────────────────────┘
  */
 @Singleton
-class UserRepo @Inject constructor(private val restAPI: RestAPI) : SignUsecase {
+class UserRepo @Inject constructor(private val restAPI: RestAPI,
+                                   private val appExecutors: AppExecutors) : SignUsecase {
 
     override fun signIn(account: String,
                         password: String,
                         execute: (url: HttpUrl) -> Response?): LiveData<Promise<AccessToken>> {
         val task = AccessTokenTask(account, password, execute)
-        return task.liveData
+        return task.apply { appExecutors.networkIO().execute(this) }.liveData
     }
 }

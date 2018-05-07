@@ -14,24 +14,15 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.injectors
+package sinyuk.com.fanfou.ui.sign;
 
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import sinyuk.com.fanfou.ui.home.HomeActivity
-import sinyuk.com.fanfou.ui.sign.SignInActivity
 
-@Module
-abstract class ActivityBuildersModule {
+import android.support.test.runner.AndroidJUnit4;
+import android.test.suitebuilder.annotation.LargeTest;
 
-    @Suppress("unused")
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun homeActivity(): HomeActivity
+import org.junit.runner.RunWith;
 
-    @Suppress("unused")
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
-    abstract fun signInActivity(): SignInActivity
-
+@LargeTest
+@RunWith(AndroidJUnit4.class)
+public class SignInViewTest {
 }

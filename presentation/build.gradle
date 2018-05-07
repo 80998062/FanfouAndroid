@@ -10,7 +10,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "sinyuk.com.fanfou"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -49,9 +49,13 @@ dependencies {
     testImplementation "org.mockito:mockito-core:$mockito_version"
     testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp_version"
     androidTestImplementation "org.mockito:mockito-android:$mockito_version"
+    androidTestImplementation "com.android.support.test:rules:$runner_version"
     androidTestImplementation "com.android.support.test:runner:$runner_version"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
     implementation "android.arch.paging:runtime:$paging_version"
+    // UI
+    implementation 'cn.dreamtobe.kpswitch:library:1.6.0'
 
     // network
     implementation "com.google.code.gson:gson:$gson_version"
@@ -69,4 +73,9 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$dagger_version"
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
     implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta5'
+    implementation("com.github.hotchemi:permissionsdispatcher:$permission_version") {
+        // if you don't use android.app.Fragment you can exclude support for them
+        exclude module: "support-v13"
+    }
+    kapt "com.github.hotchemi:permissionsdispatcher-processor:$permission_version"
 }

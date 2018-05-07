@@ -14,13 +14,16 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.ui.home
+package sinyuk.com.fanfou.ui.sign
 
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.ViewTreeObserver
+import cn.dreamtobe.kpswitch.util.KeyboardUtil
+import kotlinx.android.synthetic.main.signin_activity.*
 import sinyuk.com.fanfou.R
 import sinyuk.com.fanfou.ext.addFragment
 import sinyuk.com.fanfou.ui.base.AbstractActivity
-import sinyuk.com.fanfou.ui.player.PlayerView
 
 /**
  * Created by sinyuk on 2018/5/4.
@@ -35,15 +38,37 @@ import sinyuk.com.fanfou.ui.player.PlayerView
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-class HomeActivity : AbstractActivity() {
+class SignInActivity : AbstractActivity() {
+
+    private var signInView: SignInView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.home_activity)
+        setContentView(R.layout.signin_activity)
+        signInView = SignInView().apply {
+            addFragment(R.id.fragment_container, this, false)
+        }
         setup()
     }
 
+    lateinit var keyboardListener: ViewTreeObserver.OnGlobalLayoutListener
+
     private fun setup() {
-        addFragment(R.id.fragment_container, PlayerView(), false)
+        keyboardListener = KeyboardUtil.attach(this, panel) {
+            if (!it) signInView?.clearFocus()
+        }
+
+        nestedScrollView.setOnTouchListener { v, event ->
+            if (event?.action == MotionEvent.ACTION_CANCEL || event?.action == MotionEvent.ACTION_UP) {
+                KeyboardUtil.hideKeyboard(v)
+            }
+            false
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        KeyboardUtil.detach(this, keyboardListener)
     }
 
 }

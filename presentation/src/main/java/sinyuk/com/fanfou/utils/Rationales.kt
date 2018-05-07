@@ -14,16 +14,17 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.ui.home
+package sinyuk.com.fanfou.utils
 
-import android.os.Bundle
+import android.content.Context
+import android.support.annotation.StringRes
+import android.support.v7.app.AlertDialog
+import permissions.dispatcher.PermissionRequest
 import sinyuk.com.fanfou.R
-import sinyuk.com.fanfou.ext.addFragment
-import sinyuk.com.fanfou.ui.base.AbstractActivity
-import sinyuk.com.fanfou.ui.player.PlayerView
+
 
 /**
- * Created by sinyuk on 2018/5/4.
+ * Created by sinyuk on 2018/5/7.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -35,15 +36,11 @@ import sinyuk.com.fanfou.ui.player.PlayerView
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-class HomeActivity : AbstractActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.home_activity)
-        setup()
-    }
 
-    private fun setup() {
-        addFragment(R.id.fragment_container, PlayerView(), false)
-    }
-
+fun showRationaleDialog(context: Context, @StringRes resId: Int, request: PermissionRequest) {
+    AlertDialog.Builder(context)
+            .setMessage(resId)
+            .setPositiveButton(R.string.button_allow, { _, _ -> request.proceed() })
+            .setNegativeButton(R.string.button_deny, { _, _ -> request.cancel() })
+            .show()
 }

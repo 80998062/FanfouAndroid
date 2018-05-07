@@ -110,12 +110,22 @@ class AuthKtTest {
         val promise = getValue(mockTask.liveData)
         assert(promise.states == States.ERROR)
         assert(promise.data == null)
-        assert(promise.message == "xAuth login error 登录失败，Email或密码错误 username=80998062@qq.com")
+        assert(promise.message == "登录失败，Email或密码错误 username=80998062@qq.com")
     }
 
     @Test
     @Throws(IOException::class)
     fun run3() {
+        val mockTask = AccessTokenTask("", "", { mockFailed2(it) })
+        mockTask.run()
+        val promise = getValue(mockTask.liveData)
+        assert(promise.states == States.ERROR)
+        assert(promise.data == null)
+        assert(promise.message == "没有这个用户 username=Sinyuk")
+    }
+    @Test
+    @Throws(IOException::class)
+    fun run4() {
         val mockTask = AccessTokenTask("", "", { mockException(it) })
         mockTask.run()
         val promise = getValue(mockTask.liveData)
@@ -151,6 +161,16 @@ class AuthKtTest {
             .request(Request.Builder().url(url).build())
             .body(ResponseBody.create(mediaType,
                     loadResponseFromAssets(this.javaClass, "access_token_failed.xml")))
+            .protocol(Protocol.HTTP_1_1)
+            .message("Failed")
+            .code(401)
+            .build()
+
+    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+    private fun mockFailed2(url: HttpUrl) = Response.Builder()
+            .request(Request.Builder().url(url).build())
+            .body(ResponseBody.create(mediaType,
+                    loadResponseFromAssets(this.javaClass, "access_token_failed2.xml")))
             .protocol(Protocol.HTTP_1_1)
             .message("Failed")
             .code(401)

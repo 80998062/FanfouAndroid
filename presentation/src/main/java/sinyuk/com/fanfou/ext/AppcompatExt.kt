@@ -40,15 +40,21 @@ fun <T : ViewModel> Fragment.obtainViewModel(viewModelFactory: ViewModelProvider
         ViewModelProviders.of(this, viewModelFactory).get(viewModelClass)
 
 fun AppCompatActivity.addFragment(@IdRes res: Int, fragment: Fragment, addToBackStack: Boolean = false) {
-    if (addToBackStack) {
-        supportFragmentManager.beginTransaction()
-                .add(res, fragment, fragment.javaClass.simpleName)
-                .addToBackStack(fragment.javaClass.simpleName)
-                .commit()
+    val target = supportFragmentManager.findFragmentByTag(fragment.javaClass.simpleName)
+    if (target != null) {
+        supportFragmentManager.beginTransaction().show(target).commit()
     } else {
-        supportFragmentManager.beginTransaction()
-                .add(res, fragment, fragment.javaClass.simpleName)
-                .disallowAddToBackStack()
-                .commit()
+        if (addToBackStack) {
+            supportFragmentManager.beginTransaction()
+                    .add(res, fragment, fragment.javaClass.simpleName)
+                    .addToBackStack(fragment.javaClass.simpleName)
+                    .commit()
+        } else {
+            supportFragmentManager.beginTransaction()
+                    .add(res, fragment, fragment.javaClass.simpleName)
+                    .disallowAddToBackStack()
+                    .commit()
+        }
     }
+
 }

@@ -7,6 +7,7 @@ import okhttp3.mockwebserver.MockWebServer
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import sinyuk.com.fanfou.domain.api.adapters.LiveDataCallAdapterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -27,12 +28,13 @@ class TestApiModule constructor(private val mockWebServer: MockWebServer) {
     @Suppress("unused")
     @Provides
     @Singleton
+    @Named("test")
     fun provideEndpoint() = Endpoint("/")
 
     @Suppress("unused")
     @Provides
     @Singleton
-    fun provideRestAPI(endpoint: Endpoint, gson: Gson): RestAPI = Retrofit.Builder()
+    fun provideRestAPI(@Named("test") endpoint: Endpoint, gson: Gson): RestAPI = Retrofit.Builder()
             .baseUrl(mockWebServer.url(endpoint.baseUrl))
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(LiveDataCallAdapterFactory())

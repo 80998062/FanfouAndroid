@@ -1,9 +1,15 @@
 <resources>
     <string name="app_name">Fanfou</string>
     <string name="label_home">主页</string>
+    <string name="label_signin">登入</string>
     <string name="action_login">登录</string>
     <string name="hint_enter_account">输入你的账号</string>
     <string name="action_next">下一步</string>
     <string name="action_confirm">确认</string>
     <string name="hint_enter_password">输入你的密码</string>
+    <string name="permission_network_state">我们想要监测你的网络连接状态,用于节约网络资源和加快页面加载</string>
+    <string name="button_allow">好的</string>
+    <string name="button_deny">拒绝</string>
+    <string name="permission_neverask">请求被拒绝可能会影响应用的正常使用,不过之后你还可以在系统设置→应用中开启</string>
+    <string name="hint_login_failed">登入失败</string>
 </resources>

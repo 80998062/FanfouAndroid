@@ -14,16 +14,15 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.ui.home
+package sinyuk.com.fanfou.ui.player
 
 import android.os.Bundle
+import android.view.View
 import sinyuk.com.fanfou.R
-import sinyuk.com.fanfou.ext.addFragment
-import sinyuk.com.fanfou.ui.base.AbstractActivity
-import sinyuk.com.fanfou.ui.player.PlayerView
+import sinyuk.com.fanfou.ui.base.AbstractFragment
 
 /**
- * Created by sinyuk on 2018/5/4.
+ * Created by sinyuk on 2018/5/7.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -35,15 +34,10 @@ import sinyuk.com.fanfou.ui.player.PlayerView
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-class HomeActivity : AbstractActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.home_activity)
-        setup()
-    }
+class PlayerView:AbstractFragment() {
+    override fun layoutId() = R.layout.player_view
 
-    private fun setup() {
-        addFragment(R.id.fragment_container, PlayerView(), false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
     }
-
 }

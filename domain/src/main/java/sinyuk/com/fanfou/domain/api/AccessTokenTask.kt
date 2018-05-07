@@ -1,5 +1,6 @@
 package sinyuk.com.fanfou.domain.api
 
+import android.annotation.SuppressLint
 import android.arch.lifecycle.MutableLiveData
 import android.support.annotation.VisibleForTesting
 import okhttp3.HttpUrl
@@ -12,6 +13,7 @@ import java.io.IOException
 import java.io.InterruptedIOException
 import java.nio.charset.Charset
 import java.util.*
+import java.util.regex.Pattern
 import javax.inject.Inject
 import javax.inject.Singleton
 import javax.xml.parsers.DocumentBuilderFactory
@@ -81,15 +83,29 @@ class AccessTokenTask @Inject constructor(
     }
 
 
-    private fun parseFailedResponse(text: String?): String {
-        if (text == null) return SERVER_ERROR
+    /**
+     * 匹配中文
+     */
+    private val abs: Pattern = Pattern.compile("(\\d+)\u4e2a\u6587\u4ef6")
+
+    @SuppressLint("LogNotTimber")
+    private fun parseFailedResponse(xml: String?): String {
+        if (xml == null) return SERVER_ERROR
+        val text = xml.replace("&", "&amp;")
         val factory = DocumentBuilderFactory.newInstance()
         val builder = factory.newDocumentBuilder()
         try {
             val stream = text.byteInputStream(Charset.forName("UTF-8"))
             val doc = builder.parse(stream)
             val errors = doc.getElementsByTagName("error")
-            if (errors.length > 0) return errors.item(0).textContent
+            if (errors.length > 0) {
+                val input = errors.item(0).textContent
+                return if (input.contains("xAuth login error ", true)) {
+                    input.replace("xAuth login error ", "")
+                } else {
+                    input
+                }
+            }
         } catch (e: IOException) {
             e.printStackTrace()
         } catch (e: SAXException) {

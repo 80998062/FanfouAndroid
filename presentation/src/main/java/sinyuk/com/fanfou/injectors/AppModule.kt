@@ -16,9 +16,7 @@
 
 package sinyuk.com.fanfou.injectors
 
-import android.app.Application
 import android.content.Context
-import android.content.SharedPreferences
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -26,6 +24,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import sinyuk.com.fanfou.App
+import sinyuk.com.fanfou.domain.AppExecutors
 import sinyuk.com.fanfou.domain.api.ApiModule
 import sinyuk.com.fanfou.domain.api.Endpoint
 import sinyuk.com.fanfou.domain.api.RestAPI
@@ -52,7 +51,7 @@ class AppModule constructor(private val app: App) {
     @Suppress("unused")
     @Provides
     @Singleton
-    fun provideApplication(): Application = app
+    fun provideApp(): App = app
 
     @Suppress("unused")
     @Provides
@@ -62,7 +61,7 @@ class AppModule constructor(private val app: App) {
     @Suppress("unused")
     @Provides
     @Singleton
-    fun provideOkHttp(app: App, preferences: SharedPreferences) = initOkHttpClient(app, preferences)
+    fun provideOkHttp(app: App) = initOkHttpClient(app)
 
 
     @Suppress("unused")
@@ -76,4 +75,10 @@ class AppModule constructor(private val app: App) {
                     .client(okHttpClient)
                     .build()
                     .create(RestAPI::class.java)!!
+
+
+    @Suppress("unused")
+    @Provides
+    @Singleton
+    fun provideExecutors() = AppExecutors()
 }

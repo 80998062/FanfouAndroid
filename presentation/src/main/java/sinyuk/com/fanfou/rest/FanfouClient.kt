@@ -14,6 +14,7 @@ import sinyuk.com.fanfou.BuildConfig.OAUTH_VERSION_VALUE
 import sinyuk.com.fanfou.TimberDelegate
 import sinyuk.com.fanfou.domain.api.AccessTokenTask
 import sinyuk.com.fanfou.domain.isOnline
+import sinyuk.com.fanfou.domain.utils.UrlEscapeUtils
 import sinyuk.com.fanfou.prefs.ACCESS_TOKEN
 import sinyuk.com.fanfou.rest.FanfouAuthenticator.Companion.OAUTH_ACCESS_TOKEN
 import sinyuk.com.fanfou.rest.FanfouAuthenticator.Companion.OAUTH_CONSUMER_KEY
@@ -47,7 +48,7 @@ import javax.crypto.spec.SecretKeySpec
 └──────────────────────────────────────────────────────────────────┘
  */
 
-fun initOkHttpClient(application: Context, preferences: SharedPreferences): OkHttpClient {
+fun initOkHttpClient(application: Context): OkHttpClient {
     val timeout: Long = 30
     val max = (1024 * 1024 * 10).toLong() // 10 MiB
     val logging = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger {
@@ -55,7 +56,6 @@ fun initOkHttpClient(application: Context, preferences: SharedPreferences): OkHt
     })
 
     val builder = OkHttpClient.Builder()
-            .authenticator(FanfouAuthenticator(preferences))
     builder.retryOnConnectionFailure(false)
     builder.connectTimeout(timeout, TimeUnit.SECONDS)
             .writeTimeout(timeout, TimeUnit.SECONDS)
@@ -68,15 +68,15 @@ fun initOkHttpClient(application: Context, preferences: SharedPreferences): OkHt
     builder.addNetworkInterceptor(RewriteCacheControlInterceptor(application))
 
 
-    if (BuildConfig.DEBUG) {
+    logging.level = if (BuildConfig.DEBUG) {
         builder.addNetworkInterceptor(StethoInterceptor())
+        HttpLoggingInterceptor.Level.BODY
     } else {
-        logging.level = HttpLoggingInterceptor.Level.HEADERS
-        builder.addNetworkInterceptor(logging)
+        HttpLoggingInterceptor.Level.HEADERS
     }
+    builder.addNetworkInterceptor(logging)
     return builder.build()
 }
-
 
 /**
  * interceptor that only work with local cache.

@@ -1,0 +1,32 @@
+<!--
+  ~   Copyright 2081 Sinyuk
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:width="24dp"
+    android:height="24dp"
+    android:autoMirrored="true"
+    android:viewportHeight="1024"
+    android:viewportWidth="1024"
+    tools:targetApi="kitkat"
+    tools:ignore="VectorRaster">
+    <path
+        android:fillColor="@color/colorAccent"
+        android:pathData="M812.9,528.9C812.16,530.94 730.82,736 504.16,736c-225.44,0 -305.25,-198.24 -309.7,-209.38 -3.2,-6.4 -2.94,-21.28 1.38,-29.92C196.74,494.66 287.78,288 504.16,288c215.3,0 304.38,199.78 309.25,210.75 3.3,6.18 3.55,21.34 -0.51,30.14m58.11,-57.89C866.72,460.93 762.24,224 504.16,224 246.08,224 141.34,461.44 137.92,469.57c-12.7,24.9 -13.06,60.9 -1.98,82.75 0.96,2.5 98.05,247.68 368.22,247.68 270.14,0 367.55,-245.7 367.55,-246.02 11.71,-24.83 10.91,-61.6 -0.7,-82.98" />
+    <path
+        android:fillColor="@color/colorAccent"
+        android:pathData="M568.16,551.97a64.06,64.06 0,0 1,-64 64.03c-35.3,0 -64,-28.7 -64,-64.03v-71.9c0,-35.33 28.7,-64.06 64,-64.06s64,28.74 64,64.06v71.9zM504.16,352c-70.59,0 -128,57.44 -128,128.06v71.9a128.16,128.16 0,0 0,128 128.03c70.59,0 128,-57.44 128,-128.03v-71.9a128.16,128.16 0,0 0,-128 -128.06z" />
+</vector>

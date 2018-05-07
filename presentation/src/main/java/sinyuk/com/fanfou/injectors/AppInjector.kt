@@ -33,11 +33,11 @@ import sinyuk.com.fanfou.App
 object AppInjector {
 
     fun init(app: App) {
-//        DaggerAppComponent.builder().appModule(AppModule(app)).build().inject(app)
+        DaggerAppComponent.builder().appModule(AppModule(app)).build().inject(app)
 
         app.registerActivityLifecycleCallbacks(
                 object : Application.ActivityLifecycleCallbacks {
-                    override fun onActivityCreated(activity: Activity, b: Bundle) {
+                    override fun onActivityCreated(activity: Activity, b: Bundle?) {
                         handleFragments(activity)
                     }
 
@@ -57,7 +57,7 @@ object AppInjector {
 
                     }
 
-                    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
+                    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {
 
                     }
 
@@ -73,9 +73,7 @@ object AppInjector {
                     .registerFragmentLifecycleCallbacks(object : FragmentManager.FragmentLifecycleCallbacks() {
                         override fun onFragmentCreated(fm: FragmentManager?, f: Fragment?,
                                                        savedInstanceState: Bundle?) {
-                            if (f is Injectable) {
-                                AndroidSupportInjection.inject(f)
-                            }
+                            if (f is Injectable) AndroidSupportInjection.inject(f)
                         }
                     }, true)
         }
