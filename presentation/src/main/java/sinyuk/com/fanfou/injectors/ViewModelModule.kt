@@ -22,6 +22,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 import sinyuk.com.fanfou.ui.FanfouViewModelFactory
+import sinyuk.com.fanfou.ui.photo.PhotoViewModel
+import sinyuk.com.fanfou.ui.player.PlayerViewModel
 import sinyuk.com.fanfou.ui.sign.SignViewModel
 
 /**
@@ -44,6 +46,19 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SignViewModel::class)
     abstract fun signViewModel(viewModel: SignViewModel): ViewModel
+
+    @Suppress("unused")
+    @Binds
+    @IntoMap
+    @ViewModelKey(PlayerViewModel::class)
+    abstract fun playerViewModel(viewModel: PlayerViewModel): ViewModel
+
+
+    @Suppress("unused")
+    @Binds
+    @IntoMap
+    @ViewModelKey(PhotoViewModel::class)
+    abstract fun photoViewModel(viewModel: PhotoViewModel): ViewModel
 
     @Suppress("unused")
     @Binds

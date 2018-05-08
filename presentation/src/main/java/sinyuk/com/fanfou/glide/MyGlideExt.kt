@@ -14,16 +14,18 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.ui.player
 
-import android.os.Bundle
-import sinyuk.com.fanfou.R
-import sinyuk.com.fanfou.domain.data.Player
-import sinyuk.com.fanfou.injectors.Injectable
-import sinyuk.com.fanfou.ui.base.AbstractFragment
+package sinyuk.com.fanfou.glide
+
+import android.annotation.SuppressLint
+import android.content.Context
+import com.bumptech.glide.annotation.GlideExtension
+import com.bumptech.glide.annotation.GlideOption
+import com.bumptech.glide.request.RequestOptions
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 
 /**
- * Created by sinyuk on 2018/5/7.
+ * Created by sinyuk on 2018/5/8.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -35,21 +37,36 @@ import sinyuk.com.fanfou.ui.base.AbstractFragment
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-class PlayerView : AbstractFragment(), Injectable {
+@Suppress("unused")
+@GlideExtension
+object MyGlideExt {
+    @SuppressLint("CheckResult")
+    @GlideOption
+    @JvmStatic
+    fun avatar(options: RequestOptions) = options.optionalCircleCrop()
 
-    companion object {
-        fun newInstance(uniqueId: String? = null, player: Player? = null) = PlayerView().apply {
-            arguments = Bundle().apply {
-                uniqueId?.let { this.putString("uniqueId", it) }
-                player?.let { this.putParcelable("player", it) }
-            }
-        }
+
+    @SuppressLint("CheckResult")
+    @GlideOption
+    @JvmStatic
+    fun thumb(options: RequestOptions, context: Context) =
+            options.centerCrop()
+                    .apply(RequestOptions.bitmapTransform(
+                            RoundedCornersTransformation(dp2px(context, 3f), 0)))
+
+
+    @SuppressLint("CheckResult")
+    @GlideOption
+    @JvmStatic
+    fun image(options: RequestOptions, context: Context) =
+            options.centerCrop()
+                    .apply(RequestOptions.bitmapTransform(
+                            RoundedCornersTransformation(dp2px(context, 6f), 0)))
+
+
+    private fun dp2px(context: Context, dpValue: Float): Int {
+        val scale = context.resources.displayMetrics.density
+        return (dpValue * scale + 0.5f).toInt()
     }
 
-    override fun layoutId() = R.layout.player_view
-
-
-    private fun renderPlayer(player: Player?) {
-
-    }
 }

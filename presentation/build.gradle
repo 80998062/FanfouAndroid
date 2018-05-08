@@ -1,3 +1,19 @@
+/*
+ *   Copyright 2081 Sinyuk
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
 apply plugin: "com.android.application"
 
 apply plugin: "kotlin-android"
@@ -40,6 +56,9 @@ android {
 }
 
 dependencies {
+    implementation project(':domain')
+
+    //
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
@@ -54,8 +73,10 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
     implementation "android.arch.paging:runtime:$paging_version"
+
     // UI
     implementation 'cn.dreamtobe.kpswitch:library:1.6.0'
+    implementation 'com.makeramen:roundedimageview:2.3.0'
 
     // network
     implementation "com.google.code.gson:gson:$gson_version"
@@ -66,7 +87,6 @@ dependencies {
     implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
     implementation "android.arch.paging:runtime:$paging_version"
     implementation 'com.jakewharton.timber:timber:4.7.0'
-    implementation project(':domain')
     implementation "com.google.dagger:dagger:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
     implementation "com.google.dagger:dagger-android:$dagger_version"
@@ -78,4 +98,16 @@ dependencies {
         exclude module: "support-v13"
     }
     kapt "com.github.hotchemi:permissionsdispatcher-processor:$permission_version"
+
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    implementation "com.github.bumptech.glide:annotations:$glide_version"
+    implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
+    implementation("com.github.bumptech.glide:recyclerview-integration:$glide_version") {
+        // Excludes the support library because it's already included by Glide.
+        transitive = false
+    }
+    //noinspection GradleDynamicVersion
+    implementation "jp.wasabeef:glide-transformations:3.3+"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
+
 }

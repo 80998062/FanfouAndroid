@@ -14,16 +14,19 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.ui.player
+package sinyuk.com.fanfou.glide
 
-import android.os.Bundle
-import sinyuk.com.fanfou.R
-import sinyuk.com.fanfou.domain.data.Player
-import sinyuk.com.fanfou.injectors.Injectable
-import sinyuk.com.fanfou.ui.base.AbstractFragment
+import android.content.Context
+import com.bumptech.glide.Glide
+import com.bumptech.glide.Registry
+import com.bumptech.glide.annotation.GlideModule
+import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.module.LibraryGlideModule
+import java.io.InputStream
 
 /**
- * Created by sinyuk on 2018/5/7.
+ * Created by sinyuk on 2018/5/8.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -35,21 +38,17 @@ import sinyuk.com.fanfou.ui.base.AbstractFragment
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-class PlayerView : AbstractFragment(), Injectable {
-
-    companion object {
-        fun newInstance(uniqueId: String? = null, player: Player? = null) = PlayerView().apply {
-            arguments = Bundle().apply {
-                uniqueId?.let { this.putString("uniqueId", it) }
-                player?.let { this.putParcelable("player", it) }
-            }
-        }
-    }
-
-    override fun layoutId() = R.layout.player_view
-
-
-    private fun renderPlayer(player: Player?) {
-
+/**
+ * Registers OkHttp related classes via Glide's annotation processor.
+ *
+ * <p>For Applications that depend on this library and include an
+ * { @link AppGlideModule } and Glide's annotation processor, this class
+ * will be automatically included.
+ */
+@Suppress("unused")
+@GlideModule
+class OkHttpLibraryGlideModule : LibraryGlideModule() {
+    override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
+        registry.replace(GlideUrl::class.java, InputStream::class.java, OkHttpUrlLoader.Factory())
     }
 }

@@ -16,14 +16,11 @@
 
 package sinyuk.com.fanfou.ui.player
 
-import android.os.Bundle
-import sinyuk.com.fanfou.R
-import sinyuk.com.fanfou.domain.data.Player
-import sinyuk.com.fanfou.injectors.Injectable
-import sinyuk.com.fanfou.ui.base.AbstractFragment
+import android.arch.lifecycle.ViewModel
+import javax.inject.Inject
 
 /**
- * Created by sinyuk on 2018/5/7.
+ * Created by sinyuk on 2018/5/8.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -35,21 +32,6 @@ import sinyuk.com.fanfou.ui.base.AbstractFragment
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-class PlayerView : AbstractFragment(), Injectable {
+class PlayerViewModel @Inject constructor() : ViewModel() {
 
-    companion object {
-        fun newInstance(uniqueId: String? = null, player: Player? = null) = PlayerView().apply {
-            arguments = Bundle().apply {
-                uniqueId?.let { this.putString("uniqueId", it) }
-                player?.let { this.putParcelable("player", it) }
-            }
-        }
-    }
-
-    override fun layoutId() = R.layout.player_view
-
-
-    private fun renderPlayer(player: Player?) {
-
-    }
 }
