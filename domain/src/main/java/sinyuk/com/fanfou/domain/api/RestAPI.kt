@@ -22,10 +22,10 @@
 package sinyuk.com.fanfou.domain.api
 
 import android.arch.lifecycle.LiveData
-import android.support.annotation.VisibleForTesting
-import com.google.gson.annotations.SerializedName
 import retrofit2.Call
-import retrofit2.http.*
+import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Query
 import sinyuk.com.fanfou.domain.data.Player
 import sinyuk.com.fanfou.domain.data.Status
 
@@ -39,7 +39,6 @@ interface RestAPI {
         const val STATUS_ONE_PAGE = 50
     }
 
-    @VisibleForTesting
     @GET("statuses/{path}.json")
     fun statuses_from_path(@Path("path") path: String,
                            @Query("count") count: Int = STATUS_ONE_PAGE,
@@ -50,5 +49,14 @@ interface RestAPI {
 
     @GET("account/verify_credentials.json")
     fun verify_credentials(): LiveData<ApiResponse<Player>>
+
+
+    @GET("/statuses/user_timeline.json")
+    fun fetch_latest_status(@Query("id") id: String,
+                            @Query("count") count: Int = 1): Call<List<Status>>
+
+    @GET("users/show.json?format=html")
+    @Deprecated("unused")
+    fun show_user(@Query("id") uniqueId: String): LiveData<ApiResponse<Player>>
 
 }

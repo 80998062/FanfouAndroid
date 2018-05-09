@@ -28,5 +28,6 @@
     <string name="button_deny">拒绝</string>
     <string name="permission_neverask">请求被拒绝可能会影响应用的正常使用,不过之后你还可以在系统设置→应用中开启</string>
     <string name="hint_login_failed">登入失败</string>
-    <string name="state_following">关注中</string>
+    <string name="label_following">关注中</string>
+    <string name="label_follower">被关注</string>
 </resources>

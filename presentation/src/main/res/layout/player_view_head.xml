@@ -40,7 +40,7 @@
         android:layout_marginEnd="@dimen/action_button_size"
         android:paddingEnd="@dimen/gap_16"
         android:paddingStart="@dimen/gap_16"
-        android:text="@string/state_following"
+        android:text="@string/label_following"
         app:layout_constraintBottom_toBottomOf="@+id/avatar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/avatar"

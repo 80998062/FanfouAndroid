@@ -39,7 +39,7 @@ import javax.xml.parsers.ParserConfigurationException
 class AccessTokenTask @Inject constructor(
         account: String,
         password: String,
-        private val preferences: SharedPreferences,
+        private val preferences: SharedPreferences?,
         private val execute: (url: HttpUrl) -> Response?) : Runnable {
 
     @Suppress("MemberVisibilityCanBePrivate")
@@ -78,11 +78,9 @@ class AccessTokenTask @Inject constructor(
             if (accessToken == null) {
                 liveData.postValue(Promise.error(INTERNAL_ERROR, null))
             } else {
-                preferences.edit()
-                        .putStringSet(ACCESS_TOKEN, mutableSetOf(accessToken.token,
-                                accessToken.secret,
-                                accessToken.updatedAt?.toString()))
-                        .apply()
+                preferences?.edit()
+                        ?.putStringSet(ACCESS_TOKEN, mutableSetOf(accessToken.token, accessToken.secret))
+                        ?.apply()
                 liveData.postValue(Promise.success(accessToken))
             }
         } else {

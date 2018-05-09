@@ -78,6 +78,8 @@ class SignInView : AbstractFragment(), Injectable {
         onFormChanged()
         togglePasswordVisibility(false)
 
+        skip.setOnClickListener { start(HomeActivity::class) }
+
         account.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 onFormChanged()

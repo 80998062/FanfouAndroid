@@ -24,10 +24,8 @@ import dagger.Provides
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import sinyuk.com.fanfou.App
 import sinyuk.com.fanfou.domain.ACCESS_TOKEN
-import sinyuk.com.fanfou.domain.AppExecutors
-import sinyuk.com.fanfou.domain.TYPE_GLOBAL
+import sinyuk.com.fanfou.domain.TYPE_ANDROID_TEST
 import sinyuk.com.fanfou.domain.api.ApiModule
 import sinyuk.com.fanfou.domain.api.Endpoint
 import sinyuk.com.fanfou.domain.api.RestAPI
@@ -38,7 +36,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 /**
- * Created by sinyuk on 2018/5/4.
+ * Created by sinyuk on 2018/5/9.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -50,37 +48,41 @@ import javax.inject.Singleton
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-@Module(includes = [(ViewModelModule::class), (ApiModule::class)])
-class AppModule constructor(private val app: App) {
+@Module(includes = [(ApiModule::class)])
+class AndroidTestAppModule constructor(private val app: Context) {
     @Suppress("unused")
     @Provides
     @Singleton
-    fun provideApp(): App = app
+    fun provideApp(): Context = app
 
     @Suppress("unused")
     @Provides
     @Singleton
-    @Named(TYPE_GLOBAL)
-    fun providePreferences() = app.getSharedPreferences(TYPE_GLOBAL, Context.MODE_PRIVATE)!!
-
+    @Named(TYPE_ANDROID_TEST)
+    fun providePreferences() = app.getSharedPreferences(TYPE_ANDROID_TEST, Context.MODE_PRIVATE)!!
 
     @Suppress("unused")
     @Provides
     @Singleton
-    fun provideFanfouAuthenticator(@Named(TYPE_GLOBAL) preferences: SharedPreferences) =
+    @Named(TYPE_ANDROID_TEST)
+    fun provideFanfouAuthenticator(@Named(TYPE_ANDROID_TEST) preferences: SharedPreferences) =
             FanfouAuthenticator(preferences)
 
     @Suppress("unused")
     @Provides
     @Singleton
-    fun provideOkHttp(a: App, @Named(TYPE_GLOBAL) sp: SharedPreferences, fa: FanfouAuthenticator) =
+    @Named(TYPE_ANDROID_TEST)
+    fun provideOkHttp(a: Context,
+                      @Named(TYPE_ANDROID_TEST) sp: SharedPreferences,
+                      @Named(TYPE_ANDROID_TEST) fa: FanfouAuthenticator) =
             initOkHttpClient(a, sp.getStringSet(ACCESS_TOKEN, null), fa)
 
 
     @Suppress("unused")
     @Provides
     @Singleton
-    fun provideRestAPI(okHttpClient: OkHttpClient, gson: Gson, endpoint: Endpoint) =
+    @Named(TYPE_ANDROID_TEST)
+    fun provideRestAPI(@Named(TYPE_ANDROID_TEST) okHttpClient: OkHttpClient, gson: Gson, endpoint: Endpoint) =
             Retrofit.Builder()
                     .baseUrl(endpoint.baseUrl)
                     .addConverterFactory(GsonConverterFactory.create(gson))
@@ -88,10 +90,4 @@ class AppModule constructor(private val app: App) {
                     .client(okHttpClient)
                     .build()
                     .create(RestAPI::class.java)!!
-
-
-    @Suppress("unused")
-    @Provides
-    @Singleton
-    fun provideExecutors() = AppExecutors()
 }

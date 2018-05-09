@@ -84,7 +84,7 @@ class AuthKtTest {
     @Test
     @Throws(IOException::class)
     fun run() {
-        val mockTask = AccessTokenTask("", "", { mockSucceed(it) })
+        val mockTask = AccessTokenTask("", "", null, { mockSucceed(it) })
         mockTask.run()
         val promise = getValue(mockTask.liveData)
         assert(promise.states == States.SUCCESS)
@@ -94,7 +94,7 @@ class AuthKtTest {
     @Test
     @Throws(IOException::class)
     fun run1() {
-        val mockTask = AccessTokenTask("", "", { mockEmptyBody(it) })
+        val mockTask = AccessTokenTask("", "", null, { mockEmptyBody(it) })
         mockTask.run()
         val promise = getValue(mockTask.liveData)
         assert(promise.states == States.ERROR)
@@ -105,7 +105,7 @@ class AuthKtTest {
     @Test
     @Throws(IOException::class)
     fun run2() {
-        val mockTask = AccessTokenTask("", "", { mockFailed(it) })
+        val mockTask = AccessTokenTask("", "", null, { mockFailed(it) })
         mockTask.run()
         val promise = getValue(mockTask.liveData)
         assert(promise.states == States.ERROR)
@@ -116,17 +116,18 @@ class AuthKtTest {
     @Test
     @Throws(IOException::class)
     fun run3() {
-        val mockTask = AccessTokenTask("", "", { mockFailed2(it) })
+        val mockTask = AccessTokenTask("", "", null, { mockFailed2(it) })
         mockTask.run()
         val promise = getValue(mockTask.liveData)
         assert(promise.states == States.ERROR)
         assert(promise.data == null)
         assert(promise.message == "没有这个用户 username=Sinyuk")
     }
+
     @Test
     @Throws(IOException::class)
     fun run4() {
-        val mockTask = AccessTokenTask("", "", { mockException(it) })
+        val mockTask = AccessTokenTask("", "", null, { mockException(it) })
         mockTask.run()
         val promise = getValue(mockTask.liveData)
         assert(promise.states == States.ERROR)
@@ -137,7 +138,7 @@ class AuthKtTest {
     private val mediaType = MediaType.parse("application/json")
 
     @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-    private fun mockSucceed(url: HttpUrl) = Response.Builder()
+    private fun mockSucceed(url: HttpUrl?) = Response.Builder()
             .request(Request.Builder().url(url).build())
             .body(ResponseBody.create(mediaType,
                     loadResponseFromAssets(this.javaClass, "access_token_succeed.txt")))

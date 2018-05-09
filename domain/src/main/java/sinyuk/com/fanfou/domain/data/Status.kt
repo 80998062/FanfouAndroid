@@ -22,9 +22,7 @@ package sinyuk.com.fanfou.domain.data
 
 import android.arch.persistence.room.*
 import android.arch.persistence.room.ForeignKey.CASCADE
-import android.arch.persistence.room.ForeignKey.SET_NULL
 import android.support.annotation.NonNull
-import android.support.annotation.VisibleForTesting
 import android.support.annotation.WorkerThread
 import com.google.gson.annotations.SerializedName
 import sinyuk.com.fanfou.domain.room.DateConverter
@@ -52,12 +50,12 @@ data class Status @JvmOverloads constructor(
         @SerializedName("text") var text: String? = null,
         @SerializedName("source") var source: String? = null,
         @SerializedName("location") var location: String? = null,
-        @VisibleForTesting @Ignore @SerializedName("user") var player: Player? = null,
+        @Ignore @SerializedName("user") var player: Player? = null,
         @Embedded var author: Author? = null,
         @SerializedName("created_at") var createdAt: Date? = null,
         @SerializedName("favorited") var favorited: Boolean = false,
         @Embedded @SerializedName("photo") var photos: Photos? = null
-) {
+        ) {
     @TypeConverters(DateConverter::class)
     data class Author @JvmOverloads constructor(var screenName: String? = "",
                                                 var profileImageUrl: String? = "",

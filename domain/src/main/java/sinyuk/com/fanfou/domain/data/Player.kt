@@ -57,7 +57,10 @@ data class Player @JvmOverloads constructor(
         @SerializedName("following") var following: Boolean? = false,
         @SerializedName("notifications") var notifications: Boolean? = false,
         @SerializedName("created_at") var createdAt: Date? = null,
-        @SerializedName("profile_background_image_url") var profileBackgroundImageUrl: String? = ""
+        @SerializedName("profile_background_image_url") var profileBackgroundImageUrl: String? = "",
+        @Ignore
+        @SerializedName("status") var status: Status? = null
+
 ) : Parcelable {
     constructor(source: Parcel) : this(
             source.readString(),

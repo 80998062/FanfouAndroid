@@ -71,12 +71,15 @@ dependencies {
     androidTestImplementation "com.android.support.test:rules:$runner_version"
     androidTestImplementation "com.android.support.test:runner:$runner_version"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "com.google.dagger:dagger:$dagger_version"
+    kaptAndroidTest "com.google.dagger:dagger-compiler:$dagger_version"
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
     implementation "android.arch.paging:runtime:$paging_version"
 
     // UI
     implementation 'cn.dreamtobe.kpswitch:library:1.6.0'
     implementation 'com.makeramen:roundedimageview:2.3.0'
+    implementation 'com.github.frank-zhu:pullzoomview:1.0.0'
 
     // network
     implementation "com.google.code.gson:gson:$gson_version"

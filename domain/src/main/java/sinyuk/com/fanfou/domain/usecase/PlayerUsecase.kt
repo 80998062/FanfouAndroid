@@ -14,12 +14,11 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.ui.player
+package sinyuk.com.fanfou.domain.usecase
 
-import android.arch.lifecycle.ViewModel
-import sinyuk.com.fanfou.domain.repo.PlayerRepo
-import sinyuk.com.fanfou.domain.repo.UserRepo
-import javax.inject.Inject
+import android.arch.lifecycle.LiveData
+import sinyuk.com.fanfou.domain.Promise
+import sinyuk.com.fanfou.domain.data.Player
 
 /**
  * Created by sinyuk on 2018/5/8.
@@ -34,8 +33,6 @@ import javax.inject.Inject
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-class PlayerViewModel @Inject constructor(private val playerRepo: PlayerRepo,
-                                          private val userRepo: UserRepo) : ViewModel() {
-    fun fetch(uniqueId: String, forced: Boolean = true) = playerRepo.fetchLatestStatus(uniqueId, forced)
-
+interface PlayerUsecase {
+    fun fetchLatestStatus(uniqueId: String, forcedUpdate: Boolean = true):LiveData<Promise<Player>>
 }

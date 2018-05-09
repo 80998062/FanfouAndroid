@@ -19,6 +19,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import sinyuk.com.fanfou.BuildConfig
 import java.io.IOException
 
 /**
@@ -40,10 +41,6 @@ class FanfouAuthenticatorTest {
     companion object {
         const val accessToken = "1394833-dcb00385a3f550be20880ad428c7917d"
         const val tokenSecret = "6c561874817975548f4c352b78f29ded"
-        const val nonce = "seqCfH4TmcB8MAR1kDUWaBmmDnrSwjR8AAAAAAAAAAA"
-        const val timestamp = "1525403431"
-
-        //    OAuth oauth_consumer_key="ceab0dcd7b9fb9fa2ef5785bcd320e70",oauth_token="1394833-dcb00385a3f550be20880ad428c7917d",oauth_signature_method="HMAC-SHA1",oauth_timestamp="1525403431",oauth_nonce="seqCfH4TmcB8MAR1kDUWaBmmDnrSwjR8AAAAAAAAAAA",oauth_version="1.0",oauth_signature="g6p7veDklDVH2yOWOt%2FrRATLWlo%3D"
     }
 
     private lateinit var mockWebServer: MockWebServer
@@ -61,29 +58,64 @@ class FanfouAuthenticatorTest {
         mockWebServer.shutdown()
     }
 
-
     @Throws(IOException::class)
     @Test
     fun testGenerateCredential() {
         val mockRequest = Request.Builder()
                 .method("GET", null)
-                .url("http://api.fanfou.com/statuses/home_timeline.json")
+                .url("http://api.fanfou.com/statuses/user_timeline.json")
                 .build()
 
         val authorization = generateCredential(
                 token = accessToken,
                 secret = tokenSecret,
                 request = mockRequest,
-                mockNonce = nonce,
-                mockTimestamp = timestamp)!!
+                mockNonce = "1SsCtw5eyFFHigWXMcodkSYmtcZKv9IgSZXFKa7YnfA",
+                mockTimestamp = "1525847764")!!
 
         assert(authorization.startsWith("OAuth", false))
         val index = authorization.indexOf("oauth_signature", 0, false)
         assert(index > 0)
         val sub = authorization.substring(index)
-        assert(sub.startsWith("oauth_signature=\"g6p7veDklDVH2yOWOt%2FrRATLWlo%3D\"", false))
+        println(sub)
+        assert(sub.startsWith("oauth_signature=\"x08ZzNd6zUOio5M7cPENoUfg%2FZo%3D\"", false))
     }
 
+
+    @Throws(IOException::class)
+    @Test
+    fun testGenerateCredential2() {
+        val mockRequest = Request.Builder()
+                .method("GET", null)
+                .url("http://api.fanfou.com/statuses/user_timeline.json?id=~lwumOR8xxOI&count=1")
+                .build()
+
+        val authorization = generateCredential(
+                token = accessToken,
+                secret = tokenSecret,
+                request = mockRequest,
+                mockNonce = "1SsCtw5eyFFHigWXMcodkSYmtcZKv9IgSZXFKa7YnfA",
+                mockTimestamp = "1525847764")!!
+
+        assert(authorization.startsWith("OAuth", false))
+        val index = authorization.indexOf("oauth_signature", 0, false)
+        assert(index > 0)
+        val sub = authorization.substring(index)
+        println(sub)
+        assert(sub.startsWith("oauth_signature=\"JXM5eJR5xEixHJIQrmxSht3qC6E%3D\"", false))
+    }
+
+
+    @Throws(IOException::class)
+    @Test
+    fun generateHmacSha1Key() {
+        // timestamp: 1525846230
+
+        val baseString = "GET&http%3A%2F%2Fapi.fanfou.com%2Fstatuses%2Fuser_timeline.json&count%3D1%26id%3D~lwumOR8xxOI%26oauth_consumer_key%3Dceab0dcd7b9fb9fa2ef5785bcd320e70%26oauth_nonce%3D1SsCtw5eyFFHigWXMcodkSYmtcZKv9IgSZXFKa7YnfA%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D1525846815%26oauth_token%3D1394833-dcb00385a3f550be20880ad428c7917d%26oauth_version%3D1.0"
+        val key = BuildConfig.CONSUMER_SECRET + "&" + tokenSecret
+        val output = "sO3i8EveDf7Jr8qJSavmxnKWoOw="
+        assert(signature(baseString, key) == output)
+    }
 
     @Throws(IOException::class)
     @Test
@@ -95,6 +127,8 @@ class FanfouAuthenticatorTest {
         okHttpClient.newCall(Request.Builder().url(mockWebServer.url("/")).build()).execute()
 
         val request = mockWebServer.takeRequest()
-        assert(request.getHeader("Authorization") != null)
+        val authorization = request.getHeader("Authorization")
+
+        assert(authorization.startsWith("OAuth", false))
     }
 }

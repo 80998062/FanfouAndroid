@@ -44,7 +44,7 @@ class HomeActivity : AbstractActivity() {
     }
 
     private fun setup() {
-        addFragment(R.id.fragment_container, PlayerView(), false)
+        addFragment(R.id.fragment_container, PlayerView.newInstance("~lwumOR8xxOI"), false)
     }
 
 }

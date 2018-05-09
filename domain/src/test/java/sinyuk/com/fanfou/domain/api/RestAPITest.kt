@@ -1,22 +1,21 @@
 package sinyuk.com.fanfou.domain.api
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
-
-import java.io.IOException
-import java.nio.charset.StandardCharsets
-
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okio.Okio
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 import sinyuk.com.fanfou.domain.util.getValue
+import java.io.IOException
+import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
 import javax.inject.Inject
+import javax.inject.Named
 
 
 /**
@@ -40,6 +39,7 @@ class RestAPITest {
 
     private lateinit var mockWebServer: MockWebServer
 
+    @field:[Named("test")]
     @Inject
     lateinit var service: RestAPI
 
@@ -112,6 +112,49 @@ class RestAPITest {
         val createdAt = SimpleDateFormat(CREATED_AT_FORMAT)
                 .parse("Wed May 04 15:32:29 +0000 2016")
         assert(player?.createdAt == createdAt)
+    }
+
+
+    @Test
+    @Throws(IOException::class, InterruptedException::class)
+    fun showUser() {
+        enqueueResponse("show_user.json")
+        val uniqueId = "~lwumOR8xxOI"
+        val apiResponse = getValue(service.show_user(uniqueId))
+        assert(apiResponse.code == 200)
+
+        val request = mockWebServer.takeRequest()
+        assert(request.requestUrl.queryParameter("id") == uniqueId)
+        val player = apiResponse.body
+        assert(player?.screenName == "阪本")
+        val birthday = SimpleDateFormat(BIRTHDAY_FORMAT)
+                .parse("1993-01-13")
+        assert(player?.birthday == birthday)
+        val createdAt = SimpleDateFormat(CREATED_AT_FORMAT)
+                .parse("Tue Apr 03 17:11:06 +0000 2012")
+        assert(player?.createdAt == createdAt)
+        assert(player?.following == true)
+        assert(player?.notifications == true)
+
+        val status = player?.status!!
+        assert("_dd5X-tpqvc" == status.id)
+
+    }
+
+    @Test
+    @Throws(IOException::class, InterruptedException::class)
+    fun fetchLatestStatus() {
+        enqueueResponse("fetch_latest_status.json")
+        val uniqueId = "~lwumOR8xxOI"
+        val status = getValue(service.fetch_latest_status(uniqueId))?.first()
+
+        val request = mockWebServer.takeRequest()
+        assert(request.requestUrl.queryParameter("id") == uniqueId)
+        assert(request.requestUrl.queryParameter("count") == "1")
+        assert(request.requestUrl.queryParameter("format") == "html")
+        assert("_dd5X-tpqvc" == status?.id)
+        val player = status?.player
+        assert(uniqueId == player?.uniqueId)
     }
 
     @Throws(IOException::class)

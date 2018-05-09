@@ -31,4 +31,7 @@ package sinyuk.com.fanfou.domain
  */
 
 const val TYPE_GLOBAL = "global"
+const val TYPE_TEST = "test"
+const val TYPE_ANDROID_TEST = "android_test"
+
 const val ACCESS_TOKEN = "access_token"

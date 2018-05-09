@@ -17,6 +17,8 @@
 package sinyuk.com.fanfou.ui.photo
 
 import android.arch.lifecycle.ViewModel
+import sinyuk.com.fanfou.domain.repo.PlayerRepo
+import sinyuk.com.fanfou.domain.repo.UserRepo
 import javax.inject.Inject
 
 /**
@@ -32,5 +34,6 @@ import javax.inject.Inject
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-class PhotoViewModel @Inject constructor(): ViewModel() {
+class PhotoViewModel @Inject constructor(private val playerRepo: PlayerRepo,
+                                         private val userRepo: UserRepo) : ViewModel() {
 }

@@ -16,8 +16,10 @@
 
 package sinyuk.com.fanfou.rest
 
+import android.annotation.TargetApi
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
 import android.support.annotation.VisibleForTesting
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import okhttp3.*
@@ -41,6 +43,7 @@ import sinyuk.com.fanfou.rest.FanfouAuthenticator.Companion.OAUTH_SIGNATURE_METH
 import sinyuk.com.fanfou.rest.FanfouAuthenticator.Companion.OAUTH_TIMESTAMP
 import sinyuk.com.fanfou.rest.FanfouAuthenticator.Companion.OAUTH_VERSION
 import java.io.File
+import java.nio.charset.Charset
 import java.security.InvalidKeyException
 import java.security.NoSuchAlgorithmException
 import java.security.SecureRandom
@@ -64,7 +67,9 @@ import javax.crypto.spec.SecretKeySpec
 └──────────────────────────────────────────────────────────────────┘
  */
 
-fun initOkHttpClient(application: Context, preferences: SharedPreferences): OkHttpClient {
+fun initOkHttpClient(application: Context,
+                     tokenSet: MutableSet<String?>?,
+                     authenticator: FanfouAuthenticator): OkHttpClient {
     val timeout: Long = 30
     val max = (1024 * 1024 * 10).toLong() // 10 MiB
     val logging = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger {
@@ -72,7 +77,7 @@ fun initOkHttpClient(application: Context, preferences: SharedPreferences): OkHt
     })
 
     val builder = OkHttpClient.Builder()
-    builder.retryOnConnectionFailure(false)
+    builder.retryOnConnectionFailure(true)
     builder.connectTimeout(timeout, TimeUnit.SECONDS)
             .writeTimeout(timeout, TimeUnit.SECONDS)
             .readTimeout(timeout, TimeUnit.SECONDS)
@@ -91,14 +96,12 @@ fun initOkHttpClient(application: Context, preferences: SharedPreferences): OkHt
     }
     builder.addNetworkInterceptor(logging)
 
-    val stringSet = preferences.getStringSet(ACCESS_TOKEN, null)
-    if (stringSet?.isNotEmpty() == true) {
-        val token = stringSet.elementAt(0)
-        val secret = stringSet.elementAt(1)
-        builder.addNetworkInterceptor(Oauth1SigningInterceptor(token, secret, preferences))
-    } else {
-        builder.addNetworkInterceptor(Oauth1SigningInterceptor(preferences = preferences))
+    if (tokenSet?.isNotEmpty() == true) {
+        val token = tokenSet.elementAt(1)
+        val secret = tokenSet.elementAt(0)
+        builder.addNetworkInterceptor(Oauth1SigningInterceptor(token, secret))
     }
+    builder.authenticator(authenticator)
     return builder.build()
 }
 
@@ -153,17 +156,8 @@ class RewriteCacheControlInterceptor constructor(private val context: Context) :
  * The type Oauth 1 signing interceptor.
  */
 class Oauth1SigningInterceptor constructor(private var token: String? = null,
-                                           private var secret: String? = null,
-                                           private val preferences: SharedPreferences) : Interceptor {
+                                           private var secret: String? = null) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        if (token == null || secret == null) {
-            val stringSet = preferences.getStringSet(ACCESS_TOKEN, null)
-            if (stringSet?.isNotEmpty() == true) {
-                token = stringSet.elementAt(0)
-                secret = stringSet.elementAt(1)
-            }
-        }
-
         return if (token == null || secret == null) {
             chain.proceed(chain.request().newBuilder().removeHeader("Authorization").build())
         } else {
@@ -177,8 +171,7 @@ class Oauth1SigningInterceptor constructor(private var token: String? = null,
 /**
  * Automatically retry unauthenticated requests, when a response is 401 Not Authorized.
  */
-class FanfouAuthenticator constructor(private val token: String,
-                                      private val secret: String) : Authenticator {
+class FanfouAuthenticator constructor(private val preferences: SharedPreferences) : Authenticator {
     companion object {
         const val MAX_RETRY_COUNT = 3
         const val TAG = "FanfouAuthenticator"
@@ -199,13 +192,23 @@ class FanfouAuthenticator constructor(private val token: String,
             TimberDelegate.tag(TAG).d("Challenges: %s", response.challenges())
             return null
         }
-        val credential = generateCredential(token, secret, response.request())
+        println("authenticate")
+        val stringSet = preferences.getStringSet(ACCESS_TOKEN, null)
+        val credential = if (stringSet?.isNotEmpty() == true) {
+            val token = stringSet.elementAt(1)
+            val secret = stringSet.elementAt(0)
+            generateCredential(token, secret, response.request())
+        } else {
+            "Should have already generated credential here !"
+        }
+
         when {
             credential == null -> return null
             responseCount(response) >= MAX_RETRY_COUNT -> return null // If we've failed 3 times, give up.
             credential == response.request().header("Authorization") -> return null
             else -> response.request().newBuilder().header("Authorization", credential).build()
         }
+
         return null
     }
 
@@ -221,6 +224,7 @@ class FanfouAuthenticator constructor(private val token: String,
     }
 }
 
+//1SsCtw5eyFFHigWXMcodkSYmtcZKv9IgSZXFKa7YnfA
 fun generateCredential(token: String?,
                        secret: String?,
                        request: Request,
@@ -247,7 +251,10 @@ fun generateCredential(token: String?,
     parameters[OAUTH_VERSION] = BuildConfig.OAUTH_VERSION_VALUE
 
     val httpUrl = request.url()
-    if (request.method() == "GET" || (request.method() == "POST")) {
+    // 如果请求是GET, 则QueryString中所有的参数都参与签名
+    // 如果请求是POST并且，Content-Type是application/x-www-form-urlencoded, 则所有的POST参数需要参加签名
+    if (request.method() == "GET" || (request.method() == "POST"
+                    && request.header("Content-Type") == "application/x-www-form-urlencoded")) {
         val querySize = request.url().querySize()
         for (i in 0 until querySize) {
             parameters[httpUrl.queryParameterName(i)] = httpUrl.queryParameterValue(i)
@@ -266,29 +273,13 @@ fun generateCredential(token: String?,
     for (entry in parameters.entries) {
         if (!first) base.writeUtf8(UrlEscapeUtils.escape("&"))
         first = false
-        base.writeUtf8(UrlEscapeUtils.escape(entry.key))
+        base.writeUtf8(entry.key)
         base.writeUtf8(UrlEscapeUtils.escape("="))
-        // TODO: when entry.key = 'q' ?
-        base.writeUtf8(UrlEscapeUtils.escape(entry.value))
+        base.writeUtf8(entry.value)
     }
-
-    val signingKey = UrlEscapeUtils.escape(BuildConfig.CONSUMER_SECRET) +
-            "&" + UrlEscapeUtils.escape(secret)
-
-    val keySpec = SecretKeySpec(signingKey.toByteArray(), "HmacSHA1")
-    val mac: Mac
-    try {
-        mac = Mac.getInstance("HmacSHA1")
-        mac.init(keySpec)
-    } catch (e: NoSuchAlgorithmException) {
-        throw IllegalStateException(e)
-    } catch (e: InvalidKeyException) {
-        throw IllegalStateException(e)
-    }
-
-    val result = mac.doFinal(base.readByteArray())
-    val signature = ByteString.of(*result).base64()
-
+    val signingKey = BuildConfig.CONSUMER_SECRET + "&" + secret
+    val baseString = String(base.readByteArray(), Charset.forName("UTF-8"))
+    val signature = signature(baseString, signingKey)
     return (BuildConfig.OAUTH_TYPE + " " +
             OAUTH_CONSUMER_KEY + "=\"" + consumerKeyValue + "\", " + OAUTH_NONCE + "=\""
             + nonce + "\", " + OAUTH_SIGNATURE + "=\"" + UrlEscapeUtils.escape(signature)
@@ -297,3 +288,25 @@ fun generateCredential(token: String?,
             + accessTokenValue + "\", " + OAUTH_VERSION + "=\"" + OAUTH_VERSION_VALUE + "\"")
 }
 
+@TargetApi(Build.VERSION_CODES.O)
+@Throws(IllegalStateException::class, InvalidKeyException::class)
+@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+fun signature(baseString: String, signKey: String): String {
+    var result = ""
+    try {
+        val keySpec = SecretKeySpec(signKey.toByteArray(charset("UTF-8")), "HmacSHA1")
+        val mac: Mac
+        try {
+            mac = Mac.getInstance("HmacSHA1")
+            mac.init(keySpec)
+        } catch (e: NoSuchAlgorithmException) {
+            throw IllegalStateException(e)
+        } catch (e: InvalidKeyException) {
+            throw IllegalStateException(e)
+        }
+        val rawHmac = mac.doFinal(baseString.toByteArray(charset("UTF-8")))
+        result = Base64.getEncoder().encodeToString(rawHmac)
+    } catch (e: Exception) {
+    }
+    return result
+}
