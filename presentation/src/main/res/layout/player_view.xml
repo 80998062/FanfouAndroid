@@ -14,29 +14,66 @@
   ~    limitations under the License.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/toolbar"
+    <LinearLayout style="@style/toolbar">
+
+        <ImageView
+            android:id="@+id/back"
+            style="@style/action_button"
+            android:contentDescription="@null"
+            android:src="@color/colorAccent" />
+
+        <TextView style="@style/toolbarTitle.Linear" />
+
+        <ImageView
+            android:id="@+id/menu"
+            style="@style/action_button"
+            android:contentDescription="@null"
+            android:src="@color/colorAccent" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/backdrop"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/player_backdrop_height"
+        android:contentDescription="@null" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/footer"
+        android:layout_below="@+id/toolbar"
+        tools:ignore="UnknownId,UnknownIdInLayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/head"
+                layout="@layout/player_view_head" />
+
+            <include
+                android:id="@+id/body"
+                layout="@layout/player_view_body"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+
+    <include
+        android:id="@+id/footer"
+        layout="@layout/player_view_footer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_bar_height"
-        android:background="@color/colorAccent">
+        android:layout_alignParentBottom="true" />
 
-    </FrameLayout>
-
-    <com.ecloud.pulltozoomview.PullToZoomScrollViewEx
-        android:id="@+id/scrollview"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:overScrollMode="ifContentScrolls" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/action_button_size"
-        android:background="@color/colorAccent" />
-
-</LinearLayout>
+</RelativeLayout>

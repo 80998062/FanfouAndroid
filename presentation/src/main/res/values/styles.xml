@@ -104,13 +104,22 @@
         <item name="android:background">@color/divider_color</item>
     </style>
 
+    <style name="toolbar">
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_height">@dimen/action_bar_height</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:id">@id/toolbar</item>
+    </style>
+
     <style name="toolbarTitle">
+        <item name="android:id">@id/toolbarTitle</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/textColorPrimary</item>
-        <item name="android:textSize">@dimen/text_14</item>
+        <item name="android:textSize">@dimen/text_13</item>
         <item name="android:textStyle">bold</item>
     </style>
 

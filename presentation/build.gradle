@@ -79,7 +79,7 @@ dependencies {
     // UI
     implementation 'cn.dreamtobe.kpswitch:library:1.6.0'
     implementation 'com.makeramen:roundedimageview:2.3.0'
-    implementation 'com.github.frank-zhu:pullzoomview:1.0.0'
+    implementation 'com.borjabravo:readmoretextview:2.1.0'
 
     // network
     implementation "com.google.code.gson:gson:$gson_version"

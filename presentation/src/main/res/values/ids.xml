@@ -15,5 +15,6 @@
   -->
 
 <resources>
-    <item name="scrollview" type="id" />
+    <item name="toolbar" type="id" />
+    <item name="toolbarTitle" type="id" />
 </resources>

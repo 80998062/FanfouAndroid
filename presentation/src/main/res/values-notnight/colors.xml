@@ -25,6 +25,6 @@
     <color name="itemBackground">#FFFFFF</color>
     <color name="textColor">#18191B</color>
     <color name="textColorPrimary">#18191B</color>
-    <color name="windowBackground">#E3EDF2</color>
-    <color name="divider_color">@color/windowBackground</color>
+    <color name="windowBackground">#FFF</color>
+    <color name="divider_color">#eceff1</color>
 </resources>

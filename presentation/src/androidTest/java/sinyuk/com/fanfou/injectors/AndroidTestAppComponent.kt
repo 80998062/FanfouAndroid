@@ -17,7 +17,6 @@
 package sinyuk.com.fanfou.injectors
 
 import dagger.Component
-import sinyuk.com.fanfou.rest.Oauth1SigningInterceptorTest
 import javax.inject.Singleton
 
 /**
@@ -36,5 +35,4 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [(AndroidTestAppModule::class)])
 interface AndroidTestAppComponent {
-    fun inject(test: Oauth1SigningInterceptorTest)
 }

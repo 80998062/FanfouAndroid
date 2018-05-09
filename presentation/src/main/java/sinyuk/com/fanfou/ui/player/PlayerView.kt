@@ -19,10 +19,13 @@ package sinyuk.com.fanfou.ui.player
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.view.View
+import kotlinx.android.synthetic.main.player_view.*
+import kotlinx.android.synthetic.main.player_view_head.view.*
 import sinyuk.com.fanfou.R
 import sinyuk.com.fanfou.domain.States
 import sinyuk.com.fanfou.domain.data.Player
 import sinyuk.com.fanfou.ext.obtainViewModel
+import sinyuk.com.fanfou.glide.GlideApp
 import sinyuk.com.fanfou.injectors.Injectable
 import sinyuk.com.fanfou.rest.ConnectionModel
 import sinyuk.com.fanfou.ui.FanfouViewModelFactory
@@ -77,11 +80,9 @@ class PlayerView : AbstractFragment(), Injectable {
                 })
     }
 
-    lateinit var zoomView: View
-    lateinit var headerView: View
-    lateinit var contentView: View
-    private fun ui() {
 
+    private fun ui() {
+        back.setOnClickListener { activity?.finish() }
     }
 
     private fun render() {
@@ -93,7 +94,9 @@ class PlayerView : AbstractFragment(), Injectable {
 
     private fun renderPlayer(player: Player?) {
         player?.let {
-            assert(it.status != null)
+            head.screenName.text = it.screenName
+            head.introduce.text = it.description
+            GlideApp.with(this).asDrawable().avatar().load(it.profileImageUrl).into(head.avatar)
         }
     }
 }

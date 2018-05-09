@@ -77,7 +77,6 @@ class FanfouAuthenticatorTest {
         val index = authorization.indexOf("oauth_signature", 0, false)
         assert(index > 0)
         val sub = authorization.substring(index)
-        println(sub)
         assert(sub.startsWith("oauth_signature=\"x08ZzNd6zUOio5M7cPENoUfg%2FZo%3D\"", false))
     }
 
@@ -101,7 +100,6 @@ class FanfouAuthenticatorTest {
         val index = authorization.indexOf("oauth_signature", 0, false)
         assert(index > 0)
         val sub = authorization.substring(index)
-        println(sub)
         assert(sub.startsWith("oauth_signature=\"JXM5eJR5xEixHJIQrmxSht3qC6E%3D\"", false))
     }
 

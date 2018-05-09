@@ -18,7 +18,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="@dimen/player_head_height">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/avatar"
@@ -37,13 +37,16 @@
         android:id="@+id/follow"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/avatar_medium"
-        android:layout_marginEnd="@dimen/action_button_size"
+        android:layout_marginEnd="40dp"
+        android:gravity="center"
         android:paddingEnd="@dimen/gap_16"
         android:paddingStart="@dimen/gap_16"
         android:text="@string/label_following"
+        android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="@+id/avatar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/avatar"
+        app:qmui_backgroundColor="@color/colorAccent"
         app:qmui_borderColor="@color/colorAccent"
         app:qmui_borderWidth="@dimen/button_border"
         app:qmui_radius="16dp" />
@@ -52,30 +55,32 @@
         android:id="@+id/screenName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="40dp"
         android:ellipsize="end"
         android:maxLines="2"
-        android:text="开膛手椰壳"
         android:textColor="@color/textColorPrimary"
         android:textSize="@dimen/text_30"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/follow"
         app:layout_constraintStart_toStartOf="@+id/avatar"
-        app:layout_constraintTop_toBottomOf="@+id/avatar" />
+        app:layout_constraintTop_toBottomOf="@+id/avatar"
+        tools:text="开膛手椰壳" />
 
-    <TextView
+    <com.borjabravo.readmoretextview.ReadMoreTextView
         android:id="@+id/introduce"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
-        android:maxLines="4"
-        android:text="Velox cedrium saepe captiss ventus est.\nIssue acquires when you emerge with reincarnation.\nBeauty, amnesty, and yellow fever."
+        android:maxLines="3"
         android:textColor="@color/textColorSecondary"
         android:textSize="@dimen/text_13"
+        app:colorClickableText="@color/colorAccentLt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/screenName"
         app:layout_constraintStart_toStartOf="@+id/screenName"
-        app:layout_constraintTop_toBottomOf="@+id/screenName" />
+        app:layout_constraintTop_toBottomOf="@+id/screenName"
+        app:trimMode="trimModeLine"
+        tools:text="Velox cedrium saepe captiss ventus est.\nIssue acquires when you emerge with reincarnation.\nBeauty, amnesty, and yellow fever." />
 </android.support.constraint.ConstraintLayout>

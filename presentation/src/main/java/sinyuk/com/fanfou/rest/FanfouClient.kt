@@ -224,12 +224,9 @@ class FanfouAuthenticator constructor(private val preferences: SharedPreferences
     }
 }
 
-//1SsCtw5eyFFHigWXMcodkSYmtcZKv9IgSZXFKa7YnfA
-fun generateCredential(token: String?,
-                       secret: String?,
-                       request: Request,
-                       @VisibleForTesting mockNonce: String? = null,
-                       @VisibleForTesting mockTimestamp: String? = null): String? {
+@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+fun generateCredential(token: String?, secret: String?, request: Request,
+                       mockNonce: String? = null, mockTimestamp: String? = null): String? {
     if (token == null || secret == null) return null
     val random = SecureRandom()
     val bytes = ByteArray(32)

@@ -59,4 +59,6 @@
     <dimen name="fab_size">56dp</dimen>
     <dimen name="avatar_medium">32dp</dimen>
     <dimen name="button_border">1.6dp</dimen>
+    <dimen name="player_head_height">200dp</dimen>
+    <dimen name="player_backdrop_height">248dp</dimen>
 </resources>
