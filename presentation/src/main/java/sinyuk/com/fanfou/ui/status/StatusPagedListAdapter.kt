@@ -47,7 +47,7 @@ class StatusPagedListAdapter(
         private val glide: GlideRequests,
         private val retryCallback: () -> Unit,
         val path: String?) :
-        PagedListAdapter<Status, RecyclerView.ViewHolder>(COMPARATOR), SwipeItemMangerInterface, SwipeAdapterInterface {
+        PagedListAdapter<Status, RecyclerView.ViewHolder>(StatusComparator()), SwipeItemMangerInterface, SwipeAdapterInterface {
     private var networkState: NetworkState? = null
     private fun hasExtraRow() = networkState != null && networkState != NetworkState.LOADED
     override fun getItemViewType(position: Int) = if (hasExtraRow() && position == itemCount - 1) {
@@ -130,12 +130,9 @@ class StatusPagedListAdapter(
         }
     }
 
-
-    companion object {
-        val COMPARATOR = object : DiffUtil.ItemCallback<Status>() {
-            override fun areContentsTheSame(oldItem: Status, newItem: Status) = newItem.favorited == oldItem.favorited && (oldItem.author?.screenName == oldItem.author?.screenName && oldItem.author?.profileImageUrl == oldItem.author?.profileImageUrl && oldItem.author?.birthday == oldItem.author?.birthday)
-            override fun areItemsTheSame(oldItem: Status, newItem: Status) = oldItem.id == newItem.id
-        }
+    class StatusComparator : DiffUtil.ItemCallback<Status>() {
+        override fun areContentsTheSame(oldItem: Status, newItem: Status) = newItem.favorited == oldItem.favorited && (oldItem.author?.screenName == oldItem.author?.screenName && oldItem.author?.profileImageUrl == oldItem.author?.profileImageUrl && oldItem.author?.birthday == oldItem.author?.birthday)
+        override fun areItemsTheSame(oldItem: Status, newItem: Status) = oldItem.id == newItem.id
     }
 
     /**

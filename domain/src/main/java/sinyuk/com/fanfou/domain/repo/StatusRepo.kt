@@ -27,6 +27,7 @@ import sinyuk.com.fanfou.domain.*
 import sinyuk.com.fanfou.domain.api.RestAPI
 import sinyuk.com.fanfou.domain.data.Player
 import sinyuk.com.fanfou.domain.data.Status
+import sinyuk.com.fanfou.domain.repo.titled.TiledStatusDataSourceFactory
 import sinyuk.com.fanfou.domain.room.LocalDatabase
 import sinyuk.com.fanfou.domain.usecase.StatusUsecase
 import sinyuk.com.fanfou.domain.utils.Listing
@@ -54,6 +55,37 @@ class StatusRepo @Inject constructor(
         private val appExecutors: AppExecutors,
         @Named(ROOM_IN_MEMORY) private val memory: LocalDatabase,
         @Named(ROOM_IN_DISK) private val disk: LocalDatabase) : StatusUsecase {
+
+    /**
+     *
+     */
+    override fun fetch(id: String?, path: String, count: Int): Listing<Status> {
+        val sourceFactory = TiledStatusDataSourceFactory(cachedAPI, path, id, appExecutors)
+
+        val pagedListConfig = PagedList.Config.Builder()
+                .setEnablePlaceholders(false)
+                .setPrefetchDistance(Math.min(count / 2, 10))
+                .setInitialLoadSizeHint(count).setPageSize(count)
+                .build()
+
+        val pagedList =
+                LivePagedListBuilder(sourceFactory, pagedListConfig)
+                        .setFetchExecutor(appExecutors.networkIO())
+                        .build()
+
+        val refreshState =
+                Transformations.switchMap(sourceFactory.sourceLiveData) { it.initialLoad }
+
+        return Listing(
+                pagedList = pagedList,
+                networkState =
+                Transformations.switchMap(sourceFactory.sourceLiveData, { it.networkState }),
+                retry = { sourceFactory.sourceLiveData.value?.retryAllFailed() },
+                refresh = { sourceFactory.sourceLiveData.value?.invalidate() },
+                refreshState = refreshState
+        )
+    }
+
     override fun home(count: Int): Listing<Status> {
         val factory = disk.statusDao().home()
 
@@ -67,7 +99,7 @@ class StatusRepo @Inject constructor(
 
         val config = PagedList.Config.Builder()
                 .setPageSize(count)
-                .setEnablePlaceholders(true)
+                .setEnablePlaceholders(false)
                 .setPrefetchDistance(Math.min(count / 2, 10))
                 .setInitialLoadSizeHint(count)
 
@@ -91,8 +123,9 @@ class StatusRepo @Inject constructor(
     }
 
 
-    fun fetchTop(pageSize: Int): LiveData<Promise<MutableList<Status>>> {
-        TODO()
+    override fun fetchTop(count: Int): LiveData<Promise<MutableList<Status>>> {
+        val task = StatusFetchTopTask(restAPI, disk, count)
+        return task.livedata
     }
 
 

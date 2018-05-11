@@ -16,7 +16,9 @@
 
 package sinyuk.com.fanfou.domain.usecase
 
+import android.arch.lifecycle.LiveData
 import android.support.annotation.MainThread
+import sinyuk.com.fanfou.domain.Promise
 import sinyuk.com.fanfou.domain.data.Status
 import sinyuk.com.fanfou.domain.utils.Listing
 
@@ -36,4 +38,10 @@ import sinyuk.com.fanfou.domain.utils.Listing
 interface StatusUsecase {
     @MainThread
     fun home(count: Int): Listing<Status>
+
+    @MainThread
+    fun fetchTop(count: Int): LiveData<Promise<MutableList<Status>>>
+
+    @MainThread
+    fun fetch(id: String?, path: String, count: Int): Listing<Status>
 }

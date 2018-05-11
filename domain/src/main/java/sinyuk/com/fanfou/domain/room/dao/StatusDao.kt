@@ -37,6 +37,9 @@ interface StatusDao {
     @Query("SELECT id, statuses.uniqueId, text, source, statuses.location, statuses.createdAt, favorited, players.screenName, players.profileImageUrl, players.birthday, statuses.url, imageurl, thumburl, largeurl FROM statuses INNER JOIN players ON players.uniqueId = statuses.uniqueId WHERE id = :id LIMIT 1")
     fun query(id: String): Status?
 
+    @Query("SELECT id, statuses.uniqueId, text, source, statuses.location, statuses.createdAt, favorited, players.screenName, players.profileImageUrl, players.birthday, statuses.url, imageurl, thumburl, largeurl FROM statuses INNER JOIN players ON players.uniqueId = statuses.uniqueId ORDER BY statuses.createdAt DESC LIMIT :limit")
+    fun take(limit: Int): MutableList<Status>?
+
     @Query("SELECT id, statuses.uniqueId, text, source, statuses.location, statuses.createdAt, favorited, players.screenName, players.profileImageUrl, players.birthday, statuses.url, imageurl, thumburl, largeurl FROM statuses INNER JOIN players ON players.uniqueId = statuses.uniqueId ORDER BY statuses.createdAt DESC")
     fun home(): DataSource.Factory<Int, Status>
 

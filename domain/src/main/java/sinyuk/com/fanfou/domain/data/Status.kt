@@ -33,7 +33,7 @@ import java.util.*
 
 @Entity(tableName = "statuses",
         primaryKeys = ["id"],
-        indices = [(Index( "id"))]
+        indices = [(Index("id"))]
 //        foreignKeys = [ForeignKey(entity = Player::class,
 //                parentColumns = ["uniqueId"],
 //                childColumns = ["uniqueId"],
@@ -56,37 +56,11 @@ data class Status @JvmOverloads constructor(
     @TypeConverters(DateConverter::class)
     data class Author @JvmOverloads constructor(var screenName: String? = "",
                                                 var profileImageUrl: String? = "",
-                                                var birthday: Date? = null)
-
-
-//    @Suppress("unused")
-//    fun addPath(flags: Int) {
-//        path = path or flags
-//    }
-//
-//    @Suppress("unused")
-//    fun removePath(flags: Int) {
-//        path = path and flags.inv()
-//    }
-
-    companion object {
-        /**
-         * Notice: 对于收藏的状态不会被保存在数据库,
-         * 因为那是many-to-many的关系,处理起来太复杂了🤦‍♀️
-         */
-
-//        const val STATUS_NO_FLAG = 0x00000000
-//        const val STATUS_FLAG_HOME = 0x00000001
-//        const val STATUS_FLAG_LIKED = 0x00000010
-//        const val STATUS_FLAG_USER = 0x00000100 // photo belongs to user's
-//
-//
-//        fun convert2Flag(path: String): Int = when (path) {
-//            TIMELINE_HOME -> STATUS_FLAG_HOME
-//            TIMELINE_USER -> STATUS_FLAG_USER
-//            TIMELINE_FAVORITES -> STATUS_FLAG_LIKED
-//            else -> STATUS_NO_FLAG
-//        }
+                                                var birthday: Date? = null) {
+        constructor(player: Player?) : this(
+                screenName = player?.screenName,
+                profileImageUrl = player?.profileImageUrl,
+                birthday = player?.birthday)
     }
 }
 

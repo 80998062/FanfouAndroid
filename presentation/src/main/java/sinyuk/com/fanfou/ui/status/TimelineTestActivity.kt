@@ -16,12 +16,12 @@
 
 package sinyuk.com.fanfou.ui.status
 
+import android.content.Intent
 import android.os.Bundle
 import kotlinx.android.synthetic.main.timeline_test_activity.*
 import sinyuk.com.fanfou.R
 import sinyuk.com.fanfou.domain.api.TIMELINE_USER
 import sinyuk.com.fanfou.domain.repo.StatusRepo
-import sinyuk.com.fanfou.ext.start
 import sinyuk.com.fanfou.ui.base.AbstractActivity
 import javax.inject.Inject
 
@@ -48,13 +48,14 @@ class TimelineTestActivity : AbstractActivity() {
 
 
         homeTimeline.setOnClickListener {
-            start(TimelineActivity::class)
+            val i = Intent(this@TimelineTestActivity, TimelineActivity::class.java)
+            startActivity(i)
         }
 
         userTimeline.setOnClickListener {
-            start(TimelineActivity::class, Bundle().apply {
-                putString("path", TIMELINE_USER)
-            })
+            val i = Intent(this@TimelineTestActivity, TimelineActivity::class.java)
+            i.putExtras(Bundle().apply { putString("path", TIMELINE_USER) })
+            startActivity(i)
         }
     }
 }

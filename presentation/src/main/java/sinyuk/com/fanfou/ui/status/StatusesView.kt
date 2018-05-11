@@ -31,7 +31,8 @@ import sinyuk.com.fanfou.R
 import sinyuk.com.fanfou.TimberDelegate
 import sinyuk.com.fanfou.domain.NetworkState
 import sinyuk.com.fanfou.domain.data.Status
-import sinyuk.com.fanfou.ext.obtainViewModel
+import sinyuk.com.fanfou.domain.isOnline
+import sinyuk.com.fanfou.ext.obtainViewModelFromActivity
 import sinyuk.com.fanfou.glide.GlideApp
 import sinyuk.com.fanfou.injectors.Injectable
 import sinyuk.com.fanfou.rest.ConnectionModel
@@ -54,12 +55,13 @@ import javax.inject.Inject
  */
 class StatusesView : AbstractFragment(), Injectable {
     companion object {
-        fun newInstance(path: String, uniqueId: String? = null) = StatusesView().apply {
-            arguments = Bundle().apply {
-                putString("path", path)
-                uniqueId?.let { this.putString("uniqueId", it) }
-            }
-        }
+        fun newInstance(path: String, uniqueId: String? = null) = StatusesView()
+                .apply {
+                    arguments = Bundle().apply {
+                        putString("path", path)
+                        uniqueId?.let { this.putString("uniqueId", it) }
+                    }
+                }
     }
 
     override fun layoutId() = R.layout.statuses_view
@@ -68,27 +70,36 @@ class StatusesView : AbstractFragment(), Injectable {
     @Inject
     lateinit var factory: FanfouViewModelFactory
 
-    private val statusesViewModel by lazy { obtainViewModel(factory, StatusesViewModel::class.java) }
+    private val statusesViewModel by lazy { obtainViewModelFromActivity(factory, StatusesViewModel::class.java) }
+
+    private var connectState: Boolean = false
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("connectState", connectState)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        @Suppress("IfThenToElvis")
+        connectState = if (savedInstanceState == null) {
+            isOnline(context!!.applicationContext)
+        } else {
+            savedInstanceState.getBoolean("connectState", false)
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setup()
-        configuration()
-
         // Cannot add the same observer with different lifeCycles! So use activity here.
         ConnectionModel.livedata(context!!.applicationContext).observe(activity!!,
-                Observer { if (it?.isConnected == true) performRefresh() })
+                Observer { if (connectState != it?.isConnected) performRefresh() })
 
-    }
-
-    private fun configuration() {
-        val path: String = arguments!!.getString("path")
-        val uniqueId: String? = arguments?.getString("uniqueId")
-        statusesViewModel.setRelativeUrl(path, uniqueId)
     }
 
     private fun performRefresh() {
-
+//        statusesViewModel.refresh()
     }
 
     private lateinit var adapter: StatusPagedListAdapter
@@ -108,6 +119,7 @@ class StatusesView : AbstractFragment(), Injectable {
         recyclerView.setHasFixedSize(true)
 
         val path: String = arguments!!.getString("path")
+        TimberDelegate.tag("StatusesView").d("StatusPagedListAdapter")
         adapter = StatusPagedListAdapter(
                 GlideApp.with(this), { statusesViewModel.retry() }, path)
 
@@ -123,7 +135,6 @@ class StatusesView : AbstractFragment(), Injectable {
 
     private val pagedListConsumer = Observer<PagedList<Status>> {
         // Preserves the user's scroll position if items are inserted outside the viewable area:
-        TimberDelegate.tag("StatusesView").d("submitList: %d", it?.size)
         adapter.submitList(it)
 //        recyclerView.post { recyclerView.layoutManager.onRestoreInstanceState(recyclerViewState) }
     }
