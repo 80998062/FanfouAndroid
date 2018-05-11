@@ -69,7 +69,8 @@ import javax.crypto.spec.SecretKeySpec
 
 fun initOkHttpClient(application: Context,
                      tokenSet: MutableSet<String?>?,
-                     authenticator: FanfouAuthenticator): OkHttpClient {
+                     authenticator: FanfouAuthenticator,
+                     cached: Boolean = false): OkHttpClient {
     val timeout: Long = 30
     val max = (1024 * 1024 * 10).toLong() // 10 MiB
     val logging = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger {
@@ -81,12 +82,14 @@ fun initOkHttpClient(application: Context,
     builder.connectTimeout(timeout, TimeUnit.SECONDS)
             .writeTimeout(timeout, TimeUnit.SECONDS)
             .readTimeout(timeout, TimeUnit.SECONDS)
-    // Response Caching
-    val cacheFile = File(application.cacheDir, "http")
-    val cache = Cache(cacheFile, max)
-    builder.cache(cache)
-    builder.addInterceptor(LocalCacheInterceptor(application))
-    builder.addNetworkInterceptor(RewriteCacheControlInterceptor(application))
+    if (cached) {
+        // Response Caching
+        val cacheFile = File(application.cacheDir, "http")
+        val cache = Cache(cacheFile, max)
+        builder.cache(cache)
+        builder.addInterceptor(LocalCacheInterceptor(application))
+        builder.addNetworkInterceptor(RewriteCacheControlInterceptor(application))
+    }
 
     logging.level = if (BuildConfig.DEBUG) {
         builder.addNetworkInterceptor(StethoInterceptor())

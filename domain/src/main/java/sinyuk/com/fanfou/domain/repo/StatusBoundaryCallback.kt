@@ -82,7 +82,12 @@ class StatusBoundaryCallback(
 
     }
 
-    override fun onItemAtFrontLoaded(itemAtFront: Status) {}
+    override fun onItemAtFrontLoaded(itemAtFront: Status) {
+        helper.runIfNotRunning(PagingRequestHelper.RequestType.BEFORE) {
+            webservice.statuses_from_path(TIMELINE_HOME, count = networkPageSize, since = itemAtFront.id)
+                    .enqueue(createWebserviceCallback(it))
+        }
+    }
 
     private fun createWebserviceCallback(it: PagingRequestHelper.Request.Callback)
             : Callback<MutableList<Status>> {

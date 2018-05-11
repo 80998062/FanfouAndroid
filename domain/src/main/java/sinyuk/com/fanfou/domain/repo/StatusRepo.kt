@@ -23,10 +23,7 @@ import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.support.annotation.VisibleForTesting
 import android.support.annotation.WorkerThread
-import sinyuk.com.fanfou.domain.AppExecutors
-import sinyuk.com.fanfou.domain.Promise
-import sinyuk.com.fanfou.domain.ROOM_IN_DISK
-import sinyuk.com.fanfou.domain.ROOM_IN_MEMORY
+import sinyuk.com.fanfou.domain.*
 import sinyuk.com.fanfou.domain.api.RestAPI
 import sinyuk.com.fanfou.domain.data.Player
 import sinyuk.com.fanfou.domain.data.Status
@@ -51,10 +48,12 @@ import javax.inject.Singleton
 └──────────────────────────────────────────────────────────────────┘
  */
 @Singleton
-class StatusRepo @Inject constructor(private val restAPI: RestAPI,
-                                     private val appExecutors: AppExecutors,
-                                     @Named(ROOM_IN_MEMORY) private val memory: LocalDatabase,
-                                     @Named(ROOM_IN_DISK) private val disk: LocalDatabase) : StatusUsecase {
+class StatusRepo @Inject constructor(
+        @Named(HTTP_FORCED_NETWORK) private val restAPI: RestAPI,
+        @Named(HTTP_CACHED) private val cachedAPI: RestAPI,
+        private val appExecutors: AppExecutors,
+        @Named(ROOM_IN_MEMORY) private val memory: LocalDatabase,
+        @Named(ROOM_IN_DISK) private val disk: LocalDatabase) : StatusUsecase {
     override fun home(count: Int): Listing<Status> {
         val factory = disk.statusDao().home()
 

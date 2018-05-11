@@ -26,9 +26,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import sinyuk.com.fanfou.App
-import sinyuk.com.fanfou.domain.ACCESS_TOKEN
-import sinyuk.com.fanfou.domain.AppExecutors
-import sinyuk.com.fanfou.domain.TYPE_GLOBAL
+import sinyuk.com.fanfou.domain.*
 import sinyuk.com.fanfou.domain.api.ApiModule
 import sinyuk.com.fanfou.domain.api.Endpoint
 import sinyuk.com.fanfou.domain.api.RestAPI
@@ -80,14 +78,36 @@ class AppModule constructor(private val app: App) {
     @Suppress("unused")
     @Provides
     @Singleton
+    @Named(HTTP_FORCED_NETWORK)
     fun provideOkHttp(a: App, @Named(TYPE_GLOBAL) sp: SharedPreferences, fa: FanfouAuthenticator) =
             initOkHttpClient(a, sp.getStringSet(ACCESS_TOKEN, null), fa)
+
+    @Suppress("unused")
+    @Provides
+    @Singleton
+    @Named(HTTP_CACHED)
+    fun provideOkHttpCached(a: App, @Named(TYPE_GLOBAL) sp: SharedPreferences, fa: FanfouAuthenticator) =
+            initOkHttpClient(a, sp.getStringSet(ACCESS_TOKEN, null), fa, true)
+
+    @Suppress("unused")
+    @Provides
+    @Singleton
+    @Named(HTTP_CACHED)
+    fun provideRestAPICached(@Named(HTTP_CACHED) okHttpClient: OkHttpClient, gson: Gson, endpoint: Endpoint) =
+            Retrofit.Builder()
+                    .baseUrl(endpoint.baseUrl)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addCallAdapterFactory(LiveDataCallAdapterFactory())
+                    .client(okHttpClient)
+                    .build()
+                    .create(RestAPI::class.java)!!
 
 
     @Suppress("unused")
     @Provides
     @Singleton
-    fun provideRestAPI(okHttpClient: OkHttpClient, gson: Gson, endpoint: Endpoint) =
+    @Named(HTTP_FORCED_NETWORK)
+    fun provideRestAPI(@Named(HTTP_FORCED_NETWORK) okHttpClient: OkHttpClient, gson: Gson, endpoint: Endpoint) =
             Retrofit.Builder()
                     .baseUrl(endpoint.baseUrl)
                     .addConverterFactory(GsonConverterFactory.create(gson))

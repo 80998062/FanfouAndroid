@@ -20,9 +20,7 @@ import android.arch.lifecycle.LiveData
 import android.content.SharedPreferences
 import okhttp3.HttpUrl
 import okhttp3.Response
-import sinyuk.com.fanfou.domain.AppExecutors
-import sinyuk.com.fanfou.domain.Promise
-import sinyuk.com.fanfou.domain.TYPE_GLOBAL
+import sinyuk.com.fanfou.domain.*
 import sinyuk.com.fanfou.domain.api.AccessToken
 import sinyuk.com.fanfou.domain.api.AccessTokenTask
 import sinyuk.com.fanfou.domain.api.ApiResponse
@@ -47,9 +45,11 @@ import javax.inject.Singleton
 └──────────────────────────────────────────────────────────────────┘
  */
 @Singleton
-class UserRepo @Inject constructor(private val restAPI: RestAPI,
-                                   private val appExecutors: AppExecutors,
-                                   @Named(TYPE_GLOBAL) private val preferences: SharedPreferences) : SignUsecase {
+class UserRepo @Inject constructor(
+        @Named(HTTP_FORCED_NETWORK) private val restAPI: RestAPI,
+        @Named(HTTP_CACHED) private val cachedAPI: RestAPI,
+        private val appExecutors: AppExecutors,
+        @Named(TYPE_GLOBAL) private val preferences: SharedPreferences) : SignUsecase {
     override fun vertify(): LiveData<ApiResponse<Player>> {
         return restAPI.verify_credentials()
     }

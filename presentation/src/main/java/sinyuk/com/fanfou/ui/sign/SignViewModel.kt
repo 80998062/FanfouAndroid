@@ -21,8 +21,10 @@ import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import sinyuk.com.fanfou.domain.HTTP_FORCED_NETWORK
 import sinyuk.com.fanfou.domain.repo.UserRepo
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Created by sinyuk on 2018/5/7.
@@ -37,8 +39,9 @@ import javax.inject.Inject
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-class SignViewModel @Inject constructor(private val userRepo: UserRepo,
-                                        private val okHttpClient: OkHttpClient) : ViewModel() {
+class SignViewModel @Inject constructor(
+        private val userRepo: UserRepo,
+        @Named(HTTP_FORCED_NETWORK) private val okHttpClient: OkHttpClient) : ViewModel() {
 
     fun signIn(account: String, password: String) =
             userRepo.signIn(account, password, { executeRequest(it) })
