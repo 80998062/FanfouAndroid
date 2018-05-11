@@ -19,6 +19,7 @@
  */
 package sinyuk.com.android.paging;
 
+import android.annotation.SuppressLint;
 import android.support.annotation.AnyThread;
 import android.support.annotation.GuardedBy;
 import android.support.annotation.NonNull;
@@ -223,6 +224,7 @@ public class PagingRequestHelper {
 
     }
 
+    @SuppressLint("LogNotTimber")
     private void dispatchReport(StatusReport report) {
         if (BuildConfig.DEBUG) Log.d("StatusReport", report.toString());
         for (Listener listener : mListeners) {

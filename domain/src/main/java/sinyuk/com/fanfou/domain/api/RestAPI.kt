@@ -59,4 +59,8 @@ interface RestAPI {
     @Deprecated("unused")
     fun show_user(@Query("id") uniqueId: String): LiveData<ApiResponse<Player>>
 
+    fun photos(count: Int, id: String?, max: String? = null): Call<MutableList<Status>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 }

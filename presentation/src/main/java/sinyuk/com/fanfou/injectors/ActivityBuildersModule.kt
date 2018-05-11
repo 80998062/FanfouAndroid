@@ -20,6 +20,8 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import sinyuk.com.fanfou.ui.home.HomeActivity
 import sinyuk.com.fanfou.ui.sign.SignInActivity
+import sinyuk.com.fanfou.ui.status.TimelineActivity
+import sinyuk.com.fanfou.ui.status.TimelineTestActivity
 
 @Module
 abstract class ActivityBuildersModule {
@@ -33,5 +35,16 @@ abstract class ActivityBuildersModule {
     @ActivityScope
     @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
     abstract fun signInActivity(): SignInActivity
+
+
+    @Suppress("unused")
+    @ActivityScope
+    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
+    abstract fun timelineActivity(): TimelineActivity
+
+    @Suppress("unused")
+    @ActivityScope
+    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
+    abstract fun timelineTestActivity(): TimelineTestActivity
 
 }

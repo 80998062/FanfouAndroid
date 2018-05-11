@@ -16,6 +16,7 @@
 
 package sinyuk.com.fanfou.injectors
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
@@ -32,6 +33,7 @@ import sinyuk.com.fanfou.domain.api.ApiModule
 import sinyuk.com.fanfou.domain.api.Endpoint
 import sinyuk.com.fanfou.domain.api.RestAPI
 import sinyuk.com.fanfou.domain.api.adapters.LiveDataCallAdapterFactory
+import sinyuk.com.fanfou.domain.room.RoomModule
 import sinyuk.com.fanfou.rest.FanfouAuthenticator
 import sinyuk.com.fanfou.rest.initOkHttpClient
 import javax.inject.Named
@@ -50,12 +52,17 @@ import javax.inject.Singleton
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-@Module(includes = [(ViewModelModule::class), (ApiModule::class)])
+@Module(includes = [(ViewModelModule::class), (ApiModule::class), (RoomModule::class)])
 class AppModule constructor(private val app: App) {
     @Suppress("unused")
     @Provides
     @Singleton
     fun provideApp(): App = app
+
+    @Suppress("unused")
+    @Provides
+    @Singleton
+    fun provideApplication(): Application = app
 
     @Suppress("unused")
     @Provides

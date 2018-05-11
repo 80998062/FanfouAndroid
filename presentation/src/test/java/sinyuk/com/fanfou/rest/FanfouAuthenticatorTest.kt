@@ -63,7 +63,7 @@ class FanfouAuthenticatorTest {
     fun testGenerateCredential() {
         val mockRequest = Request.Builder()
                 .method("GET", null)
-                .url("http://api.fanfou.com/statuses/user_timeline.json")
+                .url("http://api.fanfou.com/home/user_timeline.json")
                 .build()
 
         val authorization = generateCredential(
@@ -86,7 +86,7 @@ class FanfouAuthenticatorTest {
     fun testGenerateCredential2() {
         val mockRequest = Request.Builder()
                 .method("GET", null)
-                .url("http://api.fanfou.com/statuses/user_timeline.json?id=~lwumOR8xxOI&count=1")
+                .url("http://api.fanfou.com/home/user_timeline.json?id=~lwumOR8xxOI&count=1")
                 .build()
 
         val authorization = generateCredential(

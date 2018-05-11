@@ -105,6 +105,7 @@
     </style>
 
     <style name="toolbar">
+        <item name="android:background">@color/colorPrimary</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_height">@dimen/action_bar_height</item>

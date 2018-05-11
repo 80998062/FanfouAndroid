@@ -1,11 +1,7 @@
 package sinyuk.com.fanfou.domain.room.dao
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
-import android.arch.persistence.room.Update
+import android.arch.persistence.room.*
 import sinyuk.com.fanfou.domain.data.Player
-import android.arch.persistence.room.Delete
 
 
 /**
@@ -23,10 +19,10 @@ import android.arch.persistence.room.Delete
  */
 @Dao
 interface PlayerDao {
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun inserts(players: MutableList<Player>): MutableList<Long>
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(player: Player): Long
 
     @Update(onConflict = OnConflictStrategy.REPLACE)

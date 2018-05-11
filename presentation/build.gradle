@@ -80,6 +80,8 @@ dependencies {
     implementation 'cn.dreamtobe.kpswitch:library:1.6.0'
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation 'com.borjabravo:readmoretextview:2.1.0'
+    implementation 'com.daimajia.swipelayout:library:1.2.0@aar'
+    implementation 'com.linkedin.android.spyglass:spyglass:1.4.0'
 
     // network
     implementation "com.google.code.gson:gson:$gson_version"

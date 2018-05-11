@@ -25,6 +25,7 @@ import sinyuk.com.fanfou.ui.FanfouViewModelFactory
 import sinyuk.com.fanfou.ui.photo.PhotoViewModel
 import sinyuk.com.fanfou.ui.player.PlayerViewModel
 import sinyuk.com.fanfou.ui.sign.SignViewModel
+import sinyuk.com.fanfou.ui.status.StatusesViewModel
 
 /**
  * Created by sinyuk on 2018/5/4.
@@ -59,6 +60,12 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PhotoViewModel::class)
     abstract fun photoViewModel(viewModel: PhotoViewModel): ViewModel
+
+    @Suppress("unused")
+    @Binds
+    @IntoMap
+    @ViewModelKey(StatusesViewModel::class)
+    abstract fun statusesViewModel(viewModel: StatusesViewModel): ViewModel
 
     @Suppress("unused")
     @Binds

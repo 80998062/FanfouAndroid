@@ -26,6 +26,7 @@ import sinyuk.com.fanfou.domain.usecase.PlayerUsecase
 import java.io.IOException
 import java.io.InterruptedIOException
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Created by sinyuk on 2018/5/8.
@@ -40,6 +41,7 @@ import javax.inject.Inject
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
+@Singleton
 class PlayerRepo @Inject constructor(private val restAPI: RestAPI,
                                      private val appExecutors: AppExecutors) : PlayerUsecase {
     override fun fetchLatestStatus(uniqueId: String, forcedUpdate: Boolean): LiveData<Promise<Player>> {

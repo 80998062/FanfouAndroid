@@ -14,16 +14,19 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.injectors
+package sinyuk.com.fanfou.ui.status
 
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import sinyuk.com.fanfou.ui.player.PlayerView
-import sinyuk.com.fanfou.ui.sign.SignInView
-import sinyuk.com.fanfou.ui.status.StatusesView
+import android.os.Bundle
+import kotlinx.android.synthetic.main.timeline_test_activity.*
+import sinyuk.com.fanfou.R
+import sinyuk.com.fanfou.domain.api.TIMELINE_USER
+import sinyuk.com.fanfou.domain.repo.StatusRepo
+import sinyuk.com.fanfou.ext.start
+import sinyuk.com.fanfou.ui.base.AbstractActivity
+import javax.inject.Inject
 
 /**
- * Created by sinyuk on 2018/5/4.
+ * Created by sinyuk on 2018/5/10.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -35,18 +38,23 @@ import sinyuk.com.fanfou.ui.status.StatusesView
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-@Module
-abstract class FragmentBuildersModule {
-    @Suppress("unused")
-    @ContributesAndroidInjector
-    abstract fun signInView(): SignInView
+class TimelineTestActivity : AbstractActivity() {
+    @Inject
+    lateinit var statusRepo: StatusRepo
 
-    @Suppress("unused")
-    @ContributesAndroidInjector
-    abstract fun playerView(): PlayerView
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.timeline_test_activity)
 
-    @Suppress("unused")
-    @ContributesAndroidInjector
-    abstract fun statusesView(): StatusesView
 
+        homeTimeline.setOnClickListener {
+            start(TimelineActivity::class)
+        }
+
+        userTimeline.setOnClickListener {
+            start(TimelineActivity::class, Bundle().apply {
+                putString("path", TIMELINE_USER)
+            })
+        }
+    }
 }

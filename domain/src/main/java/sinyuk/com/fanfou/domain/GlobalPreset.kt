@@ -34,4 +34,7 @@ const val TYPE_GLOBAL = "global"
 const val TYPE_TEST = "test"
 const val TYPE_ANDROID_TEST = "android_test"
 
+const val ROOM_IN_DISK = "disk_room"
+const val ROOM_IN_MEMORY = "disk_memory"
+
 const val ACCESS_TOKEN = "access_token"

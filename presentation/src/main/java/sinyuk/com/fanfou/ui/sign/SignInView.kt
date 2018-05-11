@@ -42,7 +42,7 @@ import sinyuk.com.fanfou.injectors.Injectable
 import sinyuk.com.fanfou.ui.FanfouViewModelFactory
 import sinyuk.com.fanfou.ui.ViewTooltip
 import sinyuk.com.fanfou.ui.base.AbstractFragment
-import sinyuk.com.fanfou.ui.home.HomeActivity
+import sinyuk.com.fanfou.ui.status.TimelineTestActivity
 import sinyuk.com.fanfou.utils.showRationaleDialog
 import javax.inject.Inject
 
@@ -78,7 +78,7 @@ class SignInView : AbstractFragment(), Injectable {
         onFormChanged()
         togglePasswordVisibility(false)
 
-        skip.setOnClickListener { start(HomeActivity::class) }
+        skip.setOnClickListener { start(TimelineTestActivity::class) }
 
         account.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -136,6 +136,9 @@ class SignInView : AbstractFragment(), Injectable {
         }
 
         button.setOnClickListener { performSigningIn() }
+
+        account.setText("sinyuk.7@qq.com")
+        password.setText("rabbit7run")
     }
 
     private fun onFormChanged() {
@@ -180,7 +183,7 @@ class SignInView : AbstractFragment(), Injectable {
                         States.ERROR -> {
                             onSignInFailed(it.message)
                         }
-                        States.SUCCESS -> start(HomeActivity::class)
+                        States.SUCCESS -> start(TimelineTestActivity::class)
                     }
                 })
     }

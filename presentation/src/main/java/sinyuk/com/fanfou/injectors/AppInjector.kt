@@ -24,6 +24,8 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import dagger.android.support.AndroidSupportInjection
 import sinyuk.com.fanfou.App
+import sinyuk.com.fanfou.domain.api.ApiModule
+import sinyuk.com.fanfou.domain.room.RoomModule
 
 /**
  * Helper class to automatically inject fragments if they implement [Injectable].
@@ -33,7 +35,10 @@ import sinyuk.com.fanfou.App
 object AppInjector {
 
     fun init(app: App) {
-        DaggerAppComponent.builder().appModule(AppModule(app)).build().inject(app)
+        DaggerAppComponent.builder()
+                .appModule(AppModule(app))
+                .apiModule(ApiModule())
+                .roomModule(RoomModule(app)).build().inject(app)
 
         app.registerActivityLifecycleCallbacks(
                 object : Application.ActivityLifecycleCallbacks {

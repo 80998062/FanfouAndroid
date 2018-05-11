@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~   Copyright 2081 Sinyuk
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/itemBackground">
+
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/avatar"
+        android:layout_width="@dimen/avatar_small"
+        android:layout_height="@dimen/avatar_small"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:riv_border_color="@color/divider_color"
+        app:riv_border_width="@dimen/divider_size"
+        app:riv_corner_radius="12dp"
+        tools:src="@mipmap/ic_launcher_round" />
+
+
+    <TextView
+        android:id="@+id/screenName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ellipsize="end"
+        android:minWidth="56dp"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="@dimen/text_14"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/avatar"
+        app:layout_constraintStart_toEndOf="@+id/avatar"
+        tools:background="?android:textColorHint"
+        tools:text="Sinyuk" />
+
+    <ImageView
+        android:id="@+id/likedFlag"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_marginStart="8dp"
+        android:scaleType="centerInside"
+        android:src="@color/colorAccent"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/repostFlag"
+        app:layout_constraintStart_toEndOf="@+id/repostFlag" />
+
+
+    <ImageView
+        android:id="@+id/repostFlag"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_marginStart="16dp"
+        android:scaleType="centerInside"
+        android:src="@color/colorAccent"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/screenName"
+        app:layout_constraintStart_toEndOf="@+id/screenName"
+        app:layout_constraintTop_toTopOf="@+id/screenName" />
+
+
+    <TextView
+        android:id="@+id/createdAt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:gravity="bottom"
+        android:minWidth="36dp"
+        android:textColor="?android:textColorHint"
+        android:textSize="@dimen/text_14"
+        app:layout_constraintBottom_toBottomOf="@+id/screenName"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="dsadas" />
+
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:lineSpacingExtra="4dp"
+        android:minHeight="56dp"
+        android:textColor="@color/textColorSecondary"
+        android:textSize="@dimen/text_16"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/image"
+        app:layout_constraintStart_toStartOf="@+id/avatar"
+        app:layout_constraintTop_toBottomOf="@+id/avatar"
+        tools:background="?android:textColorHint"
+        tools:text="Clemens cob mixed with basil leafs.Extums resistere!Going to the heavens of man doesn’t realize tantra anymore than praising creates powerful affirmation.A falsis, vita brevis barcas.Cum humani generis studere, omnes abnobaes perdere raptus, fidelis axonaes." />
+
+    <sinyuk.com.fanfou.ui.SquareImageView
+        android:id="@+id/image"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="8dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/createdAt"
+        app:layout_constraintTop_toBottomOf="@+id/createdAt"
+        app:layout_constraintVertical_bias="0.0"
+        app:riv_border_width="0dp"
+        app:riv_corner_radius="3dp"
+        tools:src="@color/accent" />
+
+</android.support.constraint.ConstraintLayout>

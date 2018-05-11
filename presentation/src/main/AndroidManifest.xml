@@ -31,6 +31,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.status.TimelineActivity" />
+        <activity android:name=".ui.status.TimelineTestActivity" />
     </application>
 
 </manifest>

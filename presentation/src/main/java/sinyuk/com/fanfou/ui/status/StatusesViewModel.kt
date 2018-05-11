@@ -14,16 +14,20 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.injectors
+package sinyuk.com.fanfou.ui.status
 
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import sinyuk.com.fanfou.ui.player.PlayerView
-import sinyuk.com.fanfou.ui.sign.SignInView
-import sinyuk.com.fanfou.ui.status.StatusesView
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Transformations
+import android.arch.lifecycle.ViewModel
+import sinyuk.com.fanfou.domain.data.Status
+import sinyuk.com.fanfou.domain.repo.StatusRepo
+import sinyuk.com.fanfou.domain.utils.Listing
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
- * Created by sinyuk on 2018/5/4.
+ * Created by sinyuk on 2018/5/10.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -35,18 +39,40 @@ import sinyuk.com.fanfou.ui.status.StatusesView
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-@Module
-abstract class FragmentBuildersModule {
-    @Suppress("unused")
-    @ContributesAndroidInjector
-    abstract fun signInView(): SignInView
+@Singleton
+class StatusesViewModel @Inject constructor(private val statusRepo: StatusRepo) : ViewModel() {
 
-    @Suppress("unused")
-    @ContributesAndroidInjector
-    abstract fun playerView(): PlayerView
+    data class RelativeUrl(val path: String, val uniqueId: String? = null, val query: String? = null)
 
-    @Suppress("unused")
-    @ContributesAndroidInjector
-    abstract fun statusesView(): StatusesView
+    private var relativeUrl: MutableLiveData<RelativeUrl> = MutableLiveData()
 
+    fun setRelativeUrl(path: String, uniqueId: String? = null, query: String? = null) {
+        setRelativeUrl(RelativeUrl(path, uniqueId, query))
+    }
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun setRelativeUrl(url: RelativeUrl) = if (url == relativeUrl.value) {
+        false
+    } else {
+        relativeUrl.value = url
+        true
+    }
+
+    private val repoResult: LiveData<Listing<Status>> = Transformations.map(relativeUrl, {
+        statusRepo.home(10)
+    })
+
+    val statuses = Transformations.switchMap(repoResult, { it.pagedList })!!
+    val networkState = Transformations.switchMap(repoResult, { it.networkState })!!
+    val refreshState = Transformations.switchMap(repoResult, { it.refreshState })!!
+
+
+    fun retry() {
+        val listing = repoResult.value
+        listing?.retry?.invoke()
+    }
+
+    fun refresh() {
+        repoResult.value?.refresh?.invoke()
+    }
 }

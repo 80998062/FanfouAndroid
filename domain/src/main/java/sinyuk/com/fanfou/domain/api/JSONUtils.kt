@@ -1,12 +1,9 @@
 package sinyuk.com.fanfou.domain.api
 
-import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
-import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
 import sinyuk.com.fanfou.domain.data.Photos
 import sinyuk.com.fanfou.domain.data.Status
-import java.lang.reflect.Type
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -32,7 +29,7 @@ val formatters = mutableListOf(
         SimpleDateFormat(BIRTHDAY_FORMAT, Locale.ENGLISH))
 
 val DateDeserializer = JsonDeserializer<Date> { json, _, _ ->
-    if (json == null) {
+    if (json.isJsonNull || json.asString.isEmpty()) {
         Date(System.currentTimeMillis())
     } else {
         var date: Date? = null

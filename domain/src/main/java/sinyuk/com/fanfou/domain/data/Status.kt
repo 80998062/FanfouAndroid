@@ -21,13 +21,9 @@
 package sinyuk.com.fanfou.domain.data
 
 import android.arch.persistence.room.*
-import android.arch.persistence.room.ForeignKey.CASCADE
 import android.support.annotation.NonNull
-import android.support.annotation.WorkerThread
 import com.google.gson.annotations.SerializedName
 import sinyuk.com.fanfou.domain.room.DateConverter
-import sinyuk.com.fanfou.domain.room.dao.PlayerDao
-import sinyuk.com.fanfou.domain.room.dao.StatusDao
 import java.util.*
 
 /**
@@ -37,16 +33,17 @@ import java.util.*
 
 @Entity(tableName = "statuses",
         primaryKeys = ["id"],
-        indices = [(Index("uniqueId", "id"))],
-        foreignKeys = [ForeignKey(entity = Player::class,
-                parentColumns = ["uniqueId"],
-                childColumns = ["uniqueId"],
-                onDelete = ForeignKey.SET_NULL,
-                onUpdate = CASCADE)])
+        indices = [(Index( "id"))]
+//        foreignKeys = [ForeignKey(entity = Player::class,
+//                parentColumns = ["uniqueId"],
+//                childColumns = ["uniqueId"],
+//                onDelete = CASCADE,
+//                onUpdate = CASCADE)]
+)
 @TypeConverters(DateConverter::class)
 data class Status @JvmOverloads constructor(
         @NonNull @SerializedName("id") var id: String = "",
-        var uniqueId: String? = null,
+        @NonNull var uniqueId: String = "", // 这条状态是由@{uniqueId}的人创建的
         @SerializedName("text") var text: String? = null,
         @SerializedName("source") var source: String? = null,
         @SerializedName("location") var location: String? = null,
@@ -54,23 +51,43 @@ data class Status @JvmOverloads constructor(
         @Embedded var author: Author? = null,
         @SerializedName("created_at") var createdAt: Date? = null,
         @SerializedName("favorited") var favorited: Boolean = false,
-        @Embedded @SerializedName("photo") var photos: Photos? = null
-        ) {
+        @Embedded @SerializedName("photo") var photos: Photos? = null) {
+
     @TypeConverters(DateConverter::class)
     data class Author @JvmOverloads constructor(var screenName: String? = "",
                                                 var profileImageUrl: String? = "",
                                                 var birthday: Date? = null)
-}
 
 
-@Suppress("unused")
-@WorkerThread
-fun saveStatusesAndPlayers(statusDao: StatusDao, playerDao: PlayerDao, vararg statuses: Status): Int {
-    var count = 0
-    for (status in statuses) {
-        status.player?.let { playerDao.insert(it) } // Insert will abort if player exits
-        status.uniqueId = status.player?.uniqueId
-        count += if (statusDao.insert(status) >= 0) 1 else 0
+//    @Suppress("unused")
+//    fun addPath(flags: Int) {
+//        path = path or flags
+//    }
+//
+//    @Suppress("unused")
+//    fun removePath(flags: Int) {
+//        path = path and flags.inv()
+//    }
+
+    companion object {
+        /**
+         * Notice: 对于收藏的状态不会被保存在数据库,
+         * 因为那是many-to-many的关系,处理起来太复杂了🤦‍♀️
+         */
+
+//        const val STATUS_NO_FLAG = 0x00000000
+//        const val STATUS_FLAG_HOME = 0x00000001
+//        const val STATUS_FLAG_LIKED = 0x00000010
+//        const val STATUS_FLAG_USER = 0x00000100 // photo belongs to user's
+//
+//
+//        fun convert2Flag(path: String): Int = when (path) {
+//            TIMELINE_HOME -> STATUS_FLAG_HOME
+//            TIMELINE_USER -> STATUS_FLAG_USER
+//            TIMELINE_FAVORITES -> STATUS_FLAG_LIKED
+//            else -> STATUS_NO_FLAG
+//        }
     }
-    return count
 }
+
+

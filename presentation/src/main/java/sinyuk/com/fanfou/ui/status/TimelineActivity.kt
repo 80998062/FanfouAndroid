@@ -14,16 +14,17 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.injectors
+package sinyuk.com.fanfou.ui.status
 
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import sinyuk.com.fanfou.ui.player.PlayerView
-import sinyuk.com.fanfou.ui.sign.SignInView
-import sinyuk.com.fanfou.ui.status.StatusesView
+import android.os.Bundle
+import kotlinx.android.synthetic.main.timeline_activity.*
+import sinyuk.com.fanfou.R
+import sinyuk.com.fanfou.domain.api.TIMELINE_HOME
+import sinyuk.com.fanfou.ext.addFragment
+import sinyuk.com.fanfou.ui.base.AbstractActivity
 
 /**
- * Created by sinyuk on 2018/5/4.
+ * Created by sinyuk on 2018/5/10.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -35,18 +36,23 @@ import sinyuk.com.fanfou.ui.status.StatusesView
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-@Module
-abstract class FragmentBuildersModule {
-    @Suppress("unused")
-    @ContributesAndroidInjector
-    abstract fun signInView(): SignInView
+class TimelineActivity : AbstractActivity() {
 
-    @Suppress("unused")
-    @ContributesAndroidInjector
-    abstract fun playerView(): PlayerView
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.timeline_activity)
 
-    @Suppress("unused")
-    @ContributesAndroidInjector
-    abstract fun statusesView(): StatusesView
+        back.setOnClickListener { finish() }
+        val statusesView =
+                if (intent?.extras != null) {
+                    StatusesView.newInstance(
+                            path = intent.extras.getString("path"),
+                            uniqueId = intent.extras.getString("uniqueId"))
+                } else {
+                    StatusesView.newInstance(TIMELINE_HOME)
+                }
+        addFragment(R.id.fragment_container, statusesView, false)
+    }
+
 
 }

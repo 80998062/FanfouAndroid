@@ -1,5 +1,6 @@
 package sinyuk.com.fanfou.domain.room.dao
 
+import android.arch.paging.DataSource
 import android.arch.persistence.room.*
 import sinyuk.com.fanfou.domain.data.Status
 
@@ -18,10 +19,10 @@ import sinyuk.com.fanfou.domain.data.Status
  */
 @Dao
 interface StatusDao {
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun inserts(statuses: MutableList<Status>): MutableList<Long>
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(status: Status): Long
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
@@ -30,8 +31,14 @@ interface StatusDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun update(status: Status): Int
 
+    @Delete
+    fun delete(data: Status)
 
     @Query("SELECT id, statuses.uniqueId, text, source, statuses.location, statuses.createdAt, favorited, players.screenName, players.profileImageUrl, players.birthday, statuses.url, imageurl, thumburl, largeurl FROM statuses INNER JOIN players ON players.uniqueId = statuses.uniqueId WHERE id = :id LIMIT 1")
     fun query(id: String): Status?
+
+    @Query("SELECT id, statuses.uniqueId, text, source, statuses.location, statuses.createdAt, favorited, players.screenName, players.profileImageUrl, players.birthday, statuses.url, imageurl, thumburl, largeurl FROM statuses INNER JOIN players ON players.uniqueId = statuses.uniqueId ORDER BY statuses.createdAt DESC")
+    fun home(): DataSource.Factory<Int, Status>
+
 
 }

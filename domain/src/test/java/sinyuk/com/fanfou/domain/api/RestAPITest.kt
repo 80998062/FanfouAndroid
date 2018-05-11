@@ -61,11 +61,11 @@ class RestAPITest {
     @Test
     @Throws(IOException::class, InterruptedException::class)
     fun getStatuses() {
-        enqueueResponse("statuses.json")
+        enqueueResponse("home.json")
         val statuses = getValue(service.statuses_from_path(path = "mock", count = 5))
 
         val request = mockWebServer.takeRequest()
-        assert(request.path.startsWith("/statuses/mock.json", true))
+        assert(request.path.startsWith("/home/mock.json", true))
         assert(request.method.equals("GET", true))
         assert(5 == statuses?.size)
 

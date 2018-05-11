@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "283f1f52d6c24ae263e24fc19847bb24",
+    "identityHash": "803108f12e1500d50a9614980ca7f8aa",
     "entities": [
       {
         "tableName": "players",
@@ -144,7 +144,7 @@
       },
       {
         "tableName": "statuses",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `uniqueId` TEXT, `text` TEXT, `source` TEXT, `location` TEXT, `createdAt` INTEGER, `favorited` INTEGER NOT NULL, `screenName` TEXT, `profileImageUrl` TEXT, `birthday` INTEGER, `url` TEXT, `imageurl` TEXT, `thumburl` TEXT, `largeurl` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`uniqueId`) REFERENCES `players`(`uniqueId`) ON UPDATE CASCADE ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `uniqueId` TEXT NOT NULL, `text` TEXT, `source` TEXT, `location` TEXT, `createdAt` INTEGER, `favorited` INTEGER NOT NULL, `screenName` TEXT, `profileImageUrl` TEXT, `birthday` INTEGER, `url` TEXT, `imageurl` TEXT, `thumburl` TEXT, `largeurl` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -156,7 +156,7 @@
             "fieldPath": "uniqueId",
             "columnName": "uniqueId",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "text",
@@ -239,33 +239,20 @@
         },
         "indices": [
           {
-            "name": "index_statuses_uniqueId_id",
+            "name": "index_statuses_id",
             "unique": false,
             "columnNames": [
-              "uniqueId",
               "id"
             ],
-            "createSql": "CREATE  INDEX `index_statuses_uniqueId_id` ON `${TABLE_NAME}` (`uniqueId`, `id`)"
+            "createSql": "CREATE  INDEX `index_statuses_id` ON `${TABLE_NAME}` (`id`)"
           }
         ],
-        "foreignKeys": [
-          {
-            "table": "players",
-            "onDelete": "SET NULL",
-            "onUpdate": "CASCADE",
-            "columns": [
-              "uniqueId"
-            ],
-            "referencedColumns": [
-              "uniqueId"
-            ]
-          }
-        ]
+        "foreignKeys": []
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"283f1f52d6c24ae263e24fc19847bb24\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"803108f12e1500d50a9614980ca7f8aa\")"
     ]
   }
 }
