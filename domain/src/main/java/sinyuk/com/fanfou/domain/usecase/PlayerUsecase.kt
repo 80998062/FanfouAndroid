@@ -17,7 +17,7 @@
 package sinyuk.com.fanfou.domain.usecase
 
 import android.arch.lifecycle.LiveData
-import sinyuk.com.fanfou.domain.Promise
+import sinyuk.com.common.Promise
 import sinyuk.com.fanfou.domain.data.Player
 
 /**

@@ -23,7 +23,7 @@ package sinyuk.com.fanfou.domain.data
 import android.arch.persistence.room.*
 import android.support.annotation.NonNull
 import com.google.gson.annotations.SerializedName
-import sinyuk.com.fanfou.domain.room.DateConverter
+import sinyuk.com.common.room.DateConverter
 import java.util.*
 
 /**

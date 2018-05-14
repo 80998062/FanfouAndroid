@@ -23,8 +23,8 @@ import android.support.v7.app.AppCompatDelegate
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
-import sinyuk.com.fanfou.domain.AppExecutors
-import sinyuk.com.fanfou.domain.TYPE_GLOBAL
+import sinyuk.com.common.AppExecutors
+import sinyuk.com.common.TYPE_GLOBAL
 import sinyuk.com.fanfou.injectors.AppInjector
 import sinyuk.com.fanfou.ui.NIGHT_MODE
 import sinyuk.com.fanfou.ui.NIGHT_MODE_AUTO

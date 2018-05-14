@@ -16,8 +16,16 @@
 
 package sinyuk.com.fanfou
 
+import android.annotation.SuppressLint
 import android.app.Application
+import android.os.StrictMode
+import android.util.Log
 import com.facebook.stetho.Stetho
+import com.twitter.sdk.android.core.DefaultLogger
+import com.twitter.sdk.android.core.Twitter
+import com.twitter.sdk.android.core.TwitterAuthConfig
+import com.twitter.sdk.android.core.TwitterConfig
+
 
 /**
  * Created by sinyuk on 2018/5/7.
@@ -34,9 +42,23 @@ import com.facebook.stetho.Stetho
  */
 
 class InstallTask constructor(private val application: Application) : Runnable {
+    @SuppressLint("LogNotTimber")
     override fun run() {
+        Log.d(application::class.java.simpleName, "Setting up StrictMode policy checking.")
+        StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build())
+        StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build())
+
         Stetho.initialize(Stetho.newInitializerBuilder(application)
                 .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(application))
                 .build())
+
+        val config = TwitterConfig.Builder(application)
+                .logger(DefaultLogger(Log.DEBUG))
+                .twitterAuthConfig(TwitterAuthConfig(
+                        BuildConfig.TWITTER_CONSUMER_KEY, BuildConfig.TWITTER_CONSUMER_SECRET))
+                .debug(true)
+                .build()
+
+        Twitter.initialize(config)
     }
 }

@@ -20,11 +20,14 @@ import android.arch.lifecycle.LiveData
 import android.content.SharedPreferences
 import okhttp3.HttpUrl
 import okhttp3.Response
-import sinyuk.com.fanfou.domain.*
-import sinyuk.com.fanfou.domain.api.AccessToken
-import sinyuk.com.fanfou.domain.api.AccessTokenTask
-import sinyuk.com.fanfou.domain.api.ApiResponse
-import sinyuk.com.fanfou.domain.api.RestAPI
+import sinyuk.com.common.AppExecutors
+import sinyuk.com.common.Fanfou
+import sinyuk.com.common.Promise
+import sinyuk.com.common.TYPE_GLOBAL
+import sinyuk.com.common.api.ApiResponse
+import sinyuk.com.fanfou.domain.api.FanfouAPI
+import sinyuk.com.fanfou.domain.api.FanfouAccessToken
+import sinyuk.com.fanfou.domain.api.FanfouAccessTokenTask
 import sinyuk.com.fanfou.domain.data.Player
 import sinyuk.com.fanfou.domain.usecase.SignUsecase
 import javax.inject.Inject
@@ -46,18 +49,18 @@ import javax.inject.Singleton
  */
 @Singleton
 class UserRepo @Inject constructor(
-        @Named(HTTP_FORCED_NETWORK) private val restAPI: RestAPI,
-        @Named(HTTP_CACHED) private val cachedAPI: RestAPI,
+        @Fanfou private val fanfouAPI: FanfouAPI,
+        @Fanfou(cached = true) private val cachedAPI: FanfouAPI,
         private val appExecutors: AppExecutors,
         @Named(TYPE_GLOBAL) private val preferences: SharedPreferences) : SignUsecase {
     override fun vertify(): LiveData<ApiResponse<Player>> {
-        return restAPI.verify_credentials()
+        return fanfouAPI.verify_credentials()
     }
 
     override fun signIn(account: String,
                         password: String,
-                        execute: (url: HttpUrl) -> Response?): LiveData<Promise<AccessToken>> {
-        val task = AccessTokenTask(account, password, preferences, execute)
+                        execute: (url: HttpUrl) -> Response?): LiveData<Promise<FanfouAccessToken>> {
+        val task = FanfouAccessTokenTask(account, password, preferences, execute)
         return task.apply { appExecutors.networkIO().execute(this) }.liveData
     }
 }

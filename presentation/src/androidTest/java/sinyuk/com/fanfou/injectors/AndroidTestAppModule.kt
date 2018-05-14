@@ -24,14 +24,14 @@ import dagger.Provides
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import sinyuk.com.fanfou.domain.ACCESS_TOKEN
-import sinyuk.com.fanfou.domain.TYPE_ANDROID_TEST
-import sinyuk.com.fanfou.domain.api.ApiModule
-import sinyuk.com.fanfou.domain.api.Endpoint
-import sinyuk.com.fanfou.domain.api.RestAPI
-import sinyuk.com.fanfou.domain.api.adapters.LiveDataCallAdapterFactory
+import sinyuk.com.common.ACCESS_TOKEN
+import sinyuk.com.common.TYPE_ANDROID_TEST
+import sinyuk.com.common.api.ApiModule
+import sinyuk.com.common.api.Endpoint
+import sinyuk.com.common.api.adapters.LiveDataCallAdapterFactory
+import sinyuk.com.fanfou.domain.api.FanfouAPI
 import sinyuk.com.fanfou.rest.FanfouAuthenticator
-import sinyuk.com.fanfou.rest.initOkHttpClient
+import sinyuk.com.fanfou.rest.initFanfouClient
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -75,7 +75,7 @@ class AndroidTestAppModule constructor(private val app: Context) {
     fun provideOkHttp(a: Context,
                       @Named(TYPE_ANDROID_TEST) sp: SharedPreferences,
                       @Named(TYPE_ANDROID_TEST) fa: FanfouAuthenticator) =
-            initOkHttpClient(a, sp.getStringSet(ACCESS_TOKEN, null), fa)
+            initFanfouClient(a, sp.getStringSet(ACCESS_TOKEN, null), fa)
 
 
     @Suppress("unused")
@@ -89,5 +89,5 @@ class AndroidTestAppModule constructor(private val app: Context) {
                     .addCallAdapterFactory(LiveDataCallAdapterFactory())
                     .client(okHttpClient)
                     .build()
-                    .create(RestAPI::class.java)!!
+                    .create(FanfouAPI::class.java)!!
 }

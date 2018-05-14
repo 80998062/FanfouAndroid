@@ -24,8 +24,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import sinyuk.com.android.paging.PagingRequestHelper
 import sinyuk.com.android.paging.createStatusLiveData
-import sinyuk.com.fanfou.domain.AppExecutors
-import sinyuk.com.fanfou.domain.api.RestAPI
+import sinyuk.com.common.AppExecutors
+import sinyuk.com.fanfou.domain.api.FanfouAPI
 import sinyuk.com.fanfou.domain.api.TIMELINE_HOME
 import sinyuk.com.fanfou.domain.data.Status
 
@@ -37,7 +37,7 @@ import sinyuk.com.fanfou.domain.data.Status
  * rate limiting using the PagingRequestHelper class.
  */
 class StatusBoundaryCallback(
-        private val webservice: RestAPI,
+        private val webservice: FanfouAPI,
         @WorkerThread private val handleResponse: (MutableList<Status>?) -> Unit,
         private val executors: AppExecutors,
         private val networkPageSize: Int)

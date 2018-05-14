@@ -16,6 +16,7 @@
 
 package sinyuk.com.fanfou.ui.sign
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.ViewTreeObserver
@@ -51,7 +52,7 @@ class SignInActivity : AbstractActivity() {
         setup()
     }
 
-    lateinit var keyboardListener: ViewTreeObserver.OnGlobalLayoutListener
+    private lateinit var keyboardListener: ViewTreeObserver.OnGlobalLayoutListener
 
     private fun setup() {
         keyboardListener = KeyboardUtil.attach(this, panel) {
@@ -69,6 +70,15 @@ class SignInActivity : AbstractActivity() {
     override fun onDestroy() {
         super.onDestroy()
         KeyboardUtil.detach(this, keyboardListener)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        // If using the TwitterLoginButton in a Fragment, use the following steps instead.
+        // Inside the Activity hosting the Fragment, pass the result from the Activity to the Fragment.
+        // Pass the activity result to the fragment, which will then pass the result to the login
+        // button.
+        signInView?.onActivityResult(requestCode, resultCode, data)
     }
 
 }

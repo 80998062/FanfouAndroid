@@ -18,12 +18,12 @@ package sinyuk.com.fanfou.domain.repo
 
 import android.arch.lifecycle.MutableLiveData
 import android.support.annotation.WorkerThread
-import sinyuk.com.fanfou.domain.Promise
-import sinyuk.com.fanfou.domain.api.ApiResponse
-import sinyuk.com.fanfou.domain.api.RestAPI
+import sinyuk.com.common.Promise
+import sinyuk.com.common.api.ApiResponse
+import sinyuk.com.common.room.LocalDatabase
+import sinyuk.com.fanfou.domain.api.FanfouAPI
 import sinyuk.com.fanfou.domain.api.TIMELINE_HOME
 import sinyuk.com.fanfou.domain.data.Status
-import sinyuk.com.fanfou.domain.room.LocalDatabase
 import java.io.IOException
 
 /**
@@ -31,7 +31,7 @@ import java.io.IOException
  *
  *
  */
-class StatusFetchTopTask(private val restAPI: RestAPI,
+class StatusFetchTopTask(private val fanfouAPI: FanfouAPI,
                          private val db: LocalDatabase,
                          private val pageSize: Int) : Runnable {
 
@@ -44,7 +44,7 @@ class StatusFetchTopTask(private val restAPI: RestAPI,
     override fun run() {
         try {
             val response =
-                    restAPI.statuses_from_path(path = TIMELINE_HOME, count = pageSize).execute()
+                    fanfouAPI.statuses_from_path(path = TIMELINE_HOME, count = pageSize).execute()
             val apiResponse = ApiResponse(response)
             if (apiResponse.isSuccessful()) {
                 val data = apiResponse.body

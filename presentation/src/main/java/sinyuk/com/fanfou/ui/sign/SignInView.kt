@@ -18,6 +18,7 @@ package sinyuk.com.fanfou.ui.sign
 
 import android.Manifest
 import android.arch.lifecycle.Observer
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.annotation.Dimension
@@ -32,10 +33,15 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import cn.dreamtobe.kpswitch.util.KeyboardUtil
+import com.twitter.sdk.android.core.Callback
+import com.twitter.sdk.android.core.Result
+import com.twitter.sdk.android.core.TwitterException
+import com.twitter.sdk.android.core.TwitterSession
+import com.twitter.sdk.android.core.identity.TwitterAuthClient
 import kotlinx.android.synthetic.main.signin_view.*
 import permissions.dispatcher.*
+import sinyuk.com.common.States
 import sinyuk.com.fanfou.R
-import sinyuk.com.fanfou.domain.States
 import sinyuk.com.fanfou.ext.obtainViewModel
 import sinyuk.com.fanfou.ext.start
 import sinyuk.com.fanfou.injectors.Injectable
@@ -139,6 +145,34 @@ class SignInView : AbstractFragment(), Injectable {
 
         account.setText("sinyuk.7@qq.com")
         password.setText("rabbit7run")
+
+
+        // twitter login button
+        twitterLogin.callback = object : Callback<TwitterSession>() {
+            override fun success(result: Result<TwitterSession>?) {
+                Toast.makeText(context, result?.data.toString(), Toast.LENGTH_SHORT).show()
+                requestEmail(result?.data)
+            }
+
+            override fun failure(exception: TwitterException?) {
+                Toast.makeText(context, exception?.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    /**
+     *
+     */
+    private fun requestEmail(session: TwitterSession?) {
+        TwitterAuthClient().requestEmail(session, object : Callback<String>() {
+            override fun success(result: Result<String>?) {
+                Toast.makeText(context, result?.data, Toast.LENGTH_SHORT).show()
+            }
+
+            override fun failure(exception: TwitterException?) {
+                Toast.makeText(context, exception?.message, Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun onFormChanged() {
@@ -224,5 +258,11 @@ class SignInView : AbstractFragment(), Injectable {
         password.clearFocus()
     }
 
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        // Pass the activity result to the saveSession button.
+        twitterLogin?.onActivityResult(requestCode, resultCode, data)
+    }
 
 }

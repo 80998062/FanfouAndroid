@@ -4,15 +4,11 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 27
-
-
-
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "X_AUTH_MODE", "\"client_auth\""
         buildConfigField "String", "CONSUMER_KEY", "\"ceab0dcd7b9fb9fa2ef5785bcd320e70\""
@@ -45,6 +41,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    //noinspection GradleCompatible
     implementation "com.android.support:appcompat-v7:$support_version"
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
@@ -64,6 +61,7 @@ dependencies {
     testImplementation "com.squareup.retrofit2:retrofit-mock:$retrofit_version"
     testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp_version"
 
+    implementation "com.twitter.sdk.android:twitter-core:$twitter_version"
 
     implementation "android.arch.paging:runtime:$paging_version"
     implementation "android.arch.persistence.room:runtime:$room_version"

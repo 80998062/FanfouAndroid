@@ -22,7 +22,7 @@ package sinyuk.com.android.paging
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import sinyuk.com.fanfou.domain.NetworkState
+import sinyuk.com.common.NetworkState
 
 private fun getErrorMessage(report: PagingRequestHelper.StatusReport): String {
     return PagingRequestHelper.RequestType.values().mapNotNull { report.getErrorFor(it)?.message }.first()

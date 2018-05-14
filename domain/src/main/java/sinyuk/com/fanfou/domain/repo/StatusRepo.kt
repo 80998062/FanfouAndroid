@@ -23,14 +23,14 @@ import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.support.annotation.VisibleForTesting
 import android.support.annotation.WorkerThread
-import sinyuk.com.fanfou.domain.*
-import sinyuk.com.fanfou.domain.api.RestAPI
+import sinyuk.com.common.*
+import sinyuk.com.common.room.LocalDatabase
+import sinyuk.com.common.utils.Listing
+import sinyuk.com.fanfou.domain.api.FanfouAPI
 import sinyuk.com.fanfou.domain.data.Player
 import sinyuk.com.fanfou.domain.data.Status
 import sinyuk.com.fanfou.domain.repo.titled.TiledStatusDataSourceFactory
-import sinyuk.com.fanfou.domain.room.LocalDatabase
 import sinyuk.com.fanfou.domain.usecase.StatusUsecase
-import sinyuk.com.fanfou.domain.utils.Listing
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -50,8 +50,8 @@ import javax.inject.Singleton
  */
 @Singleton
 class StatusRepo @Inject constructor(
-        @Named(HTTP_FORCED_NETWORK) private val restAPI: RestAPI,
-        @Named(HTTP_CACHED) private val cachedAPI: RestAPI,
+        @Fanfou private val fanfouAPI: FanfouAPI,
+        @Fanfou(cached = true) private val cachedAPI: FanfouAPI,
         private val appExecutors: AppExecutors,
         @Named(ROOM_IN_MEMORY) private val memory: LocalDatabase,
         @Named(ROOM_IN_DISK) private val disk: LocalDatabase) : StatusUsecase {
@@ -92,7 +92,7 @@ class StatusRepo @Inject constructor(
         // create a boundary callback which will observe when the user reaches to the edges of
         // the list and update the database with extra data.
         val boundaryCallback = StatusBoundaryCallback(
-                webservice = restAPI,
+                webservice = fanfouAPI,
                 handleResponse = this::insertResultIntoDb,
                 executors = appExecutors,
                 networkPageSize = count)
@@ -124,7 +124,7 @@ class StatusRepo @Inject constructor(
 
 
     override fun fetchTop(count: Int): LiveData<Promise<MutableList<Status>>> {
-        val task = StatusFetchTopTask(restAPI, disk, count)
+        val task = StatusFetchTopTask(fanfouAPI, disk, count)
         return task.livedata
     }
 

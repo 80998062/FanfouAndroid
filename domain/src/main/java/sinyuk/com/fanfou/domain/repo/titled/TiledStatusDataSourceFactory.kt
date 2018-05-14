@@ -18,22 +18,22 @@ package sinyuk.com.fanfou.domain.repo.titled
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.DataSource
-import sinyuk.com.fanfou.domain.AppExecutors
-import sinyuk.com.fanfou.domain.api.RestAPI
+import sinyuk.com.common.AppExecutors
+import sinyuk.com.fanfou.domain.api.FanfouAPI
 import sinyuk.com.fanfou.domain.data.Status
 
 /**
  * Created by sinyuk on 2017/12/29.
  *
  */
-class TiledStatusDataSourceFactory(private val restAPI: RestAPI,
+class TiledStatusDataSourceFactory(private val fanfouAPI: FanfouAPI,
                                    private val path: String,
                                    private val id: String?,
                                    private val appExecutors: AppExecutors) : DataSource.Factory<Int, Status>() {
     val sourceLiveData = MutableLiveData<TiledStatusDataSource>()
     override fun create(): DataSource<Int, Status> {
         val source = TiledStatusDataSource(
-                restAPI = restAPI,
+                fanfouAPI = fanfouAPI,
                 path = path,
                 id = id,
                 appExecutors = appExecutors)

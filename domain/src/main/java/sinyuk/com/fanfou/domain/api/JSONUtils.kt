@@ -2,8 +2,6 @@ package sinyuk.com.fanfou.domain.api
 
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonParseException
-import sinyuk.com.fanfou.domain.data.Photos
-import sinyuk.com.fanfou.domain.data.Status
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -48,31 +46,4 @@ val DateDeserializer = JsonDeserializer<Date> { json, _, _ ->
         else
             return@JsonDeserializer date
     }
-}
-
-
-@Deprecated("废物")
-val StatusDeserializer = JsonDeserializer<Status> { json, _, _ ->
-    val status = Status()
-    json?.asJsonObject?.apply {
-        get("user")?.asJsonObject.apply {
-            status.uniqueId = get("unique_id").asString
-        }
-        status.id = get("id").asString
-        status.text = get("text").asString
-        status.source = get("source").asString
-        status.location = get("location").asString
-        formatters[0].timeZone = TimeZone.getDefault()
-        status.createdAt = formatters[0].parse(get("createdAt").asString)
-        status.favorited = get("favorited").asBoolean
-
-        get("photo")?.asJsonObject.apply {
-            val photos = Photos(url = get("url").asString,
-                    imageurl = get("imageurl").asString,
-                    thumburl = get("thumburl").asString,
-                    largeurl = get("largeurl").asString)
-            status.photos = photos
-        }
-    }
-    status
 }

@@ -21,10 +21,10 @@ import android.arch.paging.PageKeyedDataSource
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import sinyuk.com.fanfou.domain.AppExecutors
-import sinyuk.com.fanfou.domain.NetworkState
-import sinyuk.com.fanfou.domain.Promise
-import sinyuk.com.fanfou.domain.api.RestAPI
+import sinyuk.com.common.AppExecutors
+import sinyuk.com.common.NetworkState
+import sinyuk.com.common.Promise
+import sinyuk.com.fanfou.domain.api.FanfouAPI
 import sinyuk.com.fanfou.domain.api.TIMELINE_FAVORITES
 import sinyuk.com.fanfou.domain.api.TIMELINE_USER
 import sinyuk.com.fanfou.domain.data.Status
@@ -39,7 +39,7 @@ import java.io.IOException
 /**
  * @param uniqueId 可以是用户id或者是msg id
  */
-class TiledStatusDataSource(private val restAPI: RestAPI,
+class TiledStatusDataSource(private val fanfouAPI: FanfouAPI,
                             private val path: String,
                             private val id: String?,
                             private val appExecutors: AppExecutors) : PageKeyedDataSource<Int, Status>() {
@@ -55,8 +55,8 @@ class TiledStatusDataSource(private val restAPI: RestAPI,
 
     private fun loadInitialFromNetwork(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Status>) {
         when (path) {
-            TIMELINE_USER -> restAPI.statuses_from_path(TIMELINE_USER, id = id, count = params.requestedLoadSize, page = 1)
-            TIMELINE_FAVORITES -> restAPI.fetch_favorites(id = id, count = params.requestedLoadSize, page = 1)
+            TIMELINE_USER -> fanfouAPI.statuses_from_path(TIMELINE_USER, id = id, count = params.requestedLoadSize, page = 1)
+            TIMELINE_FAVORITES -> fanfouAPI.fetch_favorites(id = id, count = params.requestedLoadSize, page = 1)
             else -> TODO()
         }.enqueue(object : Callback<MutableList<Status>> {
             override fun onResponse(call: Call<MutableList<Status>>?, response: Response<MutableList<Status>>) {
@@ -104,8 +104,8 @@ class TiledStatusDataSource(private val restAPI: RestAPI,
     private fun loadAfterFromNetwork(params: LoadParams<Int>, callback: LoadCallback<Int, Status>) {
         try {
             val response = when (path) {
-                TIMELINE_USER -> restAPI.statuses_from_path(TIMELINE_USER, id = id, count = params.requestedLoadSize, page = params.key)
-                TIMELINE_FAVORITES -> restAPI.fetch_favorites(id = id, count = params.requestedLoadSize, page = params.key)
+                TIMELINE_USER -> fanfouAPI.statuses_from_path(TIMELINE_USER, id = id, count = params.requestedLoadSize, page = params.key)
+                TIMELINE_FAVORITES -> fanfouAPI.fetch_favorites(id = id, count = params.requestedLoadSize, page = params.key)
                 else -> TODO()
             }.execute()
 

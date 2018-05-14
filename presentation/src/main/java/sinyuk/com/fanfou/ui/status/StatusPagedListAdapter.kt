@@ -30,7 +30,7 @@ import com.daimajia.swipe.interfaces.SwipeItemMangerInterface
 import com.daimajia.swipe.util.Attributes
 import kotlinx.android.synthetic.main.status_list_item.view.*
 import sinyuk.com.fanfou.R
-import sinyuk.com.fanfou.domain.NetworkState
+import sinyuk.com.common.NetworkState
 import sinyuk.com.fanfou.domain.api.TIMELINE_FAVORITES
 import sinyuk.com.fanfou.domain.data.Status
 import sinyuk.com.fanfou.glide.GlideApp

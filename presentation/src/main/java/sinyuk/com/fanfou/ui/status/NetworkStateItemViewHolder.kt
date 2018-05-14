@@ -21,7 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import sinyuk.com.fanfou.R
-import sinyuk.com.fanfou.domain.NetworkState
+import sinyuk.com.common.NetworkState
 
 /**
  * Created by sinyuk on 2017/12/18.

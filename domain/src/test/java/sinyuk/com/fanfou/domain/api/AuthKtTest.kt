@@ -8,7 +8,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import sinyuk.com.fanfou.domain.States
+import sinyuk.com.common.States
 import sinyuk.com.fanfou.domain.util.getValue
 import sinyuk.com.fanfou.domain.util.loadResponseFromAssets
 
@@ -49,7 +49,7 @@ class AuthKtTest {
     @Throws(IOException::class)
     @Suppress("UNNECESSARY_SAFE_CALL")
     fun accessTokenUrl() {
-        val mock = AccessTokenTask.accessTokenUrl(
+        val mock = FanfouAccessTokenTask.accessTokenUrl(
                 "80998062@qq.com",
                 "rabbit7run",
                 "1489591502",
@@ -84,7 +84,7 @@ class AuthKtTest {
     @Test
     @Throws(IOException::class)
     fun run() {
-        val mockTask = AccessTokenTask("", "", null, { mockSucceed(it) })
+        val mockTask = FanfouAccessTokenTask("", "", null, { mockSucceed(it) })
         mockTask.run()
         val promise = getValue(mockTask.liveData)
         assert(promise.states == States.SUCCESS)
@@ -94,18 +94,18 @@ class AuthKtTest {
     @Test
     @Throws(IOException::class)
     fun run1() {
-        val mockTask = AccessTokenTask("", "", null, { mockEmptyBody(it) })
+        val mockTask = FanfouAccessTokenTask("", "", null, { mockEmptyBody(it) })
         mockTask.run()
         val promise = getValue(mockTask.liveData)
         assert(promise.states == States.ERROR)
         assert(promise.data == null)
-        assert(promise.message == AccessTokenTask.SERVER_ERROR)
+        assert(promise.message == FanfouAccessTokenTask.SERVER_ERROR)
     }
 
     @Test
     @Throws(IOException::class)
     fun run2() {
-        val mockTask = AccessTokenTask("", "", null, { mockFailed(it) })
+        val mockTask = FanfouAccessTokenTask("", "", null, { mockFailed(it) })
         mockTask.run()
         val promise = getValue(mockTask.liveData)
         assert(promise.states == States.ERROR)
@@ -116,7 +116,7 @@ class AuthKtTest {
     @Test
     @Throws(IOException::class)
     fun run3() {
-        val mockTask = AccessTokenTask("", "", null, { mockFailed2(it) })
+        val mockTask = FanfouAccessTokenTask("", "", null, { mockFailed2(it) })
         mockTask.run()
         val promise = getValue(mockTask.liveData)
         assert(promise.states == States.ERROR)
@@ -127,7 +127,7 @@ class AuthKtTest {
     @Test
     @Throws(IOException::class)
     fun run4() {
-        val mockTask = AccessTokenTask("", "", null, { mockException(it) })
+        val mockTask = FanfouAccessTokenTask("", "", null, { mockException(it) })
         mockTask.run()
         val promise = getValue(mockTask.liveData)
         assert(promise.states == States.ERROR)

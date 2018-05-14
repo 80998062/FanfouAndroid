@@ -20,20 +20,24 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
+import com.twitter.sdk.android.core.TwitterCore
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import sinyuk.com.common.*
+import sinyuk.com.common.api.ApiModule
+import sinyuk.com.common.api.Endpoint
+import sinyuk.com.common.api.adapters.LiveDataCallAdapterFactory
+import sinyuk.com.common.room.RoomModule
 import sinyuk.com.fanfou.App
-import sinyuk.com.fanfou.domain.*
-import sinyuk.com.fanfou.domain.api.ApiModule
-import sinyuk.com.fanfou.domain.api.Endpoint
-import sinyuk.com.fanfou.domain.api.RestAPI
-import sinyuk.com.fanfou.domain.api.adapters.LiveDataCallAdapterFactory
-import sinyuk.com.fanfou.domain.room.RoomModule
+import sinyuk.com.fanfou.domain.api.FanfouAPI
 import sinyuk.com.fanfou.rest.FanfouAuthenticator
-import sinyuk.com.fanfou.rest.initOkHttpClient
+import sinyuk.com.fanfou.rest.initFanfouClient
+import sinyuk.com.fanfou.rest.initTwitterClient
+import sinyuk.com.twitter.domain.api.TwitterAPI
+import sinyuk.com.twitter.domain.api.TwitterClient
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -78,44 +82,95 @@ class AppModule constructor(private val app: App) {
     @Suppress("unused")
     @Provides
     @Singleton
-    @Named(HTTP_FORCED_NETWORK)
-    fun provideOkHttp(a: App, @Named(TYPE_GLOBAL) sp: SharedPreferences, fa: FanfouAuthenticator) =
-            initOkHttpClient(a, sp.getStringSet(ACCESS_TOKEN, null), fa)
+    @Fanfou
+    fun provideFanfou(a: App, @Named(TYPE_GLOBAL) sp: SharedPreferences, fa: FanfouAuthenticator) =
+            initFanfouClient(a, sp.getStringSet(ACCESS_TOKEN, null), fa)
 
     @Suppress("unused")
     @Provides
     @Singleton
-    @Named(HTTP_CACHED)
-    fun provideOkHttpCached(a: App, @Named(TYPE_GLOBAL) sp: SharedPreferences, fa: FanfouAuthenticator) =
-            initOkHttpClient(a, sp.getStringSet(ACCESS_TOKEN, null), fa, true)
+    @Fanfou(cached = true)
+    fun provideFanfouCached(a: App, @Named(TYPE_GLOBAL) sp: SharedPreferences, fa: FanfouAuthenticator) =
+            initFanfouClient(a, sp.getStringSet(ACCESS_TOKEN, null), fa, true)
 
     @Suppress("unused")
     @Provides
     @Singleton
-    @Named(HTTP_CACHED)
-    fun provideRestAPICached(@Named(HTTP_CACHED) okHttpClient: OkHttpClient, gson: Gson, endpoint: Endpoint) =
+    @Twitter
+    fun provideTwitter(a: App) = initTwitterClient(a, true)
+
+    @Suppress("unused")
+    @Provides
+    @Singleton
+    @Twitter(cached = true)
+    fun provideTwitterCached(a: App) = initTwitterClient(a, true)
+
+    @Suppress("unused")
+    @Provides
+    @Singleton
+    @Fanfou(cached = true)
+    fun provideFanfouAPICached(@Fanfou(cached = true) oc: OkHttpClient, g: Gson, e: Endpoint) =
             Retrofit.Builder()
-                    .baseUrl(endpoint.baseUrl)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .baseUrl(e.baseUrl)
+                    .addConverterFactory(GsonConverterFactory.create(g))
                     .addCallAdapterFactory(LiveDataCallAdapterFactory())
-                    .client(okHttpClient)
+                    .client(oc)
                     .build()
-                    .create(RestAPI::class.java)!!
+                    .create(FanfouAPI::class.java)!!
 
 
     @Suppress("unused")
     @Provides
     @Singleton
-    @Named(HTTP_FORCED_NETWORK)
-    fun provideRestAPI(@Named(HTTP_FORCED_NETWORK) okHttpClient: OkHttpClient, gson: Gson, endpoint: Endpoint) =
+    @Fanfou
+    fun provideFanfouAPI(@Fanfou oc: OkHttpClient, g: Gson, e: Endpoint) =
             Retrofit.Builder()
-                    .baseUrl(endpoint.baseUrl)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .baseUrl(e.baseUrl)
+                    .addConverterFactory(GsonConverterFactory.create(g))
                     .addCallAdapterFactory(LiveDataCallAdapterFactory())
-                    .client(okHttpClient)
+                    .client(oc)
                     .build()
-                    .create(RestAPI::class.java)!!
+                    .create(FanfouAPI::class.java)!!
 
+    @Suppress("unused")
+    @Provides
+    @Singleton
+    @Twitter
+    fun provideTwitterAPI(@Twitter oc: OkHttpClient): TwitterAPI {
+        val session = TwitterCore.getInstance().sessionManager.activeSession
+        val client: TwitterClient = if (session != null) {
+            TwitterClient(oc, session)
+        } else {
+            TwitterClient(oc)
+        }
+
+        if (session != null) {
+            TwitterCore.getInstance().addApiClient(session, client)
+        } else {
+            TwitterCore.getInstance().addGuestApiClient(client)
+        }
+        return client.getService()
+    }
+
+    @Suppress("unused")
+    @Provides
+    @Singleton
+    @Twitter(cached = true)
+    fun provideTwitterAPICached(@Twitter(cached = true) oc: OkHttpClient): TwitterAPI {
+        val session = TwitterCore.getInstance().sessionManager.activeSession
+        val client: TwitterClient = if (session != null) {
+            TwitterClient(oc, session)
+        } else {
+            TwitterClient(oc)
+        }
+
+        if (session != null) {
+            TwitterCore.getInstance().addApiClient(session, client)
+        } else {
+            TwitterCore.getInstance().addGuestApiClient(client)
+        }
+        return client.getService()
+    }
 
     @Suppress("unused")
     @Provides

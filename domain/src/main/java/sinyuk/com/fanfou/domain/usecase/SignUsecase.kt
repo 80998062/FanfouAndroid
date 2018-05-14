@@ -19,9 +19,9 @@ package sinyuk.com.fanfou.domain.usecase
 import android.arch.lifecycle.LiveData
 import okhttp3.HttpUrl
 import okhttp3.Response
-import sinyuk.com.fanfou.domain.Promise
-import sinyuk.com.fanfou.domain.api.AccessToken
-import sinyuk.com.fanfou.domain.api.ApiResponse
+import sinyuk.com.common.Promise
+import sinyuk.com.fanfou.domain.api.FanfouAccessToken
+import sinyuk.com.common.api.ApiResponse
 import sinyuk.com.fanfou.domain.data.Player
 
 /**
@@ -38,7 +38,7 @@ import sinyuk.com.fanfou.domain.data.Player
 └──────────────────────────────────────────────────────────────────┘
  */
 interface SignUsecase {
-    fun signIn(account: String, password: String, execute: (url: HttpUrl) -> Response?): LiveData<Promise<AccessToken>>
+    fun signIn(account: String, password: String, execute: (url: HttpUrl) -> Response?): LiveData<Promise<FanfouAccessToken>>
 
     fun vertify(): LiveData<ApiResponse<Player>>
 }

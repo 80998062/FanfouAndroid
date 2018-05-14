@@ -18,17 +18,15 @@ package sinyuk.com.fanfou.domain.repo
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import sinyuk.com.fanfou.domain.AppExecutors
-import sinyuk.com.fanfou.domain.HTTP_CACHED
-import sinyuk.com.fanfou.domain.HTTP_FORCED_NETWORK
-import sinyuk.com.fanfou.domain.Promise
-import sinyuk.com.fanfou.domain.api.RestAPI
+import sinyuk.com.common.AppExecutors
+import sinyuk.com.common.Fanfou
+import sinyuk.com.common.Promise
+import sinyuk.com.fanfou.domain.api.FanfouAPI
 import sinyuk.com.fanfou.domain.data.Player
 import sinyuk.com.fanfou.domain.usecase.PlayerUsecase
 import java.io.IOException
 import java.io.InterruptedIOException
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -46,8 +44,8 @@ import javax.inject.Singleton
  */
 @Singleton
 class PlayerRepo @Inject constructor(
-        @Named(HTTP_FORCED_NETWORK) private val restAPI: RestAPI,
-        @Named(HTTP_CACHED) private val cachedAPI: RestAPI,
+        @Fanfou private val fanfouAPI: FanfouAPI,
+        @Fanfou(cached = true) private val cachedAPI: FanfouAPI,
         private val appExecutors: AppExecutors) : PlayerUsecase {
     override fun fetchLatestStatus(uniqueId: String, forcedUpdate: Boolean): LiveData<Promise<Player>> {
         val liveData = MutableLiveData<Promise<Player>>()
@@ -55,7 +53,7 @@ class PlayerRepo @Inject constructor(
         if (forcedUpdate) {
             appExecutors.networkIO().execute {
                 try {
-                    val response = restAPI.fetch_latest_status(uniqueId).execute()
+                    val response = fanfouAPI.fetch_latest_status(uniqueId).execute()
                     if (response.isSuccessful) {
                         val status = response.body()?.first()
                         if (status != null) {

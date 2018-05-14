@@ -29,9 +29,9 @@ import com.bumptech.glide.util.FixedPreloadSizeProvider
 import kotlinx.android.synthetic.main.statuses_view.*
 import sinyuk.com.fanfou.R
 import sinyuk.com.fanfou.TimberDelegate
-import sinyuk.com.fanfou.domain.NetworkState
+import sinyuk.com.common.NetworkState
 import sinyuk.com.fanfou.domain.data.Status
-import sinyuk.com.fanfou.domain.isOnline
+import sinyuk.com.common.isOnline
 import sinyuk.com.fanfou.ext.obtainViewModelFromActivity
 import sinyuk.com.fanfou.glide.GlideApp
 import sinyuk.com.fanfou.injectors.Injectable

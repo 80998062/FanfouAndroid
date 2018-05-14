@@ -24,8 +24,8 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import dagger.android.support.AndroidSupportInjection
 import sinyuk.com.fanfou.App
-import sinyuk.com.fanfou.domain.api.ApiModule
-import sinyuk.com.fanfou.domain.room.RoomModule
+import sinyuk.com.common.api.ApiModule
+import sinyuk.com.common.room.RoomModule
 
 /**
  * Helper class to automatically inject fragments if they implement [Injectable].

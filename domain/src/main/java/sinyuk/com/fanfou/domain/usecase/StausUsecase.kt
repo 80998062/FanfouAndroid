@@ -18,9 +18,9 @@ package sinyuk.com.fanfou.domain.usecase
 
 import android.arch.lifecycle.LiveData
 import android.support.annotation.MainThread
-import sinyuk.com.fanfou.domain.Promise
+import sinyuk.com.common.Promise
 import sinyuk.com.fanfou.domain.data.Status
-import sinyuk.com.fanfou.domain.utils.Listing
+import sinyuk.com.common.utils.Listing
 
 /**
  * Created by sinyuk on 2018/5/9.

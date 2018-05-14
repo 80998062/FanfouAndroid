@@ -22,37 +22,59 @@ apply plugin: "kotlin-android-extensions"
 
 apply plugin: 'kotlin-kapt'
 
+//Load API Key information in from property file
+Properties props = new Properties()
+try {
+    props.load(file('twitter.properties').newDataInputStream())
+} catch (Exception ex) {
+    throw new GradleException("Missing twitter.properties, check the twitter.properties file.")
+}
+
 android {
     compileSdkVersion 27
+
     defaultConfig {
         applicationId "sinyuk.com.fanfou"
-        minSdkVersion 21
+        minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        buildConfigField "String", "OAUTH_VERSION_VALUE", "\"1.0\""
-        buildConfigField "String", "OAUTH_TYPE", "\"OAuth\""
-        buildConfigField "String", "CONSUMER_KEY", "\"ceab0dcd7b9fb9fa2ef5785bcd320e70\""
-        buildConfigField "String", "CONSUMER_SECRET", "\"bc9d15a8458d863cc6524feb6d495f4b\""
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
-            minifyEnabled false
+            shrinkResources true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            // fanfou
+            buildConfigField "String", "OAUTH_VERSION_VALUE", "\"1.0\""
+            buildConfigField "String", "OAUTH_TYPE", "\"OAuth\""
+            buildConfigField "String", "CONSUMER_KEY", "\"ceab0dcd7b9fb9fa2ef5785bcd320e70\""
+            buildConfigField "String", "CONSUMER_SECRET", "\"bc9d15a8458d863cc6524feb6d495f4b\""
+            // twitter
+            buildConfigField "String", "TWITTER_CONSUMER_KEY", "\"${props.getProperty("twitterConsumerKey")}\""
+            buildConfigField "String", "TWITTER_CONSUMER_SECRET", "\"${props.getProperty("twitterConsumerSecret")}\""
+            buildConfigField "String", "MOPUB_AD_UNIT_ID", "\"${props.getProperty("mopubAdUnitId")}\""
         }
 
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             testCoverageEnabled = true
+            // fanfou
+            buildConfigField "String", "OAUTH_VERSION_VALUE", "\"1.0\""
+            buildConfigField "String", "OAUTH_TYPE", "\"OAuth\""
+            buildConfigField "String", "CONSUMER_KEY", "\"ceab0dcd7b9fb9fa2ef5785bcd320e70\""
+            buildConfigField "String", "CONSUMER_SECRET", "\"bc9d15a8458d863cc6524feb6d495f4b\""
+            // twitter
+            buildConfigField "String", "TWITTER_CONSUMER_KEY", "\"${props.getProperty("twitterConsumerKey")}\""
+            buildConfigField "String", "TWITTER_CONSUMER_SECRET", "\"${props.getProperty("twitterConsumerSecret")}\""
+            buildConfigField "String", "MOPUB_AD_UNIT_ID", "\"${props.getProperty("mopubAdUnitId")}\""
         }
     }
 
-    sourceSets {
-//        main.kotlin.srcDirs = ['main/java', 'release/java', 'debug/java']
-//        main.java.srcDirs = ['main/java', 'release/java', 'debug/java']
-    }
+    sourceSets {}
 }
 
 dependencies {
@@ -115,4 +137,6 @@ dependencies {
     implementation "jp.wasabeef:glide-transformations:3.3+"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
 
+
+    implementation "com.twitter.sdk.android:twitter-core:$twitter_version"
 }

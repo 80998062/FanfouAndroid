@@ -33,7 +33,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import sinyuk.com.fanfou.domain.BuildConfig;
-import sinyuk.com.fanfou.domain.RequestState;
+import sinyuk.com.common.RequestState;
 
 /**
  * A helper class for {@link android.arch.paging.PagedList.BoundaryCallback BoundaryCallback}s and
