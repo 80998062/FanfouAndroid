@@ -129,4 +129,26 @@
         <item name="android:layout_weight">1</item>
     </style>
 
+    <style name="context_menu_text">
+        <item name="android:textSize">@dimen/text_13</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+    </style>
+
+    <style name="action_button_qmui">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">28dp</item>
+        <item name="android:layout_gravity">center_vertical|end</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/text_13</item>
+        <item name="android:textStyle">bold</item>
+        <item name="qmui_backgroundColor">@color/text_color_enable</item>
+        <item name="qmui_borderWidth">0dp</item>
+        <item name="qmui_radius">14dp</item>
+        <item name="android:paddingStart">@dimen/gap_12</item>
+        <item name="android:paddingEnd">@dimen/gap_12</item>
+        <item name="android:layout_marginStart">@dimen/gap_8</item>
+        <item name="android:layout_marginEnd">@dimen/gap_8</item>
+    </style>
+
 </resources>

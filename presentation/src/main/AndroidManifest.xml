@@ -23,8 +23,7 @@
 
         <activity
             android:name=".ui.sign.SignInActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:windowSoftInputMode="adjustPan|stateHidden">
+            android:windowSoftInputMode="adjustResize">
             <intent-filter android:label="@string/label_signin">
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

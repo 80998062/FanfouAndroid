@@ -29,15 +29,20 @@ import android.text.InputType
 import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
+import android.view.MotionEvent
 import android.view.View
+import android.view.ViewTreeObserver
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import cn.dreamtobe.kpswitch.util.KPSwitchConflictUtil
 import cn.dreamtobe.kpswitch.util.KeyboardUtil
 import com.twitter.sdk.android.core.Callback
 import com.twitter.sdk.android.core.Result
 import com.twitter.sdk.android.core.TwitterException
 import com.twitter.sdk.android.core.TwitterSession
 import com.twitter.sdk.android.core.identity.TwitterAuthClient
+import com.yalantis.contextmenu.lib.ContextMenuDialogFragment
+import com.yalantis.contextmenu.lib.interfaces.OnMenuItemClickListener
 import kotlinx.android.synthetic.main.signin_view.*
 import permissions.dispatcher.*
 import sinyuk.com.common.States
@@ -48,6 +53,7 @@ import sinyuk.com.fanfou.injectors.Injectable
 import sinyuk.com.fanfou.ui.FanfouViewModelFactory
 import sinyuk.com.fanfou.ui.ViewTooltip
 import sinyuk.com.fanfou.ui.base.AbstractFragment
+import sinyuk.com.fanfou.ui.getMenuDialog
 import sinyuk.com.fanfou.ui.status.TimelineTestActivity
 import sinyuk.com.fanfou.utils.showRationaleDialog
 import javax.inject.Inject
@@ -67,7 +73,8 @@ import javax.inject.Inject
 └──────────────────────────────────────────────────────────────────┘
  */
 @RuntimePermissions
-class SignInView : AbstractFragment(), Injectable {
+class SignInView : AbstractFragment(), Injectable, OnMenuItemClickListener {
+
     override fun layoutId() = R.layout.signin_view
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -79,12 +86,24 @@ class SignInView : AbstractFragment(), Injectable {
     lateinit var factory: FanfouViewModelFactory
 
     private val signViewModel by lazy { obtainViewModel(factory, SignViewModel::class.java) }
+    private lateinit var keyboardListener: ViewTreeObserver.OnGlobalLayoutListener
+
 
     private fun setup() {
+        // kps
+        keyboardListener = KeyboardUtil.attach(activity, panel) {
+            if (!it) clearFocus()
+        }
+
+        nestedScrollView.setOnTouchListener { _, event ->
+            if (event?.action == MotionEvent.ACTION_CANCEL || event?.action == MotionEvent.ACTION_UP) {
+                KPSwitchConflictUtil.hidePanelAndKeyboard(panel)
+            }
+            false
+        }
+
         onFormChanged()
         togglePasswordVisibility(false)
-
-        skip.setOnClickListener { start(TimelineTestActivity::class) }
 
         account.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -147,7 +166,9 @@ class SignInView : AbstractFragment(), Injectable {
         password.setText("rabbit7run")
 
 
-        // twitter login button
+        // twitter
+        fakeTwitterLogin.setOnClickListener { twitterLogin.performClick() }
+
         twitterLogin.callback = object : Callback<TwitterSession>() {
             override fun success(result: Result<TwitterSession>?) {
                 Toast.makeText(context, result?.data.toString(), Toast.LENGTH_SHORT).show()
@@ -158,6 +179,42 @@ class SignInView : AbstractFragment(), Injectable {
                 Toast.makeText(context, exception?.message, Toast.LENGTH_SHORT).show()
             }
         }
+
+        // context menu
+        menu.setOnClickListener {
+            if (contextMenu == null) {
+                contextMenu = getMenuDialog(context!!,
+                        R.array.context_menu_icons_login,
+                        R.array.context_menu_titles_login)
+                contextMenu!!.setItemClickListener(this)
+            }
+            contextMenu!!.show(childFragmentManager, contextMenu?.tag)
+        }
+    }
+
+    private var contextMenu: ContextMenuDialogFragment? = null
+
+    override fun onMenuItemClick(p0: View?, p1: Int) {
+        when (p1) {
+            0 -> contextMenu?.dismiss()
+            1 -> start(TimelineTestActivity::class)
+            2 -> {
+            }
+            else -> {
+            }
+        }
+    }
+
+    fun onBackpress() = when {
+        panel.visibility == View.VISIBLE -> {
+            KPSwitchConflictUtil.hidePanelAndKeyboard(panel)
+            true
+        }
+        contextMenu?.isAdded == true -> {
+            contextMenu!!.dismiss()
+            true
+        }
+        else -> false
     }
 
     /**
@@ -253,9 +310,14 @@ class SignInView : AbstractFragment(), Injectable {
         progress.isIndeterminate = freeze
     }
 
-    fun clearFocus() {
+    private fun clearFocus() {
         account.clearFocus()
         password.clearFocus()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        KeyboardUtil.detach(activity, keyboardListener)
     }
 
 

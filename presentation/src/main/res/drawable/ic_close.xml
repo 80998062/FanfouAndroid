@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<!--
   ~   Copyright 2081 Sinyuk
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,13 @@
   ~    limitations under the License.
   -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:autoMirrored="true"
+    android:viewportHeight="1024"
+    android:viewportWidth="1024">
+    <path
+        android:fillColor="@color/colorAccent"
+        android:pathData="M579.89,512l190.06,-190.06a48,48 0,0 0,-67.89 -67.87L512,444.11 321.94,254.06a48,48 0,1 0,-67.87 67.87L444.11,512 254.06,702.06a48,48 0,1 0,67.87 67.87L512,579.89l190.06,190.06a48,48 0,0 0,67.87 -67.89L579.89,512z" />
+</vector>

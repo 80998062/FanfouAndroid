@@ -30,4 +30,7 @@
     <string name="hint_login_failed">登入失败</string>
     <string name="label_following">关注中</string>
     <string name="label_follower">被关注</string>
+    <string name="action_login_fanfou">登录饭否。</string>
+    <string name="action_login_twitter">登录Twitter</string>
+    <string name="action_close">关闭</string>
 </resources>

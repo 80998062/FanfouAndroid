@@ -42,4 +42,16 @@
         <item>状态</item>
         <item>用户</item>
     </string-array>
+
+    <string-array name="context_menu_titles_login">
+        <item>饭否</item>
+        <item>推特</item>
+        <item>关于</item>
+    </string-array>
+
+    <integer-array name="context_menu_icons_login">
+        <item>@drawable/ic_android</item>
+        <item>@drawable/ic_android</item>
+        <item>@drawable/ic_android</item>
+    </integer-array>
 </resources>

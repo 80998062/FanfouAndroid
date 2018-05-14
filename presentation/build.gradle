@@ -104,6 +104,9 @@ dependencies {
     implementation 'com.borjabravo:readmoretextview:2.1.0'
     implementation 'com.daimajia.swipelayout:library:1.2.0@aar'
     implementation 'com.linkedin.android.spyglass:spyglass:1.4.0'
+    // https://yalantis.com
+    implementation 'com.github.Yalantis:Context-Menu.Android:1.0.8'
+
 
     // network
     implementation "com.google.code.gson:gson:$gson_version"

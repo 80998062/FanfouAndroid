@@ -18,10 +18,7 @@ package sinyuk.com.fanfou.ui.sign
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.MotionEvent
-import android.view.ViewTreeObserver
-import cn.dreamtobe.kpswitch.util.KeyboardUtil
-import kotlinx.android.synthetic.main.signin_activity.*
+import android.view.KeyEvent
 import sinyuk.com.fanfou.R
 import sinyuk.com.fanfou.ext.addFragment
 import sinyuk.com.fanfou.ui.base.AbstractActivity
@@ -49,27 +46,6 @@ class SignInActivity : AbstractActivity() {
         signInView = SignInView().apply {
             addFragment(R.id.fragment_container, this, false)
         }
-        setup()
-    }
-
-    private lateinit var keyboardListener: ViewTreeObserver.OnGlobalLayoutListener
-
-    private fun setup() {
-        keyboardListener = KeyboardUtil.attach(this, panel) {
-            if (!it) signInView?.clearFocus()
-        }
-
-        nestedScrollView.setOnTouchListener { v, event ->
-            if (event?.action == MotionEvent.ACTION_CANCEL || event?.action == MotionEvent.ACTION_UP) {
-                KeyboardUtil.hideKeyboard(v)
-            }
-            false
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        KeyboardUtil.detach(this, keyboardListener)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -81,4 +57,14 @@ class SignInActivity : AbstractActivity() {
         signInView?.onActivityResult(requestCode, resultCode, data)
     }
 
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK
+                || keyCode == KeyEvent.KEYCODE_HOME
+                || keyCode == KeyEvent.FLAG_CANCELED) {
+            if (signInView?.onBackpress() == true) {
+                return true
+            }
+        }
+        return super.onKeyDown(keyCode, event)
+    }
 }
