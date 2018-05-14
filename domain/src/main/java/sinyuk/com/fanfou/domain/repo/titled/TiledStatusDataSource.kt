@@ -25,6 +25,7 @@ import sinyuk.com.fanfou.domain.AppExecutors
 import sinyuk.com.fanfou.domain.NetworkState
 import sinyuk.com.fanfou.domain.Promise
 import sinyuk.com.fanfou.domain.api.RestAPI
+import sinyuk.com.fanfou.domain.api.TIMELINE_FAVORITES
 import sinyuk.com.fanfou.domain.api.TIMELINE_USER
 import sinyuk.com.fanfou.domain.data.Status
 import java.io.IOException
@@ -55,6 +56,7 @@ class TiledStatusDataSource(private val restAPI: RestAPI,
     private fun loadInitialFromNetwork(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Status>) {
         when (path) {
             TIMELINE_USER -> restAPI.statuses_from_path(TIMELINE_USER, id = id, count = params.requestedLoadSize, page = 1)
+            TIMELINE_FAVORITES -> restAPI.fetch_favorites(id = id, count = params.requestedLoadSize, page = 1)
             else -> TODO()
         }.enqueue(object : Callback<MutableList<Status>> {
             override fun onResponse(call: Call<MutableList<Status>>?, response: Response<MutableList<Status>>) {
@@ -103,6 +105,7 @@ class TiledStatusDataSource(private val restAPI: RestAPI,
         try {
             val response = when (path) {
                 TIMELINE_USER -> restAPI.statuses_from_path(TIMELINE_USER, id = id, count = params.requestedLoadSize, page = params.key)
+                TIMELINE_FAVORITES -> restAPI.fetch_favorites(id = id, count = params.requestedLoadSize, page = params.key)
                 else -> TODO()
             }.execute()
 

@@ -20,6 +20,7 @@ import android.content.Intent
 import android.os.Bundle
 import kotlinx.android.synthetic.main.timeline_test_activity.*
 import sinyuk.com.fanfou.R
+import sinyuk.com.fanfou.domain.api.TIMELINE_FAVORITES
 import sinyuk.com.fanfou.domain.api.TIMELINE_USER
 import sinyuk.com.fanfou.domain.repo.StatusRepo
 import sinyuk.com.fanfou.ui.base.AbstractActivity
@@ -55,6 +56,12 @@ class TimelineTestActivity : AbstractActivity() {
         userTimeline.setOnClickListener {
             val i = Intent(this@TimelineTestActivity, TimelineActivity::class.java)
             i.putExtras(Bundle().apply { putString("path", TIMELINE_USER) })
+            startActivity(i)
+        }
+
+        likeTimeline.setOnClickListener {
+            val i = Intent(this@TimelineTestActivity, TimelineActivity::class.java)
+            i.putExtras(Bundle().apply { putString("path", TIMELINE_FAVORITES) })
             startActivity(i)
         }
     }

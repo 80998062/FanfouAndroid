@@ -122,7 +122,8 @@ class LocalCacheInterceptor constructor(private val context: Context) : Intercep
                     .maxStale(0, TimeUnit.SECONDS).build()
             chain.proceed(builder.cacheControl(mayExpired).build())
         } else {
-            val onlyCache = CacheControl.Builder().maxAge(Int.MAX_VALUE, TimeUnit.SECONDS).build()
+            val onlyCache = CacheControl.Builder()
+                    .maxAge(Int.MAX_VALUE, TimeUnit.SECONDS).build()
             chain.proceed(builder.cacheControl(onlyCache).build())
         }
     }
@@ -140,7 +141,7 @@ class RewriteCacheControlInterceptor constructor(private val context: Context) :
         val request = chain.request()
         val originalResponse = chain.proceed(request)
         return if (isOnline(context)) {
-            val cacheControl = "public, max-age=" + (3600 * 60)
+            val cacheControl = "public, max-age=" + 3600
             originalResponse.newBuilder()
                     .removeHeader("Pragma")
                     .header("Cache-Control", cacheControl)

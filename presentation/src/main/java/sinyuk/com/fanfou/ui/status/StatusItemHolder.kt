@@ -29,9 +29,7 @@ import com.sinyuk.fanfou.util.linkfy.FanfouUtils
 import kotlinx.android.synthetic.main.status_list_item.view.*
 import kotlinx.android.synthetic.main.status_list_item_surface.view.*
 import sinyuk.com.fanfou.R
-import sinyuk.com.fanfou.domain.data.Photos
 import sinyuk.com.fanfou.domain.data.Status
-import sinyuk.com.fanfou.ext.dp2px
 import sinyuk.com.fanfou.glide.GlideRequests
 
 
@@ -53,6 +51,12 @@ class StatusItemHolder(private val view: View, private val glide: GlideRequests)
         view.surfaceView.content.background = null
         view.surfaceView.screenName.text = status.author?.screenName
 //        view.createdAt.text = DateUtils.getTimeAgo(view.context, status.createdAt)
+
+        view.surfaceView.likedFlag.visibility = if (status.favorited) {
+            View.VISIBLE
+        } else {
+            View.INVISIBLE
+        }
 
         /**
          * code about imageView
@@ -90,15 +94,14 @@ class StatusItemHolder(private val view: View, private val glide: GlideRequests)
             false
         })
 
-        val url = status.photos?.size(dp2px(view.context, Photos.SMALL_SIZE))
 
-        if (url == null) {
+        if (status.photos == null) {
             view.surfaceView.image.setOnClickListener(null)
             view.surfaceView.image.visibility = View.GONE
             glide.clear(view.surfaceView.image)
         } else {
             view.image.visibility = View.VISIBLE
-            glide.asDrawable().image(view.context).load(url).into(view.surfaceView.image)
+            glide.asDrawable().thumb(view.context).load(status.photos).into(view.surfaceView.image)
         }
 
         FanfouUtils.parseAndSetText(view.surfaceView.content, status.text)

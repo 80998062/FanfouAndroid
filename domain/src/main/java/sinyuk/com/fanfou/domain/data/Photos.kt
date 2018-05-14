@@ -19,6 +19,7 @@
  */
 
 package sinyuk.com.fanfou.domain.data
+
 import android.arch.persistence.room.Ignore
 import android.os.Parcel
 import android.os.Parcelable
@@ -40,25 +41,6 @@ data class Photos constructor(
         var hasFadedIn: Boolean = false
 
 ) : Parcelable {
-
-
-    private fun validUrl() = when {
-        largeurl != null -> largeurl
-        thumburl != null -> thumburl
-        else -> imageurl
-    }
-
-    fun size(size: Int? = null) = when {
-        validUrl() == null -> null
-        isAnimated(validUrl()) == true -> validUrl()
-        else -> {
-            val origin = validUrl()!!.split("@")[0]
-            size?.let { origin + "@" + it + "w_1l.jpg" }
-            origin
-        }
-    }
-
-
 
     constructor(source: Parcel) : this(
             source.readString(),
@@ -85,11 +67,6 @@ data class Photos constructor(
             override fun newArray(size: Int): Array<Photos?> = arrayOfNulls(size)
         }
 
-        fun isAnimated(url: String?) = url?.contains("gif", false)
-
-
-        const val LARGE_SIZE = 200f
-        const val SMALL_SIZE = 100f
-
+        fun originalUrl(photos: Photos) = photos.largeurl?.split("@")?.first()
     }
 }

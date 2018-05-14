@@ -52,16 +52,16 @@ object MyGlideExt {
     fun thumb(options: RequestOptions, context: Context) =
             options.centerCrop()
                     .apply(RequestOptions.bitmapTransform(
-                            RoundedCornersTransformation(dp2px(context, 3f), 0)))
+                            RoundedCornersTransformation(dp2px(context, 4f), 0)))
 
 
     @SuppressLint("CheckResult")
     @GlideOption
     @JvmStatic
-    fun image(options: RequestOptions, context: Context) =
+    fun large(options: RequestOptions, context: Context) =
             options.centerCrop()
                     .apply(RequestOptions.bitmapTransform(
-                            RoundedCornersTransformation(dp2px(context, 6f), 0)))
+                            RoundedCornersTransformation(dp2px(context, 8f), 0)))
 
 
     private fun dp2px(context: Context, dpValue: Float): Int {

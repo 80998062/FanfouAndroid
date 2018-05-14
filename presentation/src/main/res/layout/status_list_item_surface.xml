@@ -58,9 +58,10 @@
         android:layout_width="14dp"
         android:layout_height="14dp"
         android:layout_marginStart="8dp"
+        android:contentDescription="@null"
         android:scaleType="centerInside"
-        android:src="@color/colorAccent"
-        android:visibility="visible"
+        android:src="@drawable/ic_status_like"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/repostFlag"
         app:layout_constraintStart_toEndOf="@+id/repostFlag" />
 

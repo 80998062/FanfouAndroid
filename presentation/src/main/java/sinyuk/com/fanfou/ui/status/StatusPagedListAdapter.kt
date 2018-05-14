@@ -31,9 +31,8 @@ import com.daimajia.swipe.util.Attributes
 import kotlinx.android.synthetic.main.status_list_item.view.*
 import sinyuk.com.fanfou.R
 import sinyuk.com.fanfou.domain.NetworkState
-import sinyuk.com.fanfou.domain.data.Photos
+import sinyuk.com.fanfou.domain.api.TIMELINE_FAVORITES
 import sinyuk.com.fanfou.domain.data.Status
-import sinyuk.com.fanfou.ext.dp2px
 import sinyuk.com.fanfou.glide.GlideApp
 import sinyuk.com.fanfou.glide.GlideRequests
 import java.util.*
@@ -101,6 +100,8 @@ class StatusPagedListAdapter(
                     holder.clear()
                 } else {
                     val status = getItem(position)!!
+                    // path == favorited 返回的数据 favorited == false
+                    status.favorited == status.favorited || TIMELINE_FAVORITES == path
                     holder.bind(status)
 
                     holder.itemView.swipeLayout.addSwipeListener(object : SwipeLayout.SwipeListener {
@@ -190,25 +191,26 @@ class StatusPagedListAdapter(
     class StatusPreloadProvider constructor(private val adapter: StatusPagedListAdapter, private val context: Context, private val imageWidthPixels: Int) : ListPreloader.PreloadModelProvider<Status> {
 
         override fun getPreloadRequestBuilder(item: Status): RequestBuilder<*>? {
-            val url = item.photos?.size(dp2px(context, Photos.SMALL_SIZE))
-            return GlideApp.with(context).load(url).override(imageWidthPixels, imageWidthPixels)
+            return GlideApp.with(context).asDrawable().thumb(context)
+                    .load(item.photos).override(imageWidthPixels, imageWidthPixels)
         }
 
-        override fun getPreloadItems(position: Int): MutableList<Status> = if (adapter.currentList?.isNotEmpty() == true && position < adapter.currentList?.size ?: 0) {
-            val status = adapter.currentList!![position]
-            if (status == null) {
-                Collections.emptyList<Status>()
-            } else {
-                val url = status.photos?.size(dp2px(context, Photos.SMALL_SIZE))
-                if (url == null) {
-                    Collections.emptyList<Status>()
+        override fun getPreloadItems(position: Int): MutableList<Status> =
+                if (adapter.currentList?.isNotEmpty() == true
+                        && position < adapter.currentList?.size ?: 0) {
+                    val status = adapter.currentList!![position]
+                    if (status == null) {
+                        Collections.emptyList<Status>()
+                    } else {
+                        if (status.photos == null) {
+                            Collections.emptyList<Status>()
+                        } else {
+                            Collections.singletonList(status)
+                        }
+                    }
+
                 } else {
-                    Collections.singletonList(status)
+                    Collections.emptyList<Status>()
                 }
-            }
-
-        } else {
-            Collections.emptyList<Status>()
-        }
     }
 }

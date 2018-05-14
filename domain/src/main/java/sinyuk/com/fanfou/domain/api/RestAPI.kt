@@ -24,6 +24,7 @@ package sinyuk.com.fanfou.domain.api
 import android.arch.lifecycle.LiveData
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 import sinyuk.com.fanfou.domain.data.Player
@@ -39,7 +40,7 @@ interface RestAPI {
         const val STATUS_ONE_PAGE = 50
     }
 
-    @GET("statuses/{path}.json")
+    @GET("statuses/{path}.json?format=html")
     fun statuses_from_path(@Path("path") path: String,
                            @Query("count") count: Int = STATUS_ONE_PAGE,
                            @Query("since_id") since: String? = null,
@@ -59,8 +60,18 @@ interface RestAPI {
     @Deprecated("unused")
     fun show_user(@Query("id") uniqueId: String): LiveData<ApiResponse<Player>>
 
-    fun photos(count: Int, id: String?, max: String? = null): Call<MutableList<Status>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+
+
+    @GET("favorites/id.json?format=html")
+    fun fetch_favorites(@Query("id") id: String? = null,
+                        @Query("count") count: Int,
+                        @Query("page") page: Int): Call<MutableList<Status>>
+
+    @POST("favorites/create/{id}.json?format=html")
+    fun createFavorite(@Path("id") id: String): Call<Status>
+
+
+    @POST("favorites/destroy/{id}.json?format=html")
+    fun deleteFavorite(@Path("id") id: String): Call<Status>
 
 }
