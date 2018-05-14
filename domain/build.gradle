@@ -3,7 +3,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 'android-P'
+    buildToolsVersion '28.0.0 rc2'
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 27
@@ -19,7 +20,6 @@ android {
             }
         }
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -30,17 +30,24 @@ android {
             testCoverageEnabled = true
         }
     }
-
     sourceSets {
         androidTest.java.srcDirs += "src/test-common/java"
         test.java.srcDirs += "src/test-common/java"
     }
-
+    dexOptions {
+        incremental true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':usecasee')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
     //noinspection GradleCompatible
     implementation "com.android.support:appcompat-v7:$support_version"
     testImplementation "junit:junit:$junit_version"
@@ -53,16 +60,13 @@ dependencies {
     })
     androidTestImplementation "org.mockito:mockito-android:$mockito_version"
     androidTestImplementation "com.android.support.test:runner:$runner_version"
-
     implementation "com.google.code.gson:gson:$gson_version"
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     testImplementation "com.squareup.retrofit2:retrofit-mock:$retrofit_version"
     testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp_version"
-
     implementation "com.twitter.sdk.android:twitter-core:$twitter_version"
-
     implementation "android.arch.paging:runtime:$paging_version"
     implementation "android.arch.persistence.room:runtime:$room_version"
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"

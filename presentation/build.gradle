@@ -31,8 +31,8 @@ try {
 }
 
 android {
-    compileSdkVersion 27
-
+    compileSdkVersion 'android-P'
+    buildToolsVersion '28.0.0 rc2'
     defaultConfig {
         applicationId "sinyuk.com.fanfou"
         minSdkVersion 16
@@ -73,19 +73,26 @@ android {
             buildConfigField "String", "MOPUB_AD_UNIT_ID", "\"${props.getProperty("mopubAdUnitId")}\""
         }
     }
-
     sourceSets {}
+    dexOptions {
+        incremental true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     implementation project(':domain')
+    implementation project(':usecasee')
+    implementation "com.twitter.sdk.android:twitter-core:$twitter_version"
 
     //
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     //noinspection GradleCompatible
-    implementation "com.android.support:appcompat-v7:$support_version"
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
     testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp_version"
@@ -94,9 +101,23 @@ dependencies {
     androidTestImplementation "com.android.support.test:runner:$runner_version"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
     androidTestImplementation "com.google.dagger:dagger:$dagger_version"
-    kaptAndroidTest "com.google.dagger:dagger-compiler:$dagger_version"
+    implementation 'com.jakewharton.timber:timber:4.7.0'
+
+    //noinspection GradleCompatible
+    implementation "com.android.support:appcompat-v7:$support_version"
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
     implementation "android.arch.paging:runtime:$paging_version"
+
+    // dagger
+    implementation "com.google.dagger:dagger:$dagger_version"
+    implementation "com.google.dagger:dagger-android:$dagger_version"
+    implementation "com.google.dagger:dagger-android-support:$dagger_version"
+
+    //
+    implementation("com.github.hotchemi:permissionsdispatcher:$permission_version") {
+        // if you don't use android.app.Fragment you can exclude support for them
+        exclude module: "support-v13"
+    }
 
     // UI
     implementation 'cn.dreamtobe.kpswitch:library:1.6.0'
@@ -104,9 +125,10 @@ dependencies {
     implementation 'com.borjabravo:readmoretextview:2.1.0'
     implementation 'com.daimajia.swipelayout:library:1.2.0@aar'
     implementation 'com.linkedin.android.spyglass:spyglass:1.4.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta5'
+
     // https://yalantis.com
     implementation 'com.github.Yalantis:Context-Menu.Android:1.0.8'
-
 
     // network
     implementation "com.google.code.gson:gson:$gson_version"
@@ -115,31 +137,21 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
-    implementation "android.arch.paging:runtime:$paging_version"
-    implementation 'com.jakewharton.timber:timber:4.7.0'
-    implementation "com.google.dagger:dagger:$dagger_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger_version"
-    implementation "com.google.dagger:dagger-android:$dagger_version"
-    implementation "com.google.dagger:dagger-android-support:$dagger_version"
-    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta5'
-    implementation("com.github.hotchemi:permissionsdispatcher:$permission_version") {
-        // if you don't use android.app.Fragment you can exclude support for them
-        exclude module: "support-v13"
-    }
-    kapt "com.github.hotchemi:permissionsdispatcher-processor:$permission_version"
 
+    // glide
     implementation "com.github.bumptech.glide:glide:$glide_version"
+
+    //noinspection GradleDynamicVersion
+    implementation 'jp.wasabeef:glide-transformations:3.3+'
     implementation "com.github.bumptech.glide:annotations:$glide_version"
     implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
     implementation("com.github.bumptech.glide:recyclerview-integration:$glide_version") {
         // Excludes the support library because it's already included by Glide.
         transitive = false
     }
-    //noinspection GradleDynamicVersion
-    implementation "jp.wasabeef:glide-transformations:3.3+"
+    kapt "com.github.hotchemi:permissionsdispatcher-processor:$permission_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
-
-
-    implementation "com.twitter.sdk.android:twitter-core:$twitter_version"
+    kaptAndroidTest "com.google.dagger:dagger-compiler:$dagger_version"
 }
