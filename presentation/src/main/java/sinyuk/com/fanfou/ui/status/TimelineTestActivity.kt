@@ -18,11 +18,10 @@ package sinyuk.com.fanfou.ui.status
 
 import android.content.Intent
 import android.os.Bundle
-import kotlinx.android.synthetic.main.timeline_test_activity.*
 import sinyuk.com.fanfou.R
-import sinyuk.com.fanfou.domain.api.TIMELINE_FAVORITES
-import sinyuk.com.fanfou.domain.api.TIMELINE_USER
-import sinyuk.com.fanfou.domain.repo.StatusRepo
+import sinyuk.com.fanfou.api.TIMELINE_FAVORITES
+import sinyuk.com.fanfou.api.TIMELINE_USER
+import sinyuk.com.fanfou.repo.StatusDataStore
 import sinyuk.com.fanfou.ui.base.AbstractActivity
 import javax.inject.Inject
 
@@ -41,7 +40,7 @@ import javax.inject.Inject
  */
 class TimelineTestActivity : AbstractActivity() {
     @Inject
-    lateinit var statusRepo: StatusRepo
+    lateinit var statusDataStore: StatusDataStore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

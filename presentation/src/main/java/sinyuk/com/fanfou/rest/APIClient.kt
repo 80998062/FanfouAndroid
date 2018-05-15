@@ -33,7 +33,7 @@ import sinyuk.com.common.utils.UrlEscapeUtils
 import sinyuk.com.fanfou.BuildConfig
 import sinyuk.com.fanfou.BuildConfig.OAUTH_VERSION_VALUE
 import sinyuk.com.fanfou.TimberDelegate
-import sinyuk.com.fanfou.domain.api.FanfouAccessTokenTask
+import sinyuk.com.fanfou.api.FanfouAccessTokenTask
 import sinyuk.com.fanfou.rest.FanfouAuthenticator.Companion.OAUTH_ACCESS_TOKEN
 import sinyuk.com.fanfou.rest.FanfouAuthenticator.Companion.OAUTH_CONSUMER_KEY
 import sinyuk.com.fanfou.rest.FanfouAuthenticator.Companion.OAUTH_NONCE

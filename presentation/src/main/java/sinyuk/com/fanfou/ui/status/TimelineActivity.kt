@@ -21,7 +21,7 @@ import android.os.Bundle
 import kotlinx.android.synthetic.main.timeline_activity.*
 import sinyuk.com.fanfou.R
 import sinyuk.com.common.States
-import sinyuk.com.fanfou.domain.api.TIMELINE_HOME
+import sinyuk.com.fanfou.api.TIMELINE_HOME
 import sinyuk.com.fanfou.ext.addFragment
 import sinyuk.com.fanfou.ext.obtainViewModel
 import sinyuk.com.fanfou.ui.FanfouViewModelFactory

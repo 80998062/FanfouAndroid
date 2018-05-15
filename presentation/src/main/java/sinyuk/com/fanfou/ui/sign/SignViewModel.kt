@@ -22,7 +22,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import sinyuk.com.common.Fanfou
-import sinyuk.com.fanfou.domain.repo.UserRepo
+import sinyuk.com.fanfou.repo.UserDataStore
 import javax.inject.Inject
 
 /**
@@ -39,11 +39,11 @@ import javax.inject.Inject
 └──────────────────────────────────────────────────────────────────┘
  */
 class SignViewModel @Inject constructor(
-        private val userRepo: UserRepo,
+        private val userDataStore: UserDataStore,
         @Fanfou private val okHttpClient: OkHttpClient) : ViewModel() {
 
     fun signIn(account: String, password: String) =
-            userRepo.signIn(account, password, { executeRequest(it) })
+            userDataStore.signIn(account, password, { executeRequest(it) })
 
     private fun executeRequest(url: HttpUrl): Response {
         return okHttpClient.newCall(Request.Builder().url(url).build()).execute()

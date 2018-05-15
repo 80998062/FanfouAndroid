@@ -20,9 +20,9 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
-import sinyuk.com.fanfou.domain.api.TIMELINE_HOME
-import sinyuk.com.fanfou.domain.data.Status
-import sinyuk.com.fanfou.domain.repo.StatusRepo
+import sinyuk.com.fanfou.api.TIMELINE_HOME
+import sinyuk.com.fanfou.data.Status
+import sinyuk.com.fanfou.repo.StatusDataStore
 import sinyuk.com.common.utils.Listing
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -41,7 +41,7 @@ import javax.inject.Singleton
 └──────────────────────────────────────────────────────────────────┘
  */
 @Singleton
-class StatusesViewModel @Inject constructor(private val statusRepo: StatusRepo) : ViewModel() {
+class StatusesViewModel @Inject constructor(private val statusDataStore: StatusDataStore) : ViewModel() {
 
     data class RelativeUrl(val path: String, val uniqueId: String? = null, val query: String? = null)
 
@@ -61,9 +61,9 @@ class StatusesViewModel @Inject constructor(private val statusRepo: StatusRepo) 
 
     private val repoResult: LiveData<Listing<Status>> = Transformations.map(relativeUrl, {
         if (TIMELINE_HOME == it.path) {
-            statusRepo.home(50)
+            statusDataStore.home(50)
         } else {
-            statusRepo.fetch(it.uniqueId, it.path, 50)
+            statusDataStore.fetch(it.uniqueId, it.path, 50)
         }
     })
 

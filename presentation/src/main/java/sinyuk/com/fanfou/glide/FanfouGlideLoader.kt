@@ -23,7 +23,7 @@ import com.bumptech.glide.load.model.ModelLoaderFactory
 import com.bumptech.glide.load.model.MultiModelLoaderFactory
 import com.bumptech.glide.load.model.stream.BaseGlideUrlLoader
 import com.bumptech.glide.request.target.Target
-import sinyuk.com.fanfou.domain.data.Photos
+import sinyuk.com.fanfou.data.Photos
 import java.io.InputStream
 
 /**

@@ -32,12 +32,12 @@ import sinyuk.com.common.api.Endpoint
 import sinyuk.com.common.api.adapters.LiveDataCallAdapterFactory
 import sinyuk.com.common.room.RoomModule
 import sinyuk.com.fanfou.App
-import sinyuk.com.fanfou.domain.api.FanfouAPI
+import sinyuk.com.fanfou.api.FanfouAPI
 import sinyuk.com.fanfou.rest.FanfouAuthenticator
 import sinyuk.com.fanfou.rest.initFanfouClient
 import sinyuk.com.fanfou.rest.initTwitterClient
-import sinyuk.com.twitter.domain.api.TwitterAPI
-import sinyuk.com.twitter.domain.api.TwitterClient
+import sinyuk.com.twitter.api.TwitterAPI
+import sinyuk.com.twitter.api.TwitterClient
 import javax.inject.Named
 import javax.inject.Singleton
 
