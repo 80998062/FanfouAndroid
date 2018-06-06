@@ -23,7 +23,6 @@ import android.arch.lifecycle.ViewModel
 import sinyuk.com.fanfou.api.TIMELINE_HOME
 import sinyuk.com.common.realm.model.Status
 import sinyuk.com.common.repo.StatusDataStore
-import sinyuk.com.common.utils.Listing
 import javax.inject.Inject
 import javax.inject.Singleton
 

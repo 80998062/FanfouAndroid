@@ -32,7 +32,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import sinyuk.com.common.api.adapters.LiveDataCallAdapterFactory
 import sinyuk.com.fanfou.api.DateDeserializer
 import sinyuk.com.fanfou.util.getValue
-import sinyuk.com.twitter.mapper.UserMapper
 import java.io.IOException
 import java.nio.charset.StandardCharsets
 import java.util.*
@@ -87,18 +86,21 @@ class TwitterAPITest {
     @Throws(IOException::class, InterruptedException::class)
     fun verifyCredentials() {
         enqueueResponse("verify_credentials.json")
-        val apiResponse = getValue(service.verify_credentials())
+        val apiResponse = getValue(service.verifyCredentials())
         assert(apiResponse.code == 200)
 
         val request = mockWebServer.takeRequest()
         assert(request.path.startsWith("/account/verify_credentials.json", true))
         assert(request.method.equals("GET", true))
 
-        val user = apiResponse.body!!
-        val player = UserMapper.transform(user)
+        val player = apiResponse.body!!
 
-        assert("38895958" == player?.uniqueId)
-        assert("theSeanCook" == player?.screenName)
+        assert("38895958" == player.id)
+        assert("Sean Cook" == player.name)
+        assert("theSeanCook" == player.screenName)
+        assert(player.notifications == false)
+        assert(player.followRequestSent == true)
+        assert(player.following == false)
     }
 
     @Throws(IOException::class)

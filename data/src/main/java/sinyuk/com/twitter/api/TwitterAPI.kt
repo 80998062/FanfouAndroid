@@ -17,9 +17,9 @@
 package sinyuk.com.twitter.api
 
 import android.arch.lifecycle.LiveData
-import com.twitter.sdk.android.core.models.User
 import retrofit2.http.GET
 import sinyuk.com.common.api.ApiResponse
+import sinyuk.com.common.realm.model.Player
 
 /**
  * Created by sinyuk on 2018/5/14.
@@ -34,8 +34,12 @@ import sinyuk.com.common.api.ApiResponse
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
+@Suppress("FunctionName", "unused")
 interface TwitterAPI {
-    @SuppressWarnings("unused")
+    companion object {
+        const val STATUS_ONE_PAGE = 50
+    }
+
     @GET("/account/verify_credentials.json")
-    fun verify_credentials(): LiveData<ApiResponse<User>>
+    fun verifyCredentials(): LiveData<ApiResponse<Player>>
 }

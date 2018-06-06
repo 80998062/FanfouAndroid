@@ -17,16 +17,9 @@
 package sinyuk.com.common.realm.model
 
 import io.realm.annotations.PrimaryKey
-import io.realm.annotations.RealmClass
 import io.realm.annotations.Required
 
 /**
  * Created by sinyuk on 2017/11/30.
  */
-@RealmClass
-open class Photo constructor(
-        @Required @PrimaryKey val url: String,
-        val width: Int,
-        val height: Int,
-        var path: String?,
-        var compressed: String?)
+open class Photo constructor(@Required @PrimaryKey val url: String)

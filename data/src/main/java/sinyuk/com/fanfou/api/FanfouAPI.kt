@@ -18,57 +18,49 @@
 package sinyuk.com.fanfou.api
 
 import android.arch.lifecycle.LiveData
-import retrofit2.Call
 import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
 import sinyuk.com.common.api.ApiResponse
 import sinyuk.com.common.realm.model.Player
-import sinyuk.com.common.realm.model.Status
 
 /**
  * Created by sinyuk on 2017/11/28.
  *
  */
-@Suppress("FunctionName")
+@Suppress("FunctionName", "unused")
 interface FanfouAPI {
-    companion object {
-        const val STATUS_ONE_PAGE = 50
-    }
 
-    @GET("statuses/{path}.json?format=html")
-    fun statuses_from_path(@Path("path") path: String,
-                           @Query("count") count: Int = STATUS_ONE_PAGE,
-                           @Query("since_id") since: String? = null,
-                           @Query("max_id") max: String? = null,
-                           @Query("id") id: String? = null,
-                           @Query("page") page: Int? = null): Call<MutableList<Status>>
+
+//    @GET("statuses/{path}.json?format=html")
+//    fun statuses_from_path(@Path("path") path: String,
+//                           @Query("count") count: Int = STATUS_ONE_PAGE,
+//                           @Query("since_id") since: String? = null,
+//                           @Query("max_id") max: String? = null,
+//                           @Query("id") id: String? = null,
+//                           @Query("page") page: Int? = null): Call<MutableList<Status>>
 
     @GET("account/verify_credentials.json")
-    fun verify_credentials(): LiveData<ApiResponse<Player>>
+    fun verifyCredentials(): LiveData<ApiResponse<Player>>
 
 
-    @GET("/statuses/user_timeline.json")
-    fun fetch_latest_status(@Query("id") id: String,
-                            @Query("count") count: Int = 1): Call<List<Status>>
-
-    @GET("users/show.json?format=html")
-    @Deprecated("unused")
-    fun show_user(@Query("id") uniqueId: String): LiveData<ApiResponse<Player>>
-
-
-
-    @GET("favorites/id.json?format=html")
-    fun fetch_favorites(@Query("id") id: String? = null,
-                        @Query("count") count: Int,
-                        @Query("page") page: Int): Call<MutableList<Status>>
-
-    @POST("favorites/create/{id}.json?format=html")
-    fun createFavorite(@Path("id") id: String): Call<Status>
-
-
-    @POST("favorites/destroy/{id}.json?format=html")
-    fun deleteFavorite(@Path("id") id: String): Call<Status>
+//    @GET("/statuses/user_timeline.json")
+//    fun fetch_latest_status(@Query("id") id: String,
+//                            @Query("count") count: Int = 1): Call<List<Status>>
+//
+//    @GET("users/show.json?format=html")
+//    @Deprecated("unused")
+//    fun show_user(@Query("id") uniqueId: String): LiveData<ApiResponse<Player>>
+//
+//
+//    @GET("favorites/id.json?format=html")
+//    fun fetch_favorites(@Query("id") id: String? = null,
+//                        @Query("count") count: Int,
+//                        @Query("page") page: Int): Call<MutableList<Status>>
+//
+//    @POST("favorites/create/{id}.json?format=html")
+//    fun createFavorite(@Path("id") id: String): Call<Status>
+//
+//
+//    @POST("favorites/destroy/{id}.json?format=html")
+//    fun deleteFavorite(@Path("id") id: String): Call<Status>
 
 }

@@ -14,28 +14,13 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.common.repo
+package sinyuk.com.common.api
 
 import android.arch.lifecycle.LiveData
-import android.content.SharedPreferences
-import okhttp3.HttpUrl
-import okhttp3.Response
-import sinyuk.com.common.AppExecutors
-import sinyuk.com.common.Fanfou
-import sinyuk.com.common.Promise
-import sinyuk.com.common.TYPE_GLOBAL
-import sinyuk.com.common.api.ApiResponse
-import sinyuk.com.fanfou.api.FanfouAPI
-import sinyuk.com.fanfou.api.FanfouAccessToken
-import sinyuk.com.fanfou.api.FanfouAccessTokenTask
 import sinyuk.com.common.realm.model.Player
-import sinyuk.com.common.repo.base.UserDatasource
-import javax.inject.Inject
-import javax.inject.Named
-import javax.inject.Singleton
 
 /**
- * Created by sinyuk on 2018/5/4.
+ * Created by sinyuk on 2018/6/6.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -47,20 +32,15 @@ import javax.inject.Singleton
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-@Singleton
-class UserDataStore @Inject constructor(
-        @Fanfou private val fanfouAPI: FanfouAPI,
-        @Fanfou(cached = true) private val cachedAPI: FanfouAPI,
-        private val appExecutors: AppExecutors,
-        @Named(TYPE_GLOBAL) private val preferences: SharedPreferences) : UserDatasource {
-    override fun vertify(): LiveData<ApiResponse<Player>> {
-        return fanfouAPI.verify_credentials()
+/**
+ * Retrofit favors composition over inheritance. One interface per service.
+ * So API interfaces must not extend other interfaces.
+ */
+@Deprecated("impossible")
+interface API {
+    companion object {
+        const val STATUS_ONE_PAGE = 50
     }
 
-    override fun signIn(account: String,
-                        password: String,
-                        execute: (url: HttpUrl) -> Response?): LiveData<Promise<FanfouAccessToken>> {
-        val task = FanfouAccessTokenTask(account, password, preferences, execute)
-        return task.apply { appExecutors.networkIO().execute(this) }.liveData
-    }
+    fun verifyCredentials(): LiveData<ApiResponse<Player>>
 }

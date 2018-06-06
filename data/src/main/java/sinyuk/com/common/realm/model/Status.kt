@@ -16,11 +16,10 @@
 
 package sinyuk.com.common.realm.model
 
-import io.realm.RealmList
+import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
 import io.realm.annotations.Required
-import sinyuk.com.common.Source
 import java.util.*
 
 /**
@@ -29,15 +28,15 @@ import java.util.*
  */
 @RealmClass
 open class Status @JvmOverloads constructor(
-        @PrimaryKey @Required val id: String,
-        var text: String?,
-        val agent: String,
-        val location: String?,
-        val player: Player,
-        @Required val createdAt: Date,
-        var favorited: Boolean,
-        var photos: RealmList<Photo>?,
-        var source: Source? = null)
+        @PrimaryKey @Required var id: String = "",
+        var text: String? = null,
+        var agent: String? = null,
+        var location: String? = null,
+        var player: Player? = null,
+        @Required var createdAt: Date? = null,
+        var favorited: Boolean? = false,
+//        var photos: RealmList<Photo>?,
+        var source: Int? = -1) : RealmObject()
 
 
 
