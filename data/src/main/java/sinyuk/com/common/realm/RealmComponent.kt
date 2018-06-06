@@ -14,12 +14,13 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.common.room.dao
+package sinyuk.com.common.realm
 
-import android.arch.persistence.room.Dao
+import dagger.Component
+import javax.inject.Singleton
 
 /**
- * Created by sinyuk on 2018/5/15.
+ * Created by sinyuk on 2018/4/23.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -31,6 +32,6 @@ import android.arch.persistence.room.Dao
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-@Dao
-interface ProfileDao {
-}
+@Singleton
+@Component(modules = [RealmModule::class])
+interface RealmComponent

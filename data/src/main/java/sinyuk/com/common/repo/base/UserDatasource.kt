@@ -14,14 +14,18 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.repo.base
+package sinyuk.com.common.repo.base
 
 import android.arch.lifecycle.LiveData
+import okhttp3.HttpUrl
+import okhttp3.Response
 import sinyuk.com.common.Promise
-import sinyuk.com.fanfou.data.Player
+import sinyuk.com.fanfou.api.FanfouAccessToken
+import sinyuk.com.common.api.ApiResponse
+import sinyuk.com.common.realm.model.Player
 
 /**
- * Created by sinyuk on 2018/5/8.
+ * Created by sinyuk on 2018/5/4.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -33,6 +37,8 @@ import sinyuk.com.fanfou.data.Player
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-interface PlayerDatasource {
-    fun fetchLatestStatus(uniqueId: String, forcedUpdate: Boolean = true):LiveData<Promise<Player>>
+interface UserDatasource {
+    fun signIn(account: String, password: String, execute: (url: HttpUrl) -> Response?): LiveData<Promise<FanfouAccessToken>>
+
+    fun vertify(): LiveData<ApiResponse<Player>>
 }

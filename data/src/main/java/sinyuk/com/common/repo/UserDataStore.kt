@@ -14,19 +14,28 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.common.room
+package sinyuk.com.common.repo
 
-import android.app.Application
-import android.arch.persistence.room.Room
-import dagger.Module
-import dagger.Provides
-import sinyuk.com.common.ROOM_IN_DISK
-import sinyuk.com.common.ROOM_IN_MEMORY
+import android.arch.lifecycle.LiveData
+import android.content.SharedPreferences
+import okhttp3.HttpUrl
+import okhttp3.Response
+import sinyuk.com.common.AppExecutors
+import sinyuk.com.common.Fanfou
+import sinyuk.com.common.Promise
+import sinyuk.com.common.TYPE_GLOBAL
+import sinyuk.com.common.api.ApiResponse
+import sinyuk.com.fanfou.api.FanfouAPI
+import sinyuk.com.fanfou.api.FanfouAccessToken
+import sinyuk.com.fanfou.api.FanfouAccessTokenTask
+import sinyuk.com.common.realm.model.Player
+import sinyuk.com.common.repo.base.UserDatasource
+import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
 /**
- * Created by sinyuk on 2018/4/23.
+ * Created by sinyuk on 2018/5/4.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -38,22 +47,20 @@ import javax.inject.Singleton
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-@Module
-class RoomModule constructor(private val application: Application) {
-    @Suppress("unused")
-    @Provides
-    @Singleton
-    @Named(ROOM_IN_DISK)
-    fun provideDiskRoom(): LocalDatabase = Room.databaseBuilder(application, LocalDatabase::class.java, "twifold.db")
-            .fallbackToDestructiveMigration()
-            .build()
+@Singleton
+class UserDataStore @Inject constructor(
+        @Fanfou private val fanfouAPI: FanfouAPI,
+        @Fanfou(cached = true) private val cachedAPI: FanfouAPI,
+        private val appExecutors: AppExecutors,
+        @Named(TYPE_GLOBAL) private val preferences: SharedPreferences) : UserDatasource {
+    override fun vertify(): LiveData<ApiResponse<Player>> {
+        return fanfouAPI.verify_credentials()
+    }
 
-
-    @Suppress("unused")
-    @Provides
-    @Singleton
-    @Named(ROOM_IN_MEMORY)
-    fun provideMemoryRoom(): LocalDatabase = Room.inMemoryDatabaseBuilder(application, LocalDatabase::class.java)
-            .fallbackToDestructiveMigration()
-            .build()
+    override fun signIn(account: String,
+                        password: String,
+                        execute: (url: HttpUrl) -> Response?): LiveData<Promise<FanfouAccessToken>> {
+        val task = FanfouAccessTokenTask(account, password, preferences, execute)
+        return task.apply { appExecutors.networkIO().execute(this) }.liveData
+    }
 }

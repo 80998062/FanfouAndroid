@@ -14,13 +14,14 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.common.room
+package sinyuk.com.common.repo.base
 
-import dagger.Component
-import javax.inject.Singleton
+import android.arch.lifecycle.LiveData
+import sinyuk.com.common.Promise
+import sinyuk.com.common.realm.model.Player
 
 /**
- * Created by sinyuk on 2018/4/23.
+ * Created by sinyuk on 2018/5/8.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -32,6 +33,6 @@ import javax.inject.Singleton
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-@Singleton
-@Component(modules = [RoomModule::class])
-interface RoomComponent
+interface PlayerDatasource {
+    fun fetchLatestStatus(uniqueId: String, forcedUpdate: Boolean = true):LiveData<Promise<Player>>
+}

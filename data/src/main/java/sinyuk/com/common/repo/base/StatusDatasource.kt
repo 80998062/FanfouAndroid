@@ -14,13 +14,16 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.common.model
+package sinyuk.com.common.repo.base
 
-import sinyuk.com.common.Sourced
-import sinyuk.com.common.Source
+import android.arch.lifecycle.LiveData
+import android.support.annotation.MainThread
+import sinyuk.com.common.Promise
+import sinyuk.com.common.utils.Listing
+import sinyuk.com.common.realm.model.Status
 
 /**
- * Created by sinyuk on 2018/5/15.
+ * Created by sinyuk on 2018/5/9.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -32,6 +35,13 @@ import sinyuk.com.common.Source
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-class Profile constructor(override var source: Source = Source.Unknown) : Sourced {
+interface StatusDatasource {
+    @MainThread
+    fun home(count: Int): Listing<Status>
 
+    @MainThread
+    fun fetchTop(count: Int): LiveData<Promise<MutableList<Status>>>
+
+    @MainThread
+    fun fetch(id: String?, path: String, count: Int): Listing<Status>
 }

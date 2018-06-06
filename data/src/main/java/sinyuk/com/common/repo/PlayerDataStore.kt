@@ -14,28 +14,23 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.repo
+package sinyuk.com.common.repo
 
 import android.arch.lifecycle.LiveData
-import android.content.SharedPreferences
-import okhttp3.HttpUrl
-import okhttp3.Response
+import android.arch.lifecycle.MutableLiveData
 import sinyuk.com.common.AppExecutors
 import sinyuk.com.common.Fanfou
 import sinyuk.com.common.Promise
-import sinyuk.com.common.TYPE_GLOBAL
-import sinyuk.com.common.api.ApiResponse
 import sinyuk.com.fanfou.api.FanfouAPI
-import sinyuk.com.fanfou.api.FanfouAccessToken
-import sinyuk.com.fanfou.api.FanfouAccessTokenTask
-import sinyuk.com.fanfou.data.Player
-import sinyuk.com.fanfou.repo.base.UserDatasource
+import sinyuk.com.common.repo.base.PlayerDatasource
+import sinyuk.com.common.realm.model.Player
+import java.io.IOException
+import java.io.InterruptedIOException
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
 
 /**
- * Created by sinyuk on 2018/5/4.
+ * Created by sinyuk on 2018/5/8.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -48,19 +43,40 @@ import javax.inject.Singleton
 └──────────────────────────────────────────────────────────────────┘
  */
 @Singleton
-class UserDataStore @Inject constructor(
+class PlayerDataStore @Inject constructor(
         @Fanfou private val fanfouAPI: FanfouAPI,
         @Fanfou(cached = true) private val cachedAPI: FanfouAPI,
-        private val appExecutors: AppExecutors,
-        @Named(TYPE_GLOBAL) private val preferences: SharedPreferences) : UserDatasource {
-    override fun vertify(): LiveData<ApiResponse<Player>> {
-        return fanfouAPI.verify_credentials()
+        private val appExecutors: AppExecutors) : PlayerDatasource {
+    override fun fetchLatestStatus(uniqueId: String, forcedUpdate: Boolean): LiveData<Promise<Player>> {
+        val liveData = MutableLiveData<Promise<Player>>()
+        liveData.postValue(Promise.loading(null))
+        if (forcedUpdate) {
+            appExecutors.networkIO().execute {
+                try {
+                    val response = fanfouAPI.fetch_latest_status(uniqueId).execute()
+                    if (response.isSuccessful) {
+                        val status = response.body()?.first()
+                        if (status != null) {
+                            val player = status.player
+                            player?.status = status
+                            liveData.postValue(Promise.success(player))
+                        } else {
+                            liveData.postValue(Promise.success(null))
+                        }
+                    } else {
+                        liveData.postValue(Promise.error(response.message(), null))
+                    }
+                } catch (e: IOException) {
+                    liveData.postValue(Promise.error(e.message, null))
+                } catch (e: InterruptedIOException) {
+                    liveData.postValue(Promise.error(e.message, null))
+                }
+            }
+        } else {
+
+        }
+        return liveData
     }
 
-    override fun signIn(account: String,
-                        password: String,
-                        execute: (url: HttpUrl) -> Response?): LiveData<Promise<FanfouAccessToken>> {
-        val task = FanfouAccessTokenTask(account, password, preferences, execute)
-        return task.apply { appExecutors.networkIO().execute(this) }.liveData
-    }
+
 }

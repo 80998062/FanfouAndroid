@@ -14,16 +14,17 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.repo.base
+package sinyuk.com.common.realm
 
-import android.arch.lifecycle.LiveData
-import android.support.annotation.MainThread
-import sinyuk.com.common.Promise
-import sinyuk.com.common.utils.Listing
-import sinyuk.com.fanfou.data.Status
+import android.app.Application
+import dagger.Module
+import dagger.Provides
+import io.realm.BuildConfig
+import io.realm.Realm
+import io.realm.RealmConfiguration
 
 /**
- * Created by sinyuk on 2018/5/9.
+ * Created by sinyuk on 2018/4/23.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -35,13 +36,30 @@ import sinyuk.com.fanfou.data.Status
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-interface StatusDatasource {
-    @MainThread
-    fun home(count: Int): Listing<Status>
+@Module
+class RealmModule constructor(application: Application) {
+    init {
+        Realm.init(application)
+        Realm.setDefaultConfiguration(configurationDefault())
+    }
 
-    @MainThread
-    fun fetchTop(count: Int): LiveData<Promise<MutableList<Status>>>
+    @Suppress("unused", "MemberVisibilityCanBePrivate")
+    @Provides
+    @Default
+    fun configurationDefault(): RealmConfiguration = RealmConfiguration.Builder()
+            .name("twifold.realm")
+            .schemaVersion(BuildConfig.VERSION_CODE.toLong())
+            .deleteRealmIfMigrationNeeded()
+//            .migration()
+            .build()
 
-    @MainThread
-    fun fetch(id: String?, path: String, count: Int): Listing<Status>
+
+    @Suppress("unused")
+    @Provides
+    @Default
+    fun configurationInMemory(): RealmConfiguration = RealmConfiguration.Builder()
+            .name("twifold.realm")
+            .schemaVersion(BuildConfig.VERSION_CODE.toLong())
+            .deleteRealmIfMigrationNeeded()
+            .build()
 }

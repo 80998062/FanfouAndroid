@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.repo.titled
+package sinyuk.com.common.repo.titled
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.PageKeyedDataSource
@@ -27,7 +27,7 @@ import sinyuk.com.common.Promise
 import sinyuk.com.fanfou.api.FanfouAPI
 import sinyuk.com.fanfou.api.TIMELINE_FAVORITES
 import sinyuk.com.fanfou.api.TIMELINE_USER
-import sinyuk.com.fanfou.data.Status
+import sinyuk.com.common.realm.model.Status
 import java.io.IOException
 
 /**

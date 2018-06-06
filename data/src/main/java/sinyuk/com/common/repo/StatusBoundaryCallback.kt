@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.repo
+package sinyuk.com.common.repo
 
 import android.arch.paging.PagedList
 import android.support.annotation.MainThread
@@ -27,7 +27,7 @@ import sinyuk.com.android.paging.createStatusLiveData
 import sinyuk.com.common.AppExecutors
 import sinyuk.com.fanfou.api.FanfouAPI
 import sinyuk.com.fanfou.api.TIMELINE_HOME
-import sinyuk.com.fanfou.data.Status
+import sinyuk.com.common.realm.model.Status
 
 /**
  * This boundary callback gets notified when user reaches to the edges of the list such that the

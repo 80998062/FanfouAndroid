@@ -14,13 +14,13 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.repo.titled
+package sinyuk.com.common.repo.titled
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.DataSource
 import sinyuk.com.common.AppExecutors
 import sinyuk.com.fanfou.api.FanfouAPI
-import sinyuk.com.fanfou.data.Status
+import sinyuk.com.common.realm.model.Status
 
 /**
  * Created by sinyuk on 2017/12/29.

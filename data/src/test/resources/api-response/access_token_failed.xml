@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<hash>
-    <request>/oauth/access_token?oauth_consumer_key=ceab0dcd7b9fb9fa2ef5785bcd320e70&amp;
-        signature_method=HMAC-SHA1&amp;timestamp=1489591502&amp;nonce=6aeJiN&amp;version=1.0&amp;
-        x_auth_password=rabbit7ru&amp;x_auth_username=80998062@qq.com&amp;x_auth_mode=client_auth&amp;realm
-    </request>
-    <error>xAuth login error 登录失败，Email或密码错误 username=80998062@qq.com</error>
-</hash>

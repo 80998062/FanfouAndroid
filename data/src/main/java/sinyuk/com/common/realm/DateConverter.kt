@@ -18,9 +18,10 @@
  *
  */
 
-package sinyuk.com.common.room
+package sinyuk.com.common.realm
 
 import android.arch.persistence.room.TypeConverter
+import sinyuk.com.common.Source
 import java.util.*
 
 class DateConverter {
@@ -30,5 +31,20 @@ class DateConverter {
 
     @TypeConverter
     fun dateToTimestamp(date: Date?) = date?.time
+}
 
+class SourceConverter {
+    @TypeConverter
+    fun fromSource(source: Source?) = when (source) {
+        Source.Fanfou -> 1
+        Source.Twitter -> 2
+        else -> 0
+    }
+
+    @TypeConverter
+    fun intToSource(int: Int) = when (int) {
+        1 -> Source.Fanfou
+        2 -> Source.Twitter
+        else -> Source.Unknown
+    }
 }

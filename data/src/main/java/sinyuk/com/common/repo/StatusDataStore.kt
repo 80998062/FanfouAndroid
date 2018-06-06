@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.repo
+package sinyuk.com.common.repo
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
@@ -24,13 +24,12 @@ import android.arch.paging.PagedList
 import android.support.annotation.VisibleForTesting
 import android.support.annotation.WorkerThread
 import sinyuk.com.common.*
-import sinyuk.com.common.room.LocalDatabase
 import sinyuk.com.common.utils.Listing
 import sinyuk.com.fanfou.api.FanfouAPI
-import sinyuk.com.fanfou.data.Player
-import sinyuk.com.fanfou.data.Status
-import sinyuk.com.fanfou.repo.base.StatusDatasource
-import sinyuk.com.fanfou.repo.titled.TiledStatusDataSourceFactory
+import sinyuk.com.common.realm.model.Player
+import sinyuk.com.common.realm.model.Status
+import sinyuk.com.common.repo.base.StatusDatasource
+import sinyuk.com.common.repo.titled.TiledStatusDataSourceFactory
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
