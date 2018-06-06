@@ -29,7 +29,7 @@ import com.sinyuk.fanfou.util.linkfy.FanfouUtils
 import kotlinx.android.synthetic.main.status_list_item.view.*
 import kotlinx.android.synthetic.main.status_list_item_surface.view.*
 import sinyuk.com.fanfou.R
-import sinyuk.com.fanfou.data.Status
+import sinyuk.com.common.realm.model.Status
 import sinyuk.com.fanfou.glide.GlideRequests
 
 

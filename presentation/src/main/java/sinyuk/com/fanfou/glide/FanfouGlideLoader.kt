@@ -23,7 +23,7 @@ import com.bumptech.glide.load.model.ModelLoaderFactory
 import com.bumptech.glide.load.model.MultiModelLoaderFactory
 import com.bumptech.glide.load.model.stream.BaseGlideUrlLoader
 import com.bumptech.glide.request.target.Target
-import sinyuk.com.fanfou.data.Photos
+import sinyuk.com.common.realm.model.Photo
 import java.io.InputStream
 
 /**
@@ -41,18 +41,18 @@ import java.io.InputStream
  */
 class FanfouGlideLoader constructor(@Suppress("CanBeParameter")
                                     private val urlLoader: ModelLoader<GlideUrl, InputStream>)
-    : BaseGlideUrlLoader<Photos>(urlLoader) {
+    : BaseGlideUrlLoader<Photo>(urlLoader) {
 
     //        "url": "http://fanfou.com/photo/8bhOK6p7iR8",
     //        "imageurl": "http://photo1.fanfou.com/v1/ff/n0/0d/th/8h_350421.gif@200w_200h_1l.jpg",
     //        "thumburl": "http://photo1.fanfou.com/v1/ff/n0/0d/th/8h_350421.gif@120w_120h_1l.jpg",
     //        "largeurl": "http://photo1.fanfou.com/v1/ff/n0/0d/th/8h_350421.gif@596w_1l.gif"
 
-    override fun getUrl(model: Photos?, width: Int, height: Int, options: Options?) =
+    override fun getUrl(model: Photo?, width: Int, height: Int, options: Options?) =
             if (model == null) {
                 null
             } else if (width == Target.SIZE_ORIGINAL || height == Target.SIZE_ORIGINAL) {
-                Photos.originalUrl(model)
+                Photo.originalUrl(model)
             } else if (urlBySize(model, width, height) != null) {
                 urlBySize(model, (width * 0.5).toInt(), (height * 0.5).toInt())
             } else if (width < 596 || height < 596) {
@@ -65,7 +65,7 @@ class FanfouGlideLoader constructor(@Suppress("CanBeParameter")
                 model.largeurl
             }
 
-    private fun urlBySize(model: Photos, width: Int, height: Int): String? {
+    private fun urlBySize(model: Photo, width: Int, height: Int): String? {
         val valid = when {
             model.largeurl != null -> model.largeurl
             model.thumburl != null -> model.thumburl
@@ -78,10 +78,10 @@ class FanfouGlideLoader constructor(@Suppress("CanBeParameter")
     }
 
 
-    override fun handles(model: Photos) = true
+    override fun handles(model: Photo) = true
 
 
-    class Factory : ModelLoaderFactory<Photos, InputStream> {
+    class Factory : ModelLoaderFactory<Photo, InputStream> {
         override fun build(multiFactory: MultiModelLoaderFactory) =
                 FanfouGlideLoader(multiFactory.build(GlideUrl::class.java, InputStream::class.java))
 

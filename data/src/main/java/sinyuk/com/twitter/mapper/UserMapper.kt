@@ -14,16 +14,15 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.twitter.delegate
+package sinyuk.com.twitter.mapper
 
-import android.arch.persistence.room.Ignore
-import android.arch.persistence.room.PrimaryKey
-import android.support.annotation.NonNull
-import com.google.gson.annotations.SerializedName
-import com.twitter.sdk.android.core.models.Tweet
+import com.twitter.sdk.android.core.models.User
+import sinyuk.com.common.Source
+import sinyuk.com.common.realm.model.Player
+import java.util.*
 
 /**
- * Created by sinyuk on 2018/5/15.
+ * Created by sinyuk on 2018/5/30.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -35,22 +34,30 @@ import com.twitter.sdk.android.core.models.Tweet
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-class MyTweet constructor(@Ignore private val tweet: Tweet) {
+object UserMapper : Mapper<User, Player> {
+    override fun transform(k: User): Player? = Player(source = Source.Twitter)
+            .apply {
+                uniqueId = k.idStr
+                id = k.name
+                screenName = k.screenName
+                location = k.location
+                gender = null
+                birthday = Date()
+                description = k.description
+                profileImageUrl = k.profileImageUrlHttps
+                profileImageUrlLarge = k.profileImageUrlHttps
+                url = k.url
+                followersCount = k.followersCount
+                friendsCount = k.friendsCount
+                statusesCount = k.statusesCount
+                photoCount = 0 //
+                following = null //
+                notifications = null //
+                createdAt = null //
+                profileBackgroundImageUrl = k.profileBackgroundImageUrlHttps
+            }
 
-    @PrimaryKey
-    @NonNull
-    @SerializedName("id")
-    var id = 0.toLong()
-    @SerializedName("id_str")
-    var idStr: String? = null
-    @SerializedName(value = "text", alternate = ["full_text"])
-    var text: String? = null
-    @SerializedName("source")
-    var source: String? = null
-    init {
-        id = tweet.id
-        idStr = tweet.idStr
-        text = tweet.text
-        source = tweet.text
+    override fun transform(k: Collection<User>): Collection<Player>? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

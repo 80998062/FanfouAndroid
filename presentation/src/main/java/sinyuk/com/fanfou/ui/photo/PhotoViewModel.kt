@@ -17,8 +17,8 @@
 package sinyuk.com.fanfou.ui.photo
 
 import android.arch.lifecycle.ViewModel
-import sinyuk.com.fanfou.repo.PlayerDataStore
-import sinyuk.com.fanfou.repo.UserDataStore
+import sinyuk.com.common.repo.PlayerDataStore
+import sinyuk.com.common.repo.UserDataStore
 import javax.inject.Inject
 
 /**

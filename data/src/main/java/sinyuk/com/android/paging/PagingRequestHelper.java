@@ -32,7 +32,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import sinyuk.com.fanfou.data.BuildConfig;
+import sinyuk.com.common.realm.model.BuildConfig;
 import sinyuk.com.common.RequestState;
 
 /**

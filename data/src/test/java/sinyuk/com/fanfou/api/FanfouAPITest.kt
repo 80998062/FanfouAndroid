@@ -169,7 +169,7 @@ class FanfouAPITest {
     @Throws(IOException::class)
     private fun enqueueResponse(fileName: String, headers: Map<String, String> = emptyMap()) {
         val inputStream = javaClass.classLoader
-                .getResourceAsStream("api-response/$fileName")
+                .getResourceAsStream("api-response/fanfou/$fileName")
         val source = Okio.buffer(Okio.source(inputStream))
         val mockResponse = MockResponse()
         for ((key, value) in headers) {

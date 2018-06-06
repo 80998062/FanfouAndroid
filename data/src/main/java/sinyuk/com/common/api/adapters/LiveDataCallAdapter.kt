@@ -21,18 +21,16 @@
 package sinyuk.com.common.api.adapters
 
 import android.arch.lifecycle.LiveData
-
-import java.lang.reflect.Type
-import java.util.concurrent.atomic.AtomicBoolean
-
 import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Callback
 import retrofit2.Response
 import sinyuk.com.common.api.ApiResponse
+import java.lang.reflect.Type
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * A Retrofit adapterthat converts the Call into a LiveData of ApiResponse.
+ * A Retrofit adapter that converts the Call into a LiveData of ApiResponse.
  *
  * @param <R>
 </R> */

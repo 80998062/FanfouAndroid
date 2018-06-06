@@ -30,7 +30,7 @@ import sinyuk.com.common.*
 import sinyuk.com.common.api.ApiModule
 import sinyuk.com.common.api.Endpoint
 import sinyuk.com.common.api.adapters.LiveDataCallAdapterFactory
-import sinyuk.com.common.room.RoomModule
+import sinyuk.com.common.realm.RealmModule
 import sinyuk.com.fanfou.App
 import sinyuk.com.fanfou.api.FanfouAPI
 import sinyuk.com.fanfou.rest.FanfouAuthenticator
@@ -54,7 +54,7 @@ import javax.inject.Singleton
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-@Module(includes = [(ViewModelModule::class), (ApiModule::class), (RoomModule::class)])
+@Module(includes = [(ViewModelModule::class), (ApiModule::class), (RealmModule::class)])
 class AppModule constructor(private val app: App) {
     @Suppress("unused")
     @Provides

@@ -22,7 +22,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import sinyuk.com.common.Fanfou
-import sinyuk.com.fanfou.repo.UserDataStore
+import sinyuk.com.common.repo.UserDataStore
 import javax.inject.Inject
 
 /**

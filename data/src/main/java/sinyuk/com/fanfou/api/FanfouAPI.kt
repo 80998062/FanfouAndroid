@@ -24,8 +24,8 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 import sinyuk.com.common.api.ApiResponse
-import sinyuk.com.fanfou.data.Player
-import sinyuk.com.fanfou.data.Status
+import sinyuk.com.common.realm.model.Player
+import sinyuk.com.common.realm.model.Status
 
 /**
  * Created by sinyuk on 2017/11/28.

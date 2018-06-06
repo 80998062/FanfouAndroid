@@ -21,7 +21,3 @@ sealed class Source {
     object Fanfou : Source()
     object Unknown : Source()
 }
-
-interface Sourced {
-    var source: Source
-}

@@ -2,15 +2,21 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "803108f12e1500d50a9614980ca7f8aa",
+    "identityHash": "4819e3ee725e2d1cc055d320b9707a0c",
     "entities": [
       {
         "tableName": "players",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uniqueId` TEXT NOT NULL, `screenName` TEXT, `location` TEXT, `gender` TEXT, `birthday` INTEGER, `description` TEXT, `profileImageUrl` TEXT, `profileImageUrlLarge` TEXT, `url` TEXT, `protectedX` INTEGER, `followersCount` INTEGER, `friendsCount` INTEGER, `favouritesCount` INTEGER, `statusesCount` INTEGER, `photoCount` INTEGER, `following` INTEGER, `notifications` INTEGER, `createdAt` INTEGER, `profileBackgroundImageUrl` TEXT, PRIMARY KEY(`uniqueId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uniqueId` TEXT NOT NULL, `id` TEXT NOT NULL, `screenName` TEXT, `location` TEXT, `gender` TEXT, `birthday` INTEGER, `description` TEXT, `profileImageUrl` TEXT, `profileImageUrlLarge` TEXT, `url` TEXT, `protectedX` INTEGER, `followersCount` INTEGER, `friendsCount` INTEGER, `favouritesCount` INTEGER, `statusesCount` INTEGER, `photoCount` INTEGER, `following` INTEGER, `notifications` INTEGER, `createdAt` INTEGER, `profileBackgroundImageUrl` TEXT, `source` INTEGER, PRIMARY KEY(`uniqueId`))",
         "fields": [
           {
             "fieldPath": "uniqueId",
             "columnName": "uniqueId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -121,6 +127,12 @@
             "columnName": "profileBackgroundImageUrl",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "source",
+            "columnName": "source",
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -144,7 +156,7 @@
       },
       {
         "tableName": "statuses",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `uniqueId` TEXT NOT NULL, `text` TEXT, `source` TEXT, `location` TEXT, `createdAt` INTEGER, `favorited` INTEGER NOT NULL, `screenName` TEXT, `profileImageUrl` TEXT, `birthday` INTEGER, `url` TEXT, `imageurl` TEXT, `thumburl` TEXT, `largeurl` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `uniqueId` TEXT NOT NULL, `text` TEXT, `useragent` TEXT, `location` TEXT, `createdAt` INTEGER, `favorited` INTEGER NOT NULL, `source` INTEGER, `screenName` TEXT, `profileImageUrl` TEXT, `birthday` INTEGER, `url` TEXT, `imageurl` TEXT, `thumburl` TEXT, `largeurl` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -165,8 +177,8 @@
             "notNull": false
           },
           {
-            "fieldPath": "source",
-            "columnName": "source",
+            "fieldPath": "useragent",
+            "columnName": "useragent",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -187,6 +199,12 @@
             "columnName": "favorited",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "source",
+            "columnName": "source",
+            "affinity": "INTEGER",
+            "notNull": false
           },
           {
             "fieldPath": "author.screenName",
@@ -252,7 +270,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"803108f12e1500d50a9614980ca7f8aa\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"4819e3ee725e2d1cc055d320b9707a0c\")"
     ]
   }
 }

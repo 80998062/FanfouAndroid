@@ -20,6 +20,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
+import sinyuk.com.common.Fanfou
 import sinyuk.com.fanfou.api.DateDeserializer
 import java.util.*
 import javax.inject.Singleton
@@ -54,6 +55,7 @@ class ApiModule {
     @Suppress("unused")
     @Provides
     @Singleton
+    @Fanfou
     fun provideEndpoint() = Endpoint("http://api.fanfou.com/")
 
 }

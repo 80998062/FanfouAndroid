@@ -16,6 +16,11 @@
 
 package sinyuk.com.twitter.api
 
+import android.arch.lifecycle.LiveData
+import com.twitter.sdk.android.core.models.User
+import retrofit2.http.GET
+import sinyuk.com.common.api.ApiResponse
+
 /**
  * Created by sinyuk on 2018/5/14.
 ┌──────────────────────────────────────────────────────────────────┐
@@ -29,4 +34,8 @@ package sinyuk.com.twitter.api
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-interface TwitterAPI
+interface TwitterAPI {
+    @SuppressWarnings("unused")
+    @GET("/account/verify_credentials.json")
+    fun verify_credentials(): LiveData<ApiResponse<User>>
+}

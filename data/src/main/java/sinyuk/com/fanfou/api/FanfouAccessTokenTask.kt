@@ -25,8 +25,8 @@ import okhttp3.Response
 import okio.ByteString
 import org.xml.sax.SAXException
 import sinyuk.com.common.ACCESS_TOKEN
-import sinyuk.com.fanfou.data.BuildConfig
 import sinyuk.com.common.Promise
+import sinyuk.com.common.realm.model.BuildConfig
 import java.io.IOException
 import java.io.InterruptedIOException
 import java.nio.charset.Charset

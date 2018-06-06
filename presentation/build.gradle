@@ -105,7 +105,6 @@ dependencies {
     //noinspection GradleCompatible
     implementation "com.android.support:appcompat-v7:$support_version"
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
-    implementation "android.arch.paging:runtime:$paging_version"
 
     // dagger
     implementation "com.google.dagger:dagger:$dagger_version"

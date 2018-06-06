@@ -89,10 +89,10 @@ object FanfouUtils {
     }
 
     /**
-     * Build source html string.
+     * Build useragent html string.
      *
      * @param link   the link
-     * @param source the source
+     * @param source the useragent
      * @return the string
      */
     fun buildSourceHtml(link: String, source: String) = if (TextUtils.isEmpty(link) || TextUtils.isEmpty(source)) {

@@ -14,14 +14,13 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.common.model
+package sinyuk.com.common.realm
 
-import android.support.annotation.Nullable
-import sinyuk.com.common.Sourced
-import sinyuk.com.common.Source
+import javax.inject.Named
+import javax.inject.Qualifier
 
 /**
- * Created by sinyuk on 2018/5/15.
+ * Created by sinyuk on 2018/6/6.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -33,11 +32,16 @@ import sinyuk.com.common.Source
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-data class Photo(
-        var width: Int = 0,
-        var height: Int = 0,
-        @Nullable var url: String? = null,
-        @Nullable var file: String? = null,
-        override var source: Source = Source.Unknown) : Sourced {
-}
+@Suppress("unused")
+@Qualifier
+@MustBeDocumented
+@Retention(AnnotationRetention.RUNTIME)
+@Named
+annotation class Default
 
+
+@Suppress("unused")
+@Qualifier
+@MustBeDocumented
+@Retention(AnnotationRetention.RUNTIME)
+annotation class InMemory

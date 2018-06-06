@@ -25,7 +25,7 @@ import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.request.RequestOptions
-import sinyuk.com.fanfou.data.Photos
+import sinyuk.com.common.realm.model.Photo
 import java.io.InputStream
 
 
@@ -51,7 +51,7 @@ class MyGlideModule : AppGlideModule() {
     }
 
     override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
-        registry.prepend(Photos::class.java, InputStream::class.java, FanfouGlideLoader.Factory())
+        registry.prepend(Photo::class.java, InputStream::class.java, FanfouGlideLoader.Factory())
     }
 
     override fun isManifestParsingEnabled() = false

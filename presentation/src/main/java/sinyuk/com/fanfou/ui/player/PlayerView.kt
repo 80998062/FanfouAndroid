@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.player_view.*
 import kotlinx.android.synthetic.main.player_view_head.view.*
 import sinyuk.com.fanfou.R
 import sinyuk.com.common.States
-import sinyuk.com.fanfou.data.Player
+import sinyuk.com.common.realm.model.Player
 import sinyuk.com.fanfou.ext.obtainViewModel
 import sinyuk.com.fanfou.glide.GlideApp
 import sinyuk.com.fanfou.injectors.Injectable
