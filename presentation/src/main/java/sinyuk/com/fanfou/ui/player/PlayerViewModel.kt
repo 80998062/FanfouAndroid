@@ -18,7 +18,6 @@ package sinyuk.com.fanfou.ui.player
 
 import android.arch.lifecycle.ViewModel
 import sinyuk.com.common.repo.PlayerDataStore
-import sinyuk.com.common.repo.UserDataStore
 import javax.inject.Inject
 
 /**
@@ -35,7 +34,7 @@ import javax.inject.Inject
 └──────────────────────────────────────────────────────────────────┘
  */
 class PlayerViewModel @Inject constructor(private val playerDataStore: PlayerDataStore,
-                                          private val userDataStore: UserDataStore) : ViewModel() {
+                                          private val userDataStore: PlayerDataStore) : ViewModel() {
     fun fetch(uniqueId: String, forced: Boolean = true) = playerDataStore.fetchLatestStatus(uniqueId, forced)
 
 }

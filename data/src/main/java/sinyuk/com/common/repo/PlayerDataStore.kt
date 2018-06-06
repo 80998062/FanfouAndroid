@@ -14,14 +14,10 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.ui.photo
-
-import android.arch.lifecycle.ViewModel
-import sinyuk.com.common.repo.PlayerDataStore
-import javax.inject.Inject
+package sinyuk.com.common.repo
 
 /**
- * Created by sinyuk on 2018/5/8.
+ * Created by sinyuk on 2018/6/6.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -33,6 +29,5 @@ import javax.inject.Inject
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-class PhotoViewModel @Inject constructor(private val playerDataStore: PlayerDataStore,
-                                         private val userDataStore: PlayerDataStore) : ViewModel() {
+interface PlayerDataStore {
 }
