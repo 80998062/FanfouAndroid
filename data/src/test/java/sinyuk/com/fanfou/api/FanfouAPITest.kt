@@ -1,3 +1,19 @@
+/*
+ *   Copyright 2081 Sinyuk
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
 package sinyuk.com.fanfou.api
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
@@ -77,6 +93,22 @@ class FanfouAPITest {
         assert("Sinyuk" == player.id)
         assert("沈烨坷" == player.name)
         assert("开膛手椰壳" == player.screenName)
+        assert(player.notifications == true)
+        assert(player.followRequestSent == false)
+        assert(player.following == true)
+    }
+
+    @Test
+    @Throws(IOException::class, InterruptedException::class)
+    fun showUser() {
+        enqueueResponse("users_show.json")
+        val apiResponse = getValue(service.showUser(""))
+        assert(apiResponse.code == 200)
+
+        val player = apiResponse.body!!
+        assert("sakamotosan" == player.id)
+        assert("阪本" == player.name)
+        assert("阪本" == player.screenName)
         assert(player.notifications == true)
         assert(player.followRequestSent == false)
         assert(player.following == true)

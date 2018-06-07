@@ -103,9 +103,9 @@ class TwitterAPITest {
 
     @Test
     @Throws(IOException::class, InterruptedException::class)
-    fun showUser(){
+    fun showUser() {
         enqueueResponse("users_show.json")
-        val apiResponse = getValue(service.showUser(""))
+        val apiResponse = getValue(service.showUser("", ""))
         assert(apiResponse.code == 200)
 
         val player = apiResponse.body!!

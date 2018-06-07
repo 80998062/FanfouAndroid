@@ -46,8 +46,8 @@ interface TwitterAPI {
 
 
     @GET("/1.1/users/show.json")
-    fun showUser(@Query("user_id") id: String? = null,
-                 @Query("screen_name") screenName: String? = null): LiveData<ApiResponse<Player>>
+    fun showUser(@Query("user_id") id: String,
+                 @Query("screen_name") screenName: String): LiveData<ApiResponse<Player>>
 
     @GET("/1.1/friends/list.json")
     fun friends(@Query("user_id") id: String? = null,
