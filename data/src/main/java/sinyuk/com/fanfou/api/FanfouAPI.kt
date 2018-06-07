@@ -19,6 +19,7 @@ package sinyuk.com.fanfou.api
 
 import android.arch.lifecycle.LiveData
 import retrofit2.http.GET
+import retrofit2.http.Query
 import sinyuk.com.common.api.ApiResponse
 import sinyuk.com.common.realm.model.Player
 
@@ -41,14 +42,17 @@ interface FanfouAPI {
     @GET("account/verify_credentials.json")
     fun verifyCredentials(): LiveData<ApiResponse<Player>>
 
-
-//    @GET("/statuses/user_timeline.json")
+    //    @GET("/statuses/user_timeline.json")
 //    fun fetch_latest_status(@Query("id") id: String,
 //                            @Query("count") count: Int = 1): Call<List<Status>>
 //
-//    @GET("users/show.json?format=html")
-//    @Deprecated("unused")
-//    fun show_user(@Query("id") uniqueId: String): LiveData<ApiResponse<Player>>
+    @GET("users/show.json?format=html")
+    fun showUser(@Query("id") id: String): LiveData<ApiResponse<Player>>
+
+    @GET("users/friends.json?format=html")
+    fun friends(@Query("id") id: String? = null,
+                @Query("count") count: Int = 100,
+                @Query("page") page: Int =1 ): LiveData<ApiResponse<MutableList<Player>>>
 //
 //
 //    @GET("favorites/id.json?format=html")

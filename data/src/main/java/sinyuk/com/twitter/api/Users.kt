@@ -14,14 +14,13 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.ui.photo
+package sinyuk.com.twitter.api
 
-import android.arch.lifecycle.ViewModel
-import sinyuk.com.common.repo.PlayerDataStore
-import javax.inject.Inject
+import com.google.gson.annotations.SerializedName
+import sinyuk.com.common.realm.model.Player
 
 /**
- * Created by sinyuk on 2018/5/8.
+ * Created by sinyuk on 2018/6/7.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -33,6 +32,11 @@ import javax.inject.Inject
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-class PhotoViewModel @Inject constructor(private val playerDataStore: PlayerDataStore,
-                                         private val userDataStore: PlayerDataStore) : ViewModel() {
-}
+data class Users @JvmOverloads constructor(
+        @SerializedName("previous_cursor_str")
+        var previousCursor: String = "0",
+        @SerializedName("next_cursor_str")
+        var nextCursor: String = "0",
+        @SerializedName("users")
+        var data: MutableList<Player>? = null
+)

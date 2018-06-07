@@ -17,6 +17,7 @@
 package sinyuk.com.twitter.api
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -59,11 +60,13 @@ class TwitterAPITest {
 
     private lateinit var service: TwitterAPI
 
+    private lateinit var gson: Gson
+
     @Before
     @Throws(IOException::class)
     fun createService() {
         mockWebServer = MockWebServer()
-        val gson = GsonBuilder()
+        gson = GsonBuilder()
                 .serializeNulls()
                 .registerTypeAdapter(Date::class.java, DateDeserializer)
                 .create()
@@ -89,18 +92,42 @@ class TwitterAPITest {
         val apiResponse = getValue(service.verifyCredentials())
         assert(apiResponse.code == 200)
 
-        val request = mockWebServer.takeRequest()
-        assert(request.path.startsWith("/account/verify_credentials.json", true))
-        assert(request.method.equals("GET", true))
-
         val player = apiResponse.body!!
-
         assert("38895958" == player.id)
         assert("Sean Cook" == player.name)
         assert("theSeanCook" == player.screenName)
         assert(player.notifications == false)
         assert(player.followRequestSent == true)
         assert(player.following == false)
+    }
+
+    @Test
+    @Throws(IOException::class, InterruptedException::class)
+    fun showUser(){
+        enqueueResponse("users_show.json")
+        val apiResponse = getValue(service.showUser(""))
+        assert(apiResponse.code == 200)
+
+        val player = apiResponse.body!!
+        assert("2244994945" == player.id)
+        assert("Twitter Dev" == player.name)
+        assert("TwitterDev" == player.screenName)
+        assert(player.notifications == null)
+        assert(player.followRequestSent == null)
+        assert(player.following == null)
+    }
+
+    @Test
+    @Throws(IOException::class, InterruptedException::class)
+    fun friends() {
+        enqueueResponse("friends_list.json")
+        val apiResponse = getValue(service.friends())
+        assert(apiResponse.code == 200)
+        val players = apiResponse.body!!
+        assert(players.previousCursor == "0")
+        assert(players.nextCursor == "1333504313713126852")
+        assert("froginthevalley" == players.data?.first()?.screenName)
+        assert("keltonlynn" == players.data?.last()?.screenName)
     }
 
     @Throws(IOException::class)

@@ -18,6 +18,7 @@ package sinyuk.com.twitter.api
 
 import android.arch.lifecycle.LiveData
 import retrofit2.http.GET
+import retrofit2.http.Query
 import sinyuk.com.common.api.ApiResponse
 import sinyuk.com.common.realm.model.Player
 
@@ -40,6 +41,20 @@ interface TwitterAPI {
         const val STATUS_ONE_PAGE = 50
     }
 
-    @GET("/account/verify_credentials.json")
+    @GET("/1.1/account/verify_credentials.json")
     fun verifyCredentials(): LiveData<ApiResponse<Player>>
+
+
+    @GET("/1.1/users/show.json")
+    fun showUser(@Query("user_id") id: String? = null,
+                 @Query("screen_name") screenName: String? = null): LiveData<ApiResponse<Player>>
+
+    @GET("/1.1/friends/list.json")
+    fun friends(@Query("user_id") id: String? = null,
+                @Query("screen_name") screenName: String? = null,
+                @Query("cursor") page: Long = -1,
+                @Query("count") count: Int = 100,
+                @Query("skip_status") skipStatus: Boolean = true): LiveData<ApiResponse<Users>>
+
+
 }

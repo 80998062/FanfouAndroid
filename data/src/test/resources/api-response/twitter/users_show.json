@@ -1,0 +1,195 @@
+{
+  "id": 2244994945,
+  "id_str": "2244994945",
+  "name": "Twitter Dev",
+  "screen_name": "TwitterDev",
+  "location": "Internet",
+  "profile_location": null,
+  "description": "Your official source for Twitter Platform news, updates & events. Need technical help? Visit https://t.co/mGHnxZU8c1 ⌨️ #TapIntoTwitter",
+  "url": "https://t.co/FGl7VOULyL",
+  "entities": {
+    "url": {
+      "urls": [
+        {
+          "url": "https://t.co/FGl7VOULyL",
+          "expanded_url": "https://developer.twitter.com/",
+          "display_url": "developer.twitter.com",
+          "indices": [
+            0,
+            23
+          ]
+        }
+      ]
+    },
+    "description": {
+      "urls": [
+        {
+          "url": "https://t.co/mGHnxZU8c1",
+          "expanded_url": "https://twittercommunity.com/",
+          "display_url": "twittercommunity.com",
+          "indices": [
+            93,
+            116
+          ]
+        }
+      ]
+    }
+  },
+  "protected": false,
+  "followers_count": 492751,
+  "friends_count": 1488,
+  "listed_count": 1296,
+  "created_at": "Sat Dec 14 04:35:55 +0000 2013",
+  "favourites_count": 2206,
+  "utc_offset": -28800,
+  "time_zone": "Pacific Time (US & Canada)",
+  "geo_enabled": true,
+  "verified": true,
+  "statuses_count": 3309,
+  "lang": "en",
+  "status": {
+    "created_at": "Mon Mar 05 14:00:36 +0000 2018",
+    "id": 970660352487804928,
+    "id_str": "970660352487804928",
+    "text": "RT @TDC_israel: Join our 1st #TapIntoTwitter event at: 21/3nn@eladmeidar - Back to the 90s: Social text based gamingnRoee Sheelo - Tokyo Dr…",
+    "truncated": false,
+    "entities": {
+      "hashtags": [
+        {
+          "text": "TapIntoTwitter",
+          "indices": [
+            29,
+            44
+          ]
+        }
+      ],
+      "symbols": [],
+      "user_mentions": [
+        {
+          "screen_name": "TDC_israel",
+          "name": "Israel Developers Community",
+          "id": 948969690650554369,
+          "id_str": "948969690650554369",
+          "indices": [
+            3,
+            14
+          ]
+        },
+        {
+          "screen_name": "eladmeidar",
+          "name": "Lord Meidar",
+          "id": 16815376,
+          "id_str": "16815376",
+          "indices": [
+            61,
+            72
+          ]
+        }
+      ],
+      "urls": []
+    },
+    "source": "<a href="
+    https: //about.twitter.com/products/tweetdeck" rel="nofollow">TweetDeck</a>",
+    "in_reply_to_status_id"
+    :
+    null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "in_reply_to_screen_name": null,
+    "geo": null,
+    "coordinates": null,
+    "place": null,
+    "contributors": null,
+    "retweeted_status": {
+      "created_at": "Sun Mar 04 19:44:05 +0000 2018",
+      "id": 970384402705473543,
+      "id_str": "970384402705473543",
+      "text": "Join our 1st #TapIntoTwitter event at: 21/3nn@eladmeidar - Back to the 90s: Social text based gamingnRoee Sheelo -… https://t.co/7muTWy531w",
+      "truncated": true,
+      "entities": {
+        "hashtags": [
+          {
+            "text": "TapIntoTwitter",
+            "indices": [
+              13,
+              28
+            ]
+          }
+        ],
+        "symbols": [],
+        "user_mentions": [
+          {
+            "screen_name": "eladmeidar",
+            "name": "Lord Meidar",
+            "id": 16815376,
+            "id_str": "16815376",
+            "indices": [
+              45,
+              56
+            ]
+          }
+        ],
+        "urls": [
+          {
+            "url": "https://t.co/7muTWy531w",
+            "expanded_url": "https://twitter.com/i/web/status/970384402705473543",
+            "display_url": "twitter.com/i/web/status/9…",
+            "indices": [
+              116,
+              139
+            ]
+          }
+        ]
+      },
+      "source": "<a href="
+      http: //twitter.com" rel="nofollow">Twitter Web Client</a>",
+      "in_reply_to_status_id"
+      :
+      null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "in_reply_to_screen_name": null,
+      "geo": null,
+      "coordinates": null,
+      "place": null,
+      "contributors": null,
+      "is_quote_status": false,
+      "retweet_count": 2,
+      "favorite_count": 9,
+      "favorited": false,
+      "retweeted": false,
+      "possibly_sensitive": false,
+      "lang": "en"
+    },
+    "is_quote_status": false,
+    "retweet_count": 2,
+    "favorite_count": 0,
+    "favorited": false,
+    "retweeted": false,
+    "lang": "en"
+  },
+  "contributors_enabled": false,
+  "is_translator": false,
+  "is_translation_enabled": false,
+  "profile_background_color": "FFFFFF",
+  "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+  "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+  "profile_background_tile": false,
+  "profile_image_url": "http://pbs.twimg.com/profile_images/880136122604507136/xHrnqf1T_normal.jpg",
+  "profile_image_url_https": "https://pbs.twimg.com/profile_images/880136122604507136/xHrnqf1T_normal.jpg",
+  "profile_banner_url": "https://pbs.twimg.com/profile_banners/2244994945/1498675817",
+  "profile_link_color": "0084B4",
+  "profile_sidebar_border_color": "FFFFFF",
+  "profile_sidebar_fill_color": "DDEEF6",
+  "profile_text_color": "333333",
+  "profile_use_background_image": false,
+  "has_extended_profile": false,
+  "default_profile": false,
+  "default_profile_image": false,
+  "following": null,
+  "follow_request_sent": null,
+  "notifications": null,
+  "translator_type": "regular"
+}

@@ -47,7 +47,7 @@ class RealmModule constructor(application: Application) {
     @Provides
     @Default
     fun configurationDefault(): RealmConfiguration = RealmConfiguration.Builder()
-            .name("twifold.realm")
+            .name("fanfou.realm")
             .schemaVersion(BuildConfig.VERSION_CODE.toLong())
             .deleteRealmIfMigrationNeeded()
 //            .migration()
@@ -56,9 +56,9 @@ class RealmModule constructor(application: Application) {
 
     @Suppress("unused")
     @Provides
-    @Default
+    @InMemory
     fun configurationInMemory(): RealmConfiguration = RealmConfiguration.Builder()
-            .name("twifold.realm")
+            .name("fanfou.realm")
             .schemaVersion(BuildConfig.VERSION_CODE.toLong())
             .deleteRealmIfMigrationNeeded()
             .build()

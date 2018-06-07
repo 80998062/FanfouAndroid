@@ -22,7 +22,6 @@ import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 import sinyuk.com.fanfou.ui.FanfouViewModelFactory
-import sinyuk.com.fanfou.ui.photo.PhotoViewModel
 import sinyuk.com.fanfou.ui.player.PlayerViewModel
 import sinyuk.com.fanfou.ui.sign.SignViewModel
 import sinyuk.com.fanfou.ui.status.StatusesViewModel

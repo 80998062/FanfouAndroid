@@ -16,8 +16,14 @@
 
 package sinyuk.com.fanfou.repo
 
+import io.realm.RealmConfiguration
 import sinyuk.com.common.Fanfou
+import sinyuk.com.common.api.RateLimiter
+import sinyuk.com.common.realm.Default
+import sinyuk.com.common.realm.InMemory
 import sinyuk.com.common.repo.PlayerDataStore
+import sinyuk.com.fanfou.api.FanfouAPI
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 /**
@@ -35,6 +41,11 @@ import javax.inject.Singleton
  */
 @Singleton
 @Fanfou
-class PlayerRepo constructor(): PlayerDataStore {
+class PlayerRepo constructor(
+        private val api: FanfouAPI,
+        @Default private val defaultRealm: RealmConfiguration,
+        @InMemory private val memoryRealm: RealmConfiguration) : PlayerDataStore {
+    private val repoListRateLimit = RateLimiter<String>(10, TimeUnit.MINUTES)
+
 
 }

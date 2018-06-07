@@ -73,18 +73,25 @@ class FanfouAPITest {
         val apiResponse = getValue(service.verifyCredentials())
         assert(apiResponse.code == 200)
 
-        val request = mockWebServer.takeRequest()
-        assert(request.path.startsWith("/account/verify_credentials.json", true))
-        assert(request.method.equals("GET", true))
-
         val player = apiResponse.body!!
-
         assert("Sinyuk" == player.id)
         assert("沈烨坷" == player.name)
         assert("开膛手椰壳" == player.screenName)
         assert(player.notifications == true)
         assert(player.followRequestSent == false)
         assert(player.following == true)
+    }
+
+    @Test
+    @Throws(IOException::class, InterruptedException::class)
+    fun friends() {
+        enqueueResponse("users_friends.json")
+        val apiResponse = getValue(service.friends())
+        assert(apiResponse.code == 200)
+
+        val players = apiResponse.body!!
+        assert(players.size == 10)
+        assert(players.first().id == "aki_sakura")
     }
 
     @Throws(IOException::class)
