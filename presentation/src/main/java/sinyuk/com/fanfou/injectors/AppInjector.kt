@@ -1,5 +1,5 @@
 /*
- *   Copyright 2081 Sinyuk
+ *   Copyright 2018 Sinyuk
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,9 +23,9 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import dagger.android.support.AndroidSupportInjection
-import sinyuk.com.fanfou.App
 import sinyuk.com.common.api.ApiModule
 import sinyuk.com.common.realm.RealmModule
+import sinyuk.com.fanfou.App
 
 /**
  * Helper class to automatically inject fragments if they implement [Injectable].

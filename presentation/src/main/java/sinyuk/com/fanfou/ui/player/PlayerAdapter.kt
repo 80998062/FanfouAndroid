@@ -14,14 +14,15 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.ui.home
+package sinyuk.com.fanfou.ui.player
 
-import android.os.Bundle
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.BaseViewHolder
+import sinyuk.com.common.realm.model.Player
 import sinyuk.com.fanfou.R
-import sinyuk.com.fanfou.ui.base.AbstractActivity
 
 /**
- * Created by sinyuk on 2018/5/4.
+ * Created by sinyuk on 2018/6/10.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -33,15 +34,8 @@ import sinyuk.com.fanfou.ui.base.AbstractActivity
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-class HomeActivity : AbstractActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.home_activity)
-        setup()
+class PlayerAdapter  : BaseQuickAdapter<Player, BaseViewHolder>(R.layout.player_list_item) {
+    override fun convert(helper: BaseViewHolder?, item: Player?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
-    private fun setup() {
-    }
-
 }

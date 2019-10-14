@@ -14,20 +14,17 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.fanfou.ui.status
+package sinyuk.com.fanfou.ui.test
 
-import android.content.Intent
 import android.os.Bundle
-import kotlinx.android.synthetic.main.timeline_test_activity.*
-import sinyuk.com.common.repo.StatusDataStore
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentTransaction
+import kotlinx.android.synthetic.main.test_activity.*
 import sinyuk.com.fanfou.R
-import sinyuk.com.fanfou.api.TIMELINE_FAVORITES
-import sinyuk.com.fanfou.api.TIMELINE_USER
 import sinyuk.com.fanfou.ui.base.AbstractActivity
-import javax.inject.Inject
 
 /**
- * Created by sinyuk on 2018/5/10.
+ * Created by sinyuk on 2018/6/10.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -39,30 +36,23 @@ import javax.inject.Inject
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-class TimelineTestActivity : AbstractActivity() {
-    @Inject
-    lateinit var statusDataStore: StatusDataStore
-
+class TestActivity : AbstractActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.timeline_test_activity)
+        setContentView(R.layout.test_activity)
 
+        fanfouFriends.setOnClickListener {
 
-        homeTimeline.setOnClickListener {
-            val i = Intent(this@TimelineTestActivity, TimelineActivity::class.java)
-            startActivity(i)
-        }
-
-        userTimeline.setOnClickListener {
-            val i = Intent(this@TimelineTestActivity, TimelineActivity::class.java)
-            i.putExtras(Bundle().apply { putString("path", TIMELINE_USER) })
-            startActivity(i)
-        }
-
-        likeTimeline.setOnClickListener {
-            val i = Intent(this@TimelineTestActivity, TimelineActivity::class.java)
-            i.putExtras(Bundle().apply { putString("path", TIMELINE_FAVORITES) })
-            startActivity(i)
         }
     }
+
+
+    private fun switch(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment, fragment.javaClass.simpleName)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .addToBackStack(fragment::class.java.simpleName)
+                .commit()
+    }
+
 }

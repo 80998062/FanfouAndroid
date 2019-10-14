@@ -23,15 +23,17 @@
 
         <activity
             android:name=".ui.sign.SignInActivity"
+            android:label="@string/label_signin"
             android:windowSoftInputMode="adjustResize">
-            <intent-filter android:label="@string/label_signin">
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.status.TimelineActivity" />
-        <activity android:name=".ui.status.TimelineTestActivity" />
+        <activity
+            android:name=".ui.test.TestActivity"
+            android:label="@string/label_test" />
     </application>
 
 </manifest>

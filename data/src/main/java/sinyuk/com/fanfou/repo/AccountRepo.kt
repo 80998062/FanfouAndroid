@@ -19,23 +19,25 @@ package sinyuk.com.fanfou.repo
 import android.arch.lifecycle.LiveData
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import io.realm.RealmResults
+import okhttp3.HttpUrl
+import okhttp3.Response
 import sinyuk.com.common.AppExecutors
 import sinyuk.com.common.Fanfou
 import sinyuk.com.common.Promise
-import sinyuk.com.common.api.NetworkBoundResource
 import sinyuk.com.common.api.RateLimiter
 import sinyuk.com.common.realm.Default
-import sinyuk.com.common.realm.InMemory
-import sinyuk.com.common.realm.RealmLiveData
+import sinyuk.com.common.realm.model.Account
 import sinyuk.com.common.realm.model.Player
 import sinyuk.com.common.realm.model.SOURCE_FANFOU
 import sinyuk.com.fanfou.api.FanfouAPI
+import sinyuk.com.fanfou.api.FanfouAccessToken
+import sinyuk.com.fanfou.api.FanfouAccessTokenTask
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Created by sinyuk on 2018/6/6.
+ * Created by sinyuk on 2018/6/7.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -47,48 +49,46 @@ import javax.inject.Singleton
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-@Singleton
 @Fanfou
-class PlayerRepo @Inject constructor(
+@Singleton
+class AccountRepo @Inject constructor(
         private val api: FanfouAPI,
         private val appExecutors: AppExecutors,
-        @Fanfou private val rateLimiter: RateLimiter<String>,
         @Default private val defaultRealm: RealmConfiguration,
-        @InMemory private val memoryRealm: RealmConfiguration) {
+        @Fanfou private val rateLimiter: RateLimiter<String>) {
 
     /**
+     * Get access token for a Fanfou user
      *
+     * @param account account
+     * @param password password
+     * @param execute method that execute by the given OkHttpClient
      */
-    fun loadUser(id: String): LiveData<Promise<RealmResults<Player>>> {
-        return object : NetworkBoundResource<Player, Player>(appExecutors) {
-            override fun onFetchFailed() {
-
-            }
-
-            override fun saveCallResult(item: Player?) {
-                if (item != null) {
-                    item.source = SOURCE_FANFOU
-                    Realm.getInstance(defaultRealm).executeTransaction { it.insertOrUpdate(item) }
-                }
-            }
-
-            override fun shouldFetch(data: RealmResults<Player>?) =
-                    data == null || data.isEmpty() || rateLimiter.shouldFetch(RateLimiter.FANFOU)
-
-
-            override fun loadFromDb(): RealmLiveData<Player> {
-                val result = Realm.getInstance(defaultRealm)
-                        .where(Player::class.java)
-                        .equalTo("source", SOURCE_FANFOU)
-                        .equalTo("id", id)
-                        .findAll()
-                return RealmLiveData(result)
-            }
-
-            override fun createCall() = api.showUser(id)
-
-        }.asLiveData()
+    fun signIn(account: String,
+               password: String,
+               execute: (url: HttpUrl) -> Response?): LiveData<Promise<FanfouAccessToken>> {
+        val task = FanfouAccessTokenTask(account, password, defaultRealm, execute)
+        return task.apply { appExecutors.networkIO().execute(this) }.liveData
     }
 
-    fun loadFriends(id: String? = null, count: Int, page: Int) = api.friends(id, count, page)
+    /**
+     * verify credentials of current logged Fanfou user
+     */
+    fun verifyCredentials() = api.verifyCredentials()
+
+    /**
+     * Update account's profile
+     */
+    fun updateProfile(player: Player, account: String? = null) {
+        Realm.getInstance(defaultRealm).executeTransaction {
+            player.source = SOURCE_FANFOU
+            it.insertOrUpdate(player)
+            if (account != null) {
+                val result = it.where(Account::class.java)
+                        .equalTo("account", account).findFirst()
+                result?.updatedAt = Date()
+                result?.avatar = player.profileImageUrl
+            }
+        }
+    }
 }

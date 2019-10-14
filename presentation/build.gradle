@@ -1,5 +1,5 @@
 /*
- *   Copyright 2081 Sinyuk
+ *   Copyright 2018 Sinyuk
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,12 +31,12 @@ try {
 }
 
 android {
-    compileSdkVersion 'android-P'
-    buildToolsVersion '28.0.0 rc2'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.2'
     defaultConfig {
         applicationId "sinyuk.com.fanfou"
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -83,6 +83,12 @@ android {
     }
 }
 
+kapt {
+    arguments {
+        arg('eventBusIndex', 'com.sinyuk.fanfou.MyEventBusIndex')
+    }
+}
+
 dependencies {
     implementation project(':data')
     implementation "com.twitter.sdk.android:twitter-core:$twitter_version"
@@ -100,7 +106,7 @@ dependencies {
     androidTestImplementation "com.android.support.test:runner:$runner_version"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
     androidTestImplementation "com.google.dagger:dagger:$dagger_version"
-    implementation 'com.jakewharton.timber:timber:4.7.0'
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 
     //noinspection GradleCompatible
     implementation "com.android.support:appcompat-v7:$support_version"
@@ -118,12 +124,13 @@ dependencies {
     }
 
     // UI
-    implementation 'cn.dreamtobe.kpswitch:library:1.6.0'
+    implementation 'cn.dreamtobe.kpswitch:library:1.6.1'
     implementation 'com.makeramen:roundedimageview:2.3.0'
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
     implementation 'com.borjabravo:readmoretextview:2.1.0'
     implementation 'com.daimajia.swipelayout:library:1.2.0@aar'
     implementation 'com.linkedin.android.spyglass:spyglass:1.4.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta5'
+    implementation "com.android.support:recyclerview-v7:$support_version"
 
     // https://yalantis.com
     implementation 'com.github.Yalantis:Context-Menu.Android:1.0.8'
@@ -135,12 +142,10 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
+    implementation "org.greenrobot:eventbus:$event_bus_version"
 
     // glide
     implementation "com.github.bumptech.glide:glide:$glide_version"
-
-    //noinspection GradleDynamicVersion
-    implementation 'jp.wasabeef:glide-transformations:3.3+'
     implementation "com.github.bumptech.glide:annotations:$glide_version"
     implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
     implementation("com.github.bumptech.glide:recyclerview-integration:$glide_version") {
@@ -152,4 +157,6 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
     kaptAndroidTest "com.google.dagger:dagger-compiler:$dagger_version"
+    kapt "org.greenrobot:eventbus-annotation-processor:$event_bus_version"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 }

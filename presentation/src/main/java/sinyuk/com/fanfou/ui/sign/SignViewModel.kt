@@ -22,7 +22,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import sinyuk.com.common.Fanfou
-import sinyuk.com.common.repo.PlayerDataStore
+import sinyuk.com.common.realm.model.Player
+import sinyuk.com.fanfou.repo.AccountRepo
 import javax.inject.Inject
 
 /**
@@ -39,11 +40,17 @@ import javax.inject.Inject
 └──────────────────────────────────────────────────────────────────┘
  */
 class SignViewModel @Inject constructor(
-        private val userDataStore: PlayerDataStore,
+        private val accountRepo: AccountRepo,
         @Fanfou private val okHttpClient: OkHttpClient) : ViewModel() {
 
     fun signIn(account: String, password: String) =
-            userDataStore.signIn(account, password, { executeRequest(it) })
+            accountRepo.signIn(account, password, { executeRequest(it) })
+
+    fun verifyCredentials() = accountRepo.verifyCredentials()
+
+    fun updateProfile(player: Player, account: String) {
+        accountRepo.updateProfile(player, account)
+    }
 
     private fun executeRequest(url: HttpUrl): Response {
         return okHttpClient.newCall(Request.Builder().url(url).build()).execute()

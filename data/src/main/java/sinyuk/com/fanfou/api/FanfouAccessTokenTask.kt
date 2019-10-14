@@ -18,20 +18,21 @@ package sinyuk.com.fanfou.api
 
 import android.annotation.SuppressLint
 import android.arch.lifecycle.MutableLiveData
-import android.content.SharedPreferences
 import android.support.annotation.VisibleForTesting
+import io.realm.Realm
+import io.realm.RealmConfiguration
 import okhttp3.HttpUrl
 import okhttp3.Response
 import okio.ByteString
 import org.xml.sax.SAXException
-import sinyuk.com.common.ACCESS_TOKEN
 import sinyuk.com.common.Promise
+import sinyuk.com.common.realm.model.Account
 import sinyuk.com.common.realm.model.BuildConfig
+import sinyuk.com.common.realm.model.SOURCE_FANFOU
 import java.io.IOException
 import java.io.InterruptedIOException
 import java.nio.charset.Charset
 import java.util.*
-import java.util.regex.Pattern
 import javax.inject.Inject
 import javax.inject.Singleton
 import javax.xml.parsers.DocumentBuilderFactory
@@ -53,9 +54,9 @@ import javax.xml.parsers.ParserConfigurationException
 
 @Singleton
 class FanfouAccessTokenTask @Inject constructor(
-        account: String,
-        password: String,
-        private val preferences: SharedPreferences?,
+        private val account: String,
+        private val password: String,
+        private val config: RealmConfiguration,
         private val execute: (url: HttpUrl) -> Response?) : Runnable {
 
     @Suppress("MemberVisibilityCanBePrivate")
@@ -94,21 +95,32 @@ class FanfouAccessTokenTask @Inject constructor(
             if (accessToken == null) {
                 liveData.postValue(Promise.error(INTERNAL_ERROR, null))
             } else {
-                preferences?.edit()
-                        ?.putStringSet(ACCESS_TOKEN, mutableSetOf(accessToken.token, accessToken.secret))
-                        ?.apply()
                 liveData.postValue(Promise.success(accessToken))
+                Realm.getInstance(config).executeTransaction {
+                    val result = it.where(Account::class.java)
+                            .equalTo("account", account).findFirst()
+                    if (result == null) {
+                        val v = Account(
+                                account,
+                                password,
+                                createdAt = Date(),
+                                token = accessToken.token,
+                                secret = accessToken.secret,
+                                source = SOURCE_FANFOU
+                        )
+                        it.insert(v)
+                    } else {
+                        result.token = accessToken.token
+                        result.secret = accessToken.secret
+                        result.password = password
+                        result.updatedAt = Date()
+                    }
+                }
             }
         } else {
             liveData.postValue(Promise.error(parseFailedResponse(text), null))
         }
     }
-
-
-    /**
-     * 匹配中文
-     */
-    private val abs: Pattern = Pattern.compile("(\\d+)\u4e2a\u6587\u4ef6")
 
     @SuppressLint("LogNotTimber")
     private fun parseFailedResponse(xml: String?): String {

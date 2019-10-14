@@ -14,10 +14,16 @@
  *    limitations under the License.
  */
 
-package sinyuk.com.common.repo
+package sinyuk.com.common.realm.model
+
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
+import io.realm.annotations.RealmClass
+import io.realm.annotations.Required
+import java.util.*
 
 /**
- * Created by sinyuk on 2018/6/6.
+ * Created by sinyuk on 2018/6/10.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -29,5 +35,15 @@ package sinyuk.com.common.repo
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-interface PlayerDataStore {
-}
+@RealmClass
+class Account @JvmOverloads constructor(
+        @PrimaryKey @Required var account: String = "",
+        @Required var password: String = "",
+        var avatar: String? = null,
+        var createdAt: Date = Date(),
+        var expiredAt: Date? = null,
+        var updatedAt: Date? = null,
+        var token: String? = null,
+        var secret: String? = null,
+        @Required var source: Int = -1
+) : RealmObject()

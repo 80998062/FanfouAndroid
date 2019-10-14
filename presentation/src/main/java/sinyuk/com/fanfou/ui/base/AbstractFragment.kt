@@ -38,4 +38,6 @@ abstract class AbstractFragment : Fragment() {
             super.onCreateView(inflater, container, savedInstanceState)
         }
     }
+
+    protected abstract fun lazyDo()
 }

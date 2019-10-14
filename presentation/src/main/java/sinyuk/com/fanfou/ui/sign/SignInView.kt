@@ -54,7 +54,7 @@ import sinyuk.com.fanfou.ui.FanfouViewModelFactory
 import sinyuk.com.fanfou.ui.ViewTooltip
 import sinyuk.com.fanfou.ui.base.AbstractFragment
 import sinyuk.com.fanfou.ui.getMenuDialog
-import sinyuk.com.fanfou.ui.status.TimelineTestActivity
+import sinyuk.com.fanfou.ui.test.TestActivity
 import sinyuk.com.fanfou.utils.showRationaleDialog
 import javax.inject.Inject
 
@@ -74,6 +74,7 @@ import javax.inject.Inject
  */
 @RuntimePermissions
 class SignInView : AbstractFragment(), Injectable, OnMenuItemClickListener {
+    override fun lazyDo() {}
 
     override fun layoutId() = R.layout.signin_view
 
@@ -162,7 +163,7 @@ class SignInView : AbstractFragment(), Injectable, OnMenuItemClickListener {
 
         button.setOnClickListener { performSigningIn() }
 
-        account.setText("sinyuk.7@qq.com")
+        account.setText("80998062@qq.com")
         password.setText("rabbit7run")
 
 
@@ -197,7 +198,7 @@ class SignInView : AbstractFragment(), Injectable, OnMenuItemClickListener {
     override fun onMenuItemClick(p0: View?, p1: Int) {
         when (p1) {
             0 -> contextMenu?.dismiss()
-            1 -> start(TimelineTestActivity::class)
+            1 -> start(TestActivity::class)
             2 -> {
             }
             else -> {
@@ -274,8 +275,21 @@ class SignInView : AbstractFragment(), Injectable, OnMenuItemClickListener {
                         States.ERROR -> {
                             onSignInFailed(it.message)
                         }
-                        States.SUCCESS -> start(TimelineTestActivity::class)
+                        States.SUCCESS -> verifyCredentials(accountText)
                     }
+                })
+    }
+
+
+    private fun verifyCredentials(account: String) {
+        signViewModel.verifyCredentials()
+                .observe(this, Observer {
+                    if (it?.isSuccessful() == true) {
+                        it.body?.let { signViewModel.updateProfile(it, account) }
+                    } else {
+                        Toast.makeText(context, it?.errorMessage, Toast.LENGTH_LONG).show()
+                    }
+                    start(TestActivity::class)
                 })
     }
 

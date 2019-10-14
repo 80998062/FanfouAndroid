@@ -24,6 +24,10 @@ import java.util.concurrent.TimeUnit
  * Utility class that decides whether we should fetch some data or not.
  */
 class RateLimiter<in KEY>(timeout: Int, timeUnit: TimeUnit) {
+    companion object {
+        const val FANFOU = "fanfou/"
+    }
+
     private val timestamps = ArrayMap<KEY, Long>()
     private val timeout = timeUnit.toMillis(timeout.toLong())
 

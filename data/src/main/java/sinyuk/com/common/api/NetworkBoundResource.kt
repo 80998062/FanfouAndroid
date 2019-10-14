@@ -20,8 +20,11 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
+import io.realm.RealmModel
+import io.realm.RealmResults
 import sinyuk.com.common.AppExecutors
 import sinyuk.com.common.Promise
+import sinyuk.com.common.realm.RealmLiveData
 
 /**
  * Created by sinyuk on 2018/5/8.
@@ -47,10 +50,10 @@ import sinyuk.com.common.Promise
  *
  * https://github.com/googlesamples/android-architecture-components/blob/master/GithubBrowserSample/app/src/main/java/com/android/example/github/repository/NetworkBoundResource.java
  */
-abstract class NetworkBoundResource<ResultType, RequestType>
+abstract class NetworkBoundResource<ResultType : RealmModel, RequestType>
 @MainThread constructor(private val appExecutors: AppExecutors) {
 
-    private val result = MediatorLiveData<Promise<ResultType>>()
+    private val result = MediatorLiveData<Promise<RealmResults<ResultType>>>()
 
     init {
         result.value = Promise.loading(null)
@@ -61,19 +64,21 @@ abstract class NetworkBoundResource<ResultType, RequestType>
             if (shouldFetch(data)) {
                 fetchFromNetwork(dbSource)
             } else {
-                result.addSource(dbSource) { newData -> setValue(Promise.success(newData)) }
+                result.addSource(dbSource) { newData ->
+                    setValue(Promise.success(newData))
+                }
             }
         }
     }
 
     @MainThread
-    private fun setValue(newValue: Promise<ResultType>) {
+    private fun setValue(newValue: Promise<RealmResults<ResultType>>) {
         if (result.value != newValue) {
             result.value = newValue
         }
     }
 
-    private fun fetchFromNetwork(dbSource: LiveData<ResultType?>) {
+    private fun fetchFromNetwork(dbSource: RealmLiveData<ResultType>) {
         val apiResponse = createCall()
         result.addSource(apiResponse) { response ->
             result.removeSource(apiResponse)
@@ -84,12 +89,16 @@ abstract class NetworkBoundResource<ResultType, RequestType>
                         // we specially request a new live data,
                         // otherwise we will get immediately last cached value,
                         // which may not be updated with latest results received from network.
-                        result.addSource(loadFromDb()) { newData -> setValue(Promise.success(newData)) }
+                        result.addSource(loadFromDb()) { newData ->
+                            setValue(Promise.success(newData))
+                        }
                     }
                 }
             } else {
                 onFetchFailed()
-                result.addSource(dbSource) { newData -> setValue(Promise.error(response?.errorMessage, newData)) }
+                result.addSource(dbSource) { newData ->
+                    setValue(Promise.error(response?.errorMessage, newData))
+                }
             }
         }
     }
@@ -97,7 +106,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>
     @MainThread
     protected abstract fun onFetchFailed()
 
-    fun asLiveData(): LiveData<Promise<ResultType>> = result
+    fun asLiveData(): LiveData<Promise<RealmResults<ResultType>>> = result
 
     @WorkerThread
     private fun processResponse(response: ApiResponse<RequestType>): RequestType? = response.body
@@ -106,10 +115,10 @@ abstract class NetworkBoundResource<ResultType, RequestType>
     protected abstract fun saveCallResult(item: RequestType?)
 
     @MainThread
-    protected abstract fun shouldFetch(data: ResultType?): Boolean
+    protected abstract fun shouldFetch(data: RealmResults<ResultType>?): Boolean
 
     @MainThread
-    protected abstract fun loadFromDb(): LiveData<ResultType?>
+    protected abstract fun loadFromDb(): RealmLiveData<ResultType>
 
     @MainThread
     protected abstract fun createCall(): LiveData<ApiResponse<RequestType>>

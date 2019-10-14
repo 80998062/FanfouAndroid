@@ -17,11 +17,11 @@
 package sinyuk.com.fanfou.ui.player
 
 import android.arch.lifecycle.ViewModel
-import sinyuk.com.common.repo.PlayerDataStore
+import sinyuk.com.fanfou.repo.PlayerRepo
 import javax.inject.Inject
 
 /**
- * Created by sinyuk on 2018/5/8.
+ * Created by sinyuk on 2018/6/10.
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
 │        _______. __  .__   __. ____    ____  __    __   __  ___   │
@@ -33,8 +33,11 @@ import javax.inject.Inject
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
  */
-class PlayerViewModel @Inject constructor(private val playerDataStore: PlayerDataStore,
-                                          private val userDataStore: PlayerDataStore) : ViewModel() {
-    fun fetch(uniqueId: String, forced: Boolean = true) = playerDataStore.fetchLatestStatus(uniqueId, forced)
 
+class PlayerViewModel @Inject constructor(private val playerRepo: PlayerRepo) : ViewModel() {
+
+
+    fun loadFriends(page: Int) = playerRepo.loadFriends(count = pageCount, page = page)
+
+    var pageCount: Int = 30
 }
